@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LegalBody from '../../components/LegalBody.astro';
+import Disclosure from '../../components/Disclosure.astro';
+import { person, type Lang } from '../../config/site';
+import { langs, path } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const updated = '2026-10-05';
+const cred = `<a href="${path(lang, 'credentials')}">${lang === 'ar' ? 'صفحة المؤهلات' : 'Credentials page'}</a>`;
+
+const copy = {
+  ar: {
+    title: 'إخلاء المسؤولية الطبية | آيسر شواقفة',
+    description: 'المحتوى على موقع آيسر شواقفة تثقيفي عام ولا يغني عن التقييم الطبي الفردي. تعرّف إلى نطاق المحتوى وحدوده وما يجب فعله في الحالات الطارئة.',
+    h1: 'إخلاء المسؤولية الطبية',
+    lead: 'المعلومات المنشورة على هذا الموقع لأغراض تثقيفية عامة فقط، ولا تُعد تشخيصًا أو نصيحة طبية فردية أو خطة علاج.',
+    sections: [
+      { h: 'الحالات الطارئة', p: ['لا يدير هذا الموقع ولا WhatsApp ولا البريد الإلكتروني أي حالات طارئة. إذا كانت لديك أعراض خطيرة، مثل احمرار ينتشر حول الجرح أو حرارة أو تشوّش أو نزيف لا يتوقف، توجّه فورًا إلى أقرب قسم طوارئ أو اتصل بالرقم <span class="ltr">911</span>.'] },
+      { h: 'ليس بديلًا عن التقييم الطبي', p: ['كل جرح وكل مريض حالة مختلفة. لا تبدأ علاجًا ولا تغيّره ولا توقفه، ولا تغيّر نوع الضماد، بناءً على محتوى الموقع وحده. ناقش أي قرار مع الطبيب المعالج أو الفريق الصحي المسؤول عنك.'] },
+      { h: 'نطاق الممارسة', p: [`${person.name.ar} ممرض قانوني وأخصائي معتمد في العناية بالجروح، وليس طبيبًا. التشخيص الطبي ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب. تفاصيل المؤهلات في ${cred}.`] },
+      { h: 'لا علاقة علاجية عبر الموقع', p: ['قراءة المحتوى أو إرسال استفسار لا يُنشئ علاقة علاجية بين القارئ وآيسر شواقفة.'] },
+      { h: 'لا ضمانات للنتائج', p: ['تختلف نتائج العناية بالجروح بحسب حالة المريض الصحية وعوامل كثيرة أخرى، ولا يَعِد هذا الموقع بالتئام الجروح أو بأي نتيجة علاجية محددة.'] },
+      { h: 'المراجع وتحديث المحتوى', p: ['يستند المحتوى السريري إلى إرشادات ومصادر علمية موثوقة مذكورة في كل صفحة، ويظهر تاريخ النشر وتاريخ آخر مراجعة. قد تتغير التوصيات العلمية بعد تاريخ المراجعة.'] },
+      { h: 'الروابط الخارجية', p: ['قد يحتوي الموقع على روابط لمواقع أخرى للمرجعية. لسنا مسؤولين عن محتوى تلك المواقع أو سياساتها.'] },
+    ],
+  },
+  en: {
+    title: 'Medical Disclaimer | Ayser Shawaqfeh',
+    description: 'Content on this website is general education, not individual medical advice. Read its scope, its limits and what to do in an emergency.',
+    h1: 'Medical disclaimer',
+    lead: 'Information on this website is for general education only. It is not a diagnosis, individual medical advice or a treatment plan.',
+    sections: [
+      { h: 'Emergencies', p: ['This website, WhatsApp and email do not handle emergencies. If you have serious symptoms, such as redness spreading around a wound, fever, confusion or bleeding that will not stop, go to the nearest emergency department or call <span class="ltr">911</span> immediately.'] },
+      { h: 'Not a substitute for medical assessment', p: ['Every wound and every patient is different. Do not start, change or stop treatment, or change your dressing type, based on this website alone. Discuss any decision with your treating doctor or care team.'] },
+      { h: 'Scope of practice', p: [`${person.name.en} is a Registered Nurse and Certified Wound Specialist, not a physician. Medical diagnosis, prescribing and surgical decisions are the physician’s responsibility. Qualifications are listed on the ${cred}.`] },
+      { h: 'No care relationship through the website', p: ['Reading this content or sending an enquiry does not create a care relationship between the reader and Ayser Shawaqfeh.'] },
+      { h: 'No guaranteed outcomes', p: ['Wound-care outcomes depend on the person’s health and many other factors. This website does not promise wound healing or any specific clinical result.'] },
+      { h: 'References and content updates', p: ['Clinical content is based on reliable guidelines and scientific sources cited on each page, with the publication and last-review dates shown. Recommendations may change after the review date.'] },
+      { h: 'External links', p: ['The website may link to other sites for reference. We are not responsible for their content or policies.'] },
+    ],
+  },
+}[lang];
+const schema = pageGraph({ lang, key: 'disclaimer', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated });
+---
+<BaseLayout lang={lang} pageKey="disclaimer" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="disclaimer" />
+    <LegalBody lang={lang} h1={copy.h1} lead={copy.lead} updated={updated} sections={copy.sections}>
+      <Disclosure lang={lang} />
+    </LegalBody>
+  </div>
+</BaseLayout>

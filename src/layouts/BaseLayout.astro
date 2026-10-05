@@ -1,0 +1,90 @@
+---
+import '../styles/global.css';
+import { site, analytics, person, type Lang } from '../config/site';
+import { path, otherLang, type PageKey } from '../lib/routes';
+import { abs } from '../lib/schema';
+import { t } from '../lib/i18n';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import EmergencyBar from '../components/EmergencyBar.astro';
+import Analytics from '../components/Analytics.astro';
+
+interface Props {
+  lang: Lang;
+  /** Registry key; omit for pages outside the registry (404). */
+  pageKey?: PageKey;
+  title: string;
+  description: string;
+  schema?: object;
+  noindex?: boolean;
+  ogType?: 'website' | 'profile' | 'article';
+}
+
+const { lang, pageKey, title, description, schema, noindex = false, ogType = 'website' } = Astro.props;
+const s = t(lang);
+const canonical = pageKey ? abs(path(lang, pageKey)) : undefined;
+const alt = otherLang(lang);
+const hreflangs = pageKey
+  ? [
+      { hreflang: 'ar-JO', href: abs(path('ar', pageKey)) },
+      { hreflang: 'en-JO', href: abs(path('en', pageKey)) },
+      { hreflang: 'x-default', href: abs(path('ar', pageKey)) },
+    ]
+  : [];
+const ogImage = abs(`/og/${lang}.png`);
+---
+<!doctype html>
+<html lang={site.locales[lang]} dir={s.dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : <meta name="robots" content="index, follow, max-image-preview:large" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    {hreflangs.map((h) => <link rel="alternate" hreflang={h.hreflang} href={h.href} />)}
+    <meta name="author" content={`${person.name[lang]}, ${person.postNominals}`} />
+    <meta name="theme-color" content="#0b6e69" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    {lang === 'ar'
+      ? <Fragment>
+          <link rel="preload" href="/fonts/plex-arabic-400.woff2" as="font" type="font/woff2" crossorigin />
+          <link rel="preload" href="/fonts/plex-arabic-600.woff2" as="font" type="font/woff2" crossorigin />
+          <link rel="preload" href="/fonts/plex-arabic-700.woff2" as="font" type="font/woff2" crossorigin />
+          <link rel="preload" href="/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+        </Fragment>
+      : <link rel="preload" href="/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />}
+    {analytics.gscVerification && <meta name="google-site-verification" content={analytics.gscVerification} />}
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.siteName[lang]} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta property="og:locale" content={site.ogLocale[lang]} />
+    <meta property="og:locale:alternate" content={site.ogLocale[alt]} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${person.name[lang]} — ${person.title[lang]}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{s.skip}</a>
+    <EmergencyBar lang={lang} />
+    <Header lang={lang} pageKey={pageKey} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} pageKey={pageKey} />
+    <Analytics lang={lang} />
+  </body>
+</html>

@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { path, mainNav, pages } from '../lib/routes';
+---
+<BaseLayout lang="ar" title="الصفحة غير موجودة | Page not found" description="الصفحة المطلوبة غير موجودة. The page you requested does not exist." noindex>
+  <div class="wrap section">
+    <div class="grid-2">
+      <section class="prose">
+        <h1>الصفحة غير موجودة</h1>
+        <p>ربما تغيّر رابط الصفحة أو كُتب بشكل غير صحيح. يمكنك الانتقال إلى إحدى هذه الصفحات:</p>
+        <ul>{mainNav.map((k) => <li><a href={path('ar', k)}>{pages[k].nav.ar}</a></li>)}</ul>
+      </section>
+      <section class="prose" lang="en" dir="ltr">
+        <h2 class="flush">Page not found</h2>
+        <p>The link may have changed or been typed incorrectly. Try one of these pages:</p>
+        <ul>{mainNav.map((k) => <li><a href={path('en', k)}>{pages[k].nav.en}</a></li>)}</ul>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

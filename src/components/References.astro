@@ -1,0 +1,13 @@
+---
+import type { Lang } from '../config/site';
+import { t } from '../lib/i18n';
+export interface Ref { text: string; url: string }
+interface Props { lang: Lang; items: Ref[] }
+const { lang, items } = Astro.props;
+---
+<section class="references prose" aria-labelledby="refs-h">
+  <h2 id="refs-h">{t(lang).references}</h2>
+  <ol lang="en" dir="ltr">
+    {items.map((r) => <li><a href={r.url} rel="noopener">{r.text}</a></li>)}
+  </ol>
+</section>

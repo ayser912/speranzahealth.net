@@ -1,0 +1,63 @@
+---
+/**
+ * Consent-aware GA4. Nothing is loaded and no cookie is set unless:
+ *   1) PUBLIC_GA4_ID is configured, and 2) the visitor clicks "Accept".
+ * Conversion events (fired only after consent):
+ *   whatsapp_click, phone_click, email_click, cta_click, outbound_profile  → from [data-track] links
+ *   generate_lead                                                           → contact form submit
+ */
+import { analytics, type Lang } from '../config/site';
+import { path } from '../lib/routes';
+import { t } from '../lib/i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const id = analytics.ga4Id;
+---
+{id && (
+  <div class="consent" id="consent" role="region" aria-label={lang === 'ar' ? 'موافقة ملفات تعريف الارتباط' : 'Cookie consent'} hidden>
+    <p>{s.consentText} <a href={path(lang, 'privacy')}>{s.privacyLink}</a></p>
+    <div class="actions">
+      <button type="button" class="btn btn-primary" data-consent="granted">{s.consentAccept}</button>
+      <button type="button" class="btn btn-secondary" data-consent="denied">{s.consentDecline}</button>
+    </div>
+  </div>
+)}
+<script is:inline define:vars={{ id }}>
+  (function () {
+    var KEY = 'analytics-consent';
+    var loaded = false;
+    function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+    function read() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+    window.siteTrack = function (name, params) {
+      if (loaded && typeof window.gtag === 'function') window.gtag('event', name, params || {});
+    };
+    function load() {
+      if (!id || loaded) return;
+      loaded = true;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'granted' });
+      window.gtag('js', new Date());
+      window.gtag('config', id, { anonymize_ip: true });
+      var sc = document.createElement('script');
+      sc.async = true; sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+      document.head.appendChild(sc);
+    }
+    document.addEventListener('click', function (e) {
+      var el = e.target && e.target.closest ? e.target.closest('[data-track]') : null;
+      if (el) window.siteTrack(el.getAttribute('data-track'), { ref: el.getAttribute('data-track-ref'), link_url: el.getAttribute('href') });
+    });
+    if (!id) return;
+    var banner = document.getElementById('consent');
+    var choice = read();
+    if (choice === 'granted') load();
+    else if (choice !== 'denied' && banner) banner.hidden = false;
+    if (banner) banner.addEventListener('click', function (e) {
+      var v = e.target && e.target.getAttribute && e.target.getAttribute('data-consent');
+      if (!v) return;
+      store(v); banner.hidden = true;
+      if (v === 'granted') load();
+    });
+  })();
+</script>

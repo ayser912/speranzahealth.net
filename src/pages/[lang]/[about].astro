@@ -1,0 +1,157 @@
+---
+/** About page. Slug comes from config (person.aboutSlug) so the name spelling can change in one place. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ContactActions from '../../components/ContactActions.astro';
+import Disclosure from '../../components/Disclosure.astro';
+import Icon from '../../components/Icon.astro';
+import { person, career, profiles, yearsExperience, type Lang } from '../../config/site';
+import { path, langs } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+import { t, formatDate } from '../../lib/i18n';
+import { track } from '../../lib/links';
+
+export function getStaticPaths() {
+  return langs.map((lang) => ({ params: { lang, about: person.aboutSlug } }));
+}
+const lang = Astro.params.lang as Lang;
+const s = t(lang);
+const yrs = yearsExperience();
+const updated = '2026-10-05';
+const linkedin = profiles.find((p) => p.id === 'linkedin')!;
+
+const copy = {
+  ar: {
+    title: 'آيسر شواقفة | ممرض وأخصائي جروح معتمد CWS® في عمّان',
+    description: 'تعرّف إلى آيسر شواقفة، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في عمّان، وخبرته في الجروح المزمنة وقرح الضغط والقدم السكري وNPWT.',
+    h1: 'آيسر شواقفة، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®',
+    intro: [
+      `آيسر شواقفة ممرض قانوني في الأردن وحاصل على اعتماد Certified Wound Specialist (CWS®) من American Board of Wound Management. يعمل في القطاع الصحي منذ عام 2017، أي منذ نحو ${yrs} سنوات، بدأها في العناية الحثيثة ثم تخصص في العناية بالجروح.`,
+      'يركّز عمله على الجروح التي لا تلتئم كما يُتوقع، وعلى تثقيف المرضى وأسرهم والكوادر الصحية بطريقة واضحة ومبنية على الدليل العلمي.',
+    ],
+    careerH: 'المسيرة المهنية',
+    eduLine: 'بكالوريوس التمريض، جامعة العلوم والتكنولوجيا الأردنية',
+    cwsLine: 'اعتماد Certified Wound Specialist (CWS®)، American Board of Wound Management',
+    present: 'حتى الآن',
+    focusH: 'مجالات التركيز',
+    focus: [
+      'الجروح المزمنة التي تتأخر في الالتئام',
+      'قرح الضغط (قرح الفراش) لدى المرضى قليلي الحركة',
+      'جروح القدم لدى مرضى السكري',
+      'الجروح الجراحية بعد العمليات',
+      'العلاج بالضغط السلبي NPWT ومتابعته',
+      'تعليم الممرضين ومقدمي الرعاية',
+    ],
+    scopeH: 'نطاق الممارسة',
+    scope: [
+      'آيسر ممرض قانوني وأخصائي جروح معتمد، وليس طبيبًا. التشخيص الطبي ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب المعالج.',
+      'يعمل ضمن نطاق ممارسة التمريض في الأردن، بما في ذلك معايير وكفاءات تمريض العناية بالجروح التي نشرها مجلس التمريض الأردني، وبالتنسيق مع الفريق الطبي.',
+      'لا يقدّم هذا الموقع تشخيصًا أو خطة علاجية فردية، ولا يَعِد بنتائج علاجية مضمونة.',
+    ],
+    eduH: 'التعليم والتدريب',
+    edu: 'يشارك آيسر خبرته مع الممرضين ومقدمي الرعاية من خلال محاضرات وورش تطبيقية في تقييم الجروح، واختيار الضمادات المناسبة، وأساسيات العلاج بالضغط السلبي، إلى جانب محتوى تثقيفي منتظم للمرضى والأسر.',
+    profilesH: 'الملفات المهنية',
+    contactH: 'التواصل',
+    contactP: 'للاستفسارات المهنية والتدريب والتعاون:',
+    updated: 'آخر تحديث',
+  },
+  en: {
+    title: 'Ayser Shawaqfeh, RN, CWS® | Wound Care Specialist in Amman',
+    description: 'Meet Ayser Shawaqfeh, RN, CWS®, a wound care specialist in Amman: his career and experience with chronic wounds, pressure injuries, diabetic foot and NPWT.',
+    h1: 'Ayser Shawaqfeh, Registered Nurse and Certified Wound Specialist, CWS®',
+    intro: [
+      `Ayser Shawaqfeh is a Registered Nurse in Jordan and holds the Certified Wound Specialist (CWS®) credential from the American Board of Wound Management. He has worked in healthcare since 2017, about ${yrs} years, starting in intensive care before specialising in wound care.`,
+      'His work focuses on wounds that are not healing as expected, and on clear, evidence-based education for patients, families and healthcare teams.',
+    ],
+    careerH: 'Career',
+    eduLine: 'B.Sc. Nursing, Jordan University of Science and Technology',
+    cwsLine: 'Certified Wound Specialist (CWS®), American Board of Wound Management',
+    present: 'present',
+    focusH: 'Areas of focus',
+    focus: [
+      'Chronic wounds that are slow to heal',
+      'Pressure injuries (bedsores) in people with limited mobility',
+      'Foot wounds in people with diabetes',
+      'Surgical wounds after an operation',
+      'Negative pressure wound therapy (NPWT) and its follow-up',
+      'Education for nurses and caregivers',
+    ],
+    scopeH: 'Scope of practice',
+    scope: [
+      'Ayser is a Registered Nurse and certified wound specialist, not a physician. Medical diagnosis, prescribing and surgical decisions are the responsibility of the treating physician.',
+      'He works within the nursing scope of practice in Jordan, including the wound-care nursing standards and competencies published by the Jordanian Nursing Council, and in coordination with the medical team.',
+      'This website does not provide diagnosis or an individual treatment plan, and does not promise guaranteed outcomes.',
+    ],
+    eduH: 'Education and training',
+    edu: 'Ayser shares his experience with nurses and caregivers through lectures and practical workshops on wound assessment, choosing appropriate dressings and the fundamentals of negative pressure wound therapy, alongside regular educational content for patients and families.',
+    profilesH: 'Professional profiles',
+    contactH: 'Contact',
+    contactP: 'For professional enquiries, training and collaboration:',
+    updated: 'Last updated',
+  },
+}[lang];
+
+const schema = pageGraph({ lang, key: 'about', type: 'ProfilePage', title: copy.title, description: copy.description, dateModified: updated, mainEntityPerson: true });
+---
+<BaseLayout lang={lang} pageKey="about" title={copy.title} description={copy.description} schema={schema} ogType="profile">
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="about" />
+    <header class="page-head prose">
+      <h1>{copy.h1}</h1>
+      <p class="page-dates">{copy.updated}: <time datetime={updated}>{formatDate(updated, lang)}</time></p>
+      {copy.intro.map((p, i) => <p class={i === 0 ? 'lead' : ''}>{p}</p>)}
+      <div class="actions">
+        <a class="btn btn-primary" href={path(lang, 'credentials')} {...track('cta_click', { lang, page: 'about', placement: 'intro-credentials' })}>{s.credentialsCta}</a>
+        <a class="btn btn-secondary" href={linkedin.url} rel="noopener me" {...track('outbound_profile', { lang, page: 'about', placement: 'intro-linkedin' })}><Icon name="linkedin" />{s.linkedinCta}</a>
+      </div>
+    </header>
+
+    <div class="grid-2">
+      <section class="prose" aria-labelledby="career-h">
+        <h2 id="career-h" class="flush">{copy.careerH}</h2>
+        <ol class="timeline">
+          <li><span class="when">2017</span><span class="what">{copy.eduLine}</span></li>
+          {career.map((c) => (
+            <li><span class="when">{c.to ? `${c.from}–${c.to}` : (lang === 'ar' ? `منذ ${c.from} حتى الآن` : `${c.from}–present`)}</span><span class="what">{c.role[lang]}</span><br />{c.org[lang]}</li>
+          ))}
+          <li><span class="when">2026</span><span class="what">{copy.cwsLine}</span></li>
+        </ol>
+      </section>
+      <section class="prose" aria-labelledby="focus-h">
+        <h2 id="focus-h" class="flush">{copy.focusH}</h2>
+        <ul>
+          {copy.focus.map((f, i) => <li>{i === 0 ? <a href={path(lang, 'chronic')}>{f}</a> : f}</li>)}
+        </ul>
+      </section>
+    </div>
+
+    <section class="prose" aria-labelledby="scope-h">
+      <h2 id="scope-h">{copy.scopeH}</h2>
+      {copy.scope.map((p) => <p>{p}</p>)}
+      <p><a href={path(lang, 'disclaimer')}>{lang === 'en' ? 'Read the medical disclaimer' : 'اقرأ إخلاء المسؤولية الطبية'}</a></p>
+    </section>
+
+    <section class="prose" aria-labelledby="edu-h">
+      <h2 id="edu-h">{copy.eduH}</h2>
+      <p>{copy.edu}</p>
+      <p><a href={`${path(lang, 'contact')}?reason=education`} {...track('cta_click', { lang, page: 'about', placement: 'education' })}>{s.educationCta}</a></p>
+    </section>
+
+    <section class="prose" aria-labelledby="profiles-h">
+      <h2 id="profiles-h">{copy.profilesH}</h2>
+      <ul>
+        {profiles.filter((p) => p.verified).map((p) => (
+          <li><a href={p.url} rel="noopener me" {...track('outbound_profile', { lang, page: 'about', placement: `profiles-${p.id}` })}>{p.label}</a></li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="prose" aria-labelledby="contact-h">
+      <h2 id="contact-h">{copy.contactH}</h2>
+      <p>{copy.contactP}</p>
+      <ContactActions lang={lang} page="about" placement="contact" />
+    </section>
+
+    <Disclosure lang={lang} id="disclosure" />
+  </div>
+</BaseLayout>

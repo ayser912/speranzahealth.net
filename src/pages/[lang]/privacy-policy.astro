@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LegalBody from '../../components/LegalBody.astro';
+import { contact, person, site, type Lang } from '../../config/site';
+import { langs } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const updated = '2026-10-05';
+const mail = `<a href="mailto:${contact.email}"><span class="ltr">${contact.email}</span></a>`;
+
+const copy = {
+  ar: {
+    title: 'سياسة الخصوصية | آيسر شواقفة',
+    description: 'كيف يتعامل موقع آيسر شواقفة مع البيانات: لا تخزين لبيانات النماذج، وتحليلات بموافقتك فقط، ولا جمع للمعلومات الصحية.',
+    h1: 'سياسة الخصوصية',
+    lead: `يحترم موقع ${site.domain} خصوصيتك، ومصمم ليجمع أقل قدر ممكن من البيانات. توضح هذه الصفحة ما يُجمع ولماذا وكيف تتحكم فيه.`,
+    sections: [
+      { h: 'المسؤول عن الموقع', p: [`${person.name.ar}، ${person.title.ar}. للتواصل بخصوص الخصوصية: ${mail}.`] },
+      { h: 'نموذج التواصل', p: ['لا يرسل نموذج التواصل بياناتك إلى خادم ولا يخزنها على الموقع. عند الضغط على زر التجهيز تُفتح رسالة في WhatsApp أو في تطبيق البريد الإلكتروني، ولا تُرسل إلا عندما تضغط أنت على إرسال.', 'يطلب النموذج الاسم الأول والمدينة وسبب التواصل وطريقة التواصل المفضلة فقط.'] },
+      { h: 'المعلومات الصحية', p: ['لا نطلب معلومات صحية عبر الموقع. يرجى عدم إرسال صور الجروح أو التقارير الطبية أو تفاصيل التشخيص عبر النموذج أو الرسائل قبل الاتفاق على طريقة آمنة ومناسبة.'] },
+      { h: 'الرسائل عبر WhatsApp والبريد الإلكتروني', p: ['عندما تراسلنا عبر WhatsApp أو البريد الإلكتروني تخضع الرسالة أيضًا لسياسات خصوصية مزوّد الخدمة. نستخدم بيانات التواصل للرد على استفسارك فقط، ولا نبيعها ولا نشاركها لأغراض تسويقية.'] },
+      { h: 'التحليلات وملفات تعريف الارتباط', p: ['قد يستخدم الموقع Google Analytics 4 لفهم عدد الزيارات والصفحات الأكثر فائدة. لا تُحمّل أدوات التحليل ولا تُستخدم ملفات تعريف الارتباط الخاصة بها إلا بعد موافقتك، ويمكنك الرفض دون أن يؤثر ذلك على استخدام الموقع.', 'يُحفظ اختيارك (موافقة أو رفض) في متصفحك فقط. لتغيير اختيارك امسح بيانات الموقع من إعدادات المتصفح.'] },
+      { h: 'سجلات الاستضافة', p: ['قد يحتفظ مزوّد الاستضافة بسجلات تقنية مؤقتة، مثل عنوان IP ونوع المتصفح، لأغراض الأمان وتشغيل الخدمة.'] },
+      { h: 'حقوقك', list: ['طلب معرفة البيانات التي لدينا عنك.', 'طلب تصحيحها أو حذفها.', 'سحب موافقتك على التواصل أو التحليلات في أي وقت.'], p: [`لممارسة أي من هذه الحقوق راسلنا على ${mail}. نتعامل مع البيانات وفق التشريعات الأردنية المعمول بها، بما فيها قانون حماية البيانات الشخصية رقم 24 لسنة 2023.`] },
+      { h: 'التعديلات', p: ['قد نحدّث هذه السياسة عند تغيّر طريقة عمل الموقع، ويظهر تاريخ آخر تحديث أعلى الصفحة.'] },
+    ],
+  },
+  en: {
+    title: 'Privacy Policy | Ayser Shawaqfeh',
+    description: 'How the Ayser Shawaqfeh website handles data: no stored form data, analytics only with your consent, and no collection of health information.',
+    h1: 'Privacy policy',
+    lead: `${site.domain} respects your privacy and is designed to collect as little data as possible. This page explains what is collected, why, and how you control it.`,
+    sections: [
+      { h: 'Who runs this website', p: [`${person.name.en}, ${person.title.en}. For privacy questions: ${mail}.`] },
+      { h: 'Contact form', p: ['The contact form does not send your details to a server or store them on the website. When you press the button, a message opens in WhatsApp or your email app, and it is only sent when you press send yourself.', 'The form asks only for your first name, city, reason for contacting and preferred contact method.'] },
+      { h: 'Health information', p: ['We do not ask for health information through this website. Please don’t send wound photos, medical reports or diagnosis details through the form or by message until a secure and appropriate method has been agreed.'] },
+      { h: 'WhatsApp and email messages', p: ['When you contact us by WhatsApp or email, your message is also subject to that provider’s privacy policy. We use your contact details only to reply to your enquiry, and we never sell them or share them for marketing.'] },
+      { h: 'Analytics and cookies', p: ['The website may use Google Analytics 4 to understand visit numbers and which pages are most useful. Analytics tools and their cookies are loaded only after you consent, and declining does not affect your use of the site.', 'Your choice (accept or decline) is stored only in your browser. To change it, clear this site’s data in your browser settings.'] },
+      { h: 'Hosting logs', p: ['The hosting provider may keep temporary technical logs, such as IP address and browser type, for security and to operate the service.'] },
+      { h: 'Your rights', list: ['Ask what data we hold about you.', 'Ask us to correct or delete it.', 'Withdraw your consent to contact or analytics at any time.'], p: [`To exercise any of these rights, email ${mail}. We handle data in line with applicable Jordanian law, including Personal Data Protection Law No. 24 of 2023.`] },
+      { h: 'Changes', p: ['We may update this policy when the way the website works changes. The date of the latest update appears at the top of this page.'] },
+    ],
+  },
+}[lang];
+const schema = pageGraph({ lang, key: 'privacy', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated });
+---
+<BaseLayout lang={lang} pageKey="privacy" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="privacy" />
+    <LegalBody lang={lang} h1={copy.h1} lead={copy.lead} updated={updated} sections={copy.sections} />
+  </div>
+</BaseLayout>

@@ -1,0 +1,19 @@
+---
+import type { Lang } from '../config/site';
+import { formatDate } from '../lib/i18n';
+interface Props { lang: Lang; h1: string; lead: string; updated: string; sections: Array<{ h: string; p?: string[]; list?: string[] }> }
+const { lang, h1, lead, updated, sections } = Astro.props;
+---
+<header class="page-head prose">
+  <h1>{h1}</h1>
+  <p class="page-dates">{lang === 'ar' ? 'آخر تحديث' : 'Last updated'}: <time datetime={updated}>{formatDate(updated, lang)}</time></p>
+  <p class="lead">{lead}</p>
+</header>
+{sections.map((sec) => (
+  <section class="prose">
+    <h2>{sec.h}</h2>
+    {sec.p?.map((x) => <p set:html={x} />)}
+    {sec.list && <ul>{sec.list.map((x) => <li set:html={x} />)}</ul>}
+  </section>
+))}
+<slot />

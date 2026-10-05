@@ -1,0 +1,41 @@
+---
+import { person, type Lang } from '../config/site';
+import { path, mainNav, pages, otherLang, type PageKey } from '../lib/routes';
+import { t } from '../lib/i18n';
+interface Props { lang: Lang; pageKey?: PageKey }
+const { lang, pageKey } = Astro.props;
+const s = t(lang);
+const alt = otherLang(lang);
+const altHref = path(alt, pageKey ?? 'home');
+---
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href={path(lang, 'home')}>
+      <span class="brand-name">{person.name[lang]}</span>
+      <span class="brand-title">{person.shortTitle[lang]}</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">{s.menu}</button>
+    <nav id="site-nav" class="site-nav" aria-label={lang === 'ar' ? 'القائمة الرئيسية' : 'Main'}>
+      <ul>
+        {mainNav.map((k) => (
+          <li><a href={path(lang, k)} aria-current={k === pageKey ? 'page' : undefined}>{pages[k].nav[lang]}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <a class="lang-switch" href={altHref} hreflang={alt === 'ar' ? 'ar-JO' : 'en-JO'} lang={alt} aria-label={s.switchLangLabel}>{s.switchLang}</a>
+  </div>
+</header>
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const nav = document.getElementById('site-nav');
+  if (btn && nav) {
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      nav.classList.toggle('open', !open);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && nav.classList.contains('open')) { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.focus(); }
+    });
+  }
+</script>
