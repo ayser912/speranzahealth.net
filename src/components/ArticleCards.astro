@@ -1,0 +1,22 @@
+---
+import type { Lang } from '../config/site';
+import type { Article } from '../lib/content-types';
+import { articlePath } from '../content/articles/index';
+import { pages } from '../lib/routes';
+import { formatDate } from '../lib/i18n';
+interface Props { lang: Lang; items: Article[]; headingLevel?: 'h2' | 'h3'; showTopic?: boolean }
+const { lang, items, showTopic = true } = Astro.props;
+const readLabel = lang === 'ar' ? 'آخر مراجعة' : 'Reviewed';
+---
+<ul class="card-list">
+  {items.map((a) => (
+    <li>
+      <article class="card">
+        {showTopic && <span class="topic-tag">{pages[a.topic].nav[lang]}</span>}
+        <h3><a href={articlePath(lang, a.slug)}>{a[lang].card ?? a[lang].h1}</a></h3>
+        <p>{a[lang].description}</p>
+        <p class="card-meta">{readLabel}: <time datetime={a.reviewed}>{formatDate(a.reviewed, lang)}</time></p>
+      </article>
+    </li>
+  ))}
+</ul>

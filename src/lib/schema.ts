@@ -6,6 +6,7 @@
  */
 import { site, person, credentials, profiles, flags, contact, type Lang } from '../config/site';
 import { pages, path, type PageKey } from './routes';
+import type { Video } from './content-types';
 
 const base = () => (import.meta.env.SITE as string | undefined)?.replace(/\/$/, '') || `https://${site.domain}`;
 export const abs = (p: string) => `${base()}${p}`;
@@ -94,7 +95,25 @@ export interface PageSchemaOpts {
 }
 
 export function pageGraph(o: PageSchemaOpts) {
-  const url = abs(path(o.lang, o.key));
+  const trail = o.key === 'home' ? [] : [
+    { name: pages.home.nav[o.lang], path: path(o.lang, 'home') },
+    { name: pages[o.key].nav[o.lang], path: path(o.lang, o.key) },
+  ];
+  return docGraph({ ...o, path: path(o.lang, o.key), trail });
+}
+
+export interface DocGraphOpts extends Omit<PageSchemaOpts, 'key'> {
+  path: string;
+  /** breadcrumb trail including the current page; empty for the homepage */
+  trail: Array<{ name: string; path: string }>;
+  /** extra nodes (Article, VideoObject, ItemList …) */
+  extra?: Array<Record<string, unknown>>;
+  reviewedBy?: { name: string; title: string } | null;
+}
+
+/** Generic page graph: WebSite + Person + the page node (+ breadcrumb + extras). */
+export function docGraph(o: DocGraphOpts) {
+  const url = abs(o.path);
   const page: Record<string, unknown> = {
     '@type': o.type,
     '@id': `${url}#webpage`,
@@ -111,6 +130,7 @@ export function pageGraph(o: PageSchemaOpts) {
   else page.about = o.aboutTopic ? { '@type': 'Thing', name: o.aboutTopic } : { '@id': ids.person() };
   if (o.type === 'MedicalWebPage') {
     if (o.lastReviewed) page.lastReviewed = o.lastReviewed;
+    if (o.reviewedBy) page.reviewedBy = { '@type': 'Person', name: o.reviewedBy.name, jobTitle: o.reviewedBy.title };
     page.audience = [
       { '@type': 'PeopleAudience', audienceType: 'Patients and caregivers' },
       { '@type': 'MedicalAudience', audienceType: 'Clinician' },
@@ -118,15 +138,11 @@ export function pageGraph(o: PageSchemaOpts) {
   }
   const graph: unknown[] = [websiteNode(o.lang), personNode(o.lang), page];
   if (flags.organizationConfirmed) graph.push(orgNode());
-  if (o.key !== 'home') {
+  if (o.trail.length) {
     page.breadcrumb = { '@id': `${url}#breadcrumb` };
-    graph.push(
-      breadcrumbNode(o.lang, [
-        { name: pages.home.nav[o.lang], path: path(o.lang, 'home') },
-        { name: pages[o.key].nav[o.lang], path: path(o.lang, o.key) },
-      ]),
-    );
+    graph.push(breadcrumbNode(o.lang, o.trail));
   }
+  if (o.extra) graph.push(...o.extra);
   return { '@context': 'https://schema.org', '@graph': graph };
 }
 
@@ -149,5 +165,22 @@ export function articleNode(o: {
     publisher: { '@id': flags.organizationConfirmed ? ids.org() : ids.person() },
     mainEntityOfPage: o.url,
     ...(o.image ? { image: o.image } : {}),
+  };
+}
+
+/** VideoObject — emit only for an original video actually embedded on the page. */
+export function videoNode(lang: Lang, pagePath: string, v: Video) {
+  return {
+    '@type': 'VideoObject',
+    '@id': `${abs(pagePath)}#video`,
+    name: v.title[lang],
+    description: v.description[lang],
+    thumbnailUrl: `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`,
+    uploadDate: v.uploadDate,
+    duration: v.duration,
+    embedUrl: `https://www.youtube-nocookie.com/embed/${v.youtubeId}`,
+    contentUrl: `https://www.youtube.com/watch?v=${v.youtubeId}`,
+    inLanguage: lang === 'ar' ? 'ar-JO' : 'en-JO',
+    author: { '@id': ids.person() },
   };
 }

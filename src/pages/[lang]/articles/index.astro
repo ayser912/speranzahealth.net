@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import ArticleCards from '../../../components/ArticleCards.astro';
+import { articles, articlePath } from '../../../content/articles/index';
+import { langs, pages, path, careNav } from '../../../lib/routes';
+import { pageGraph, abs } from '../../../lib/schema';
+import { formatDate } from '../../../lib/i18n';
+import type { Lang } from '../../../config/site';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const copy = {
+  ar: {
+    title: 'مقالات تثقيفية في العناية بالجروح | أيسر شواقفه CWS®',
+    description: 'مقالات تثقيفية موثقة للمرضى والأسر والكوادر الصحية حول الجروح المزمنة وقرح الضغط والقدم السكري والجروح الجراحية والعلاج بالضغط السلبي.',
+    h1: 'مقالات تثقيفية في العناية بالجروح',
+    lead: 'إجابات واضحة ومبنية على الإرشادات العلمية عن أكثر الأسئلة شيوعًا لدى المرضى والأسر والممرضين. كل مقال يذكر الكاتب وتاريخ النشر وآخر مراجعة والمراجع.',
+    updated: 'آخر تحديث للمكتبة',
+    other: 'مقالات عامة',
+  },
+  en: {
+    title: 'Wound-Care Articles and Educational Resources | Aissar Shawaqfeh',
+    description: 'Referenced educational articles for patients, families and clinicians on chronic wounds, pressure injuries, diabetic foot, surgical wounds and NPWT.',
+    h1: 'Wound-care articles and educational resources',
+    lead: 'Clear, guideline-based answers to the questions patients, families and nurses ask most. Every article shows the author, publication date, last review date and references.',
+    updated: 'Library last updated',
+    other: 'General articles',
+  },
+}[lang];
+const latest = articles.map((a) => a.reviewed).sort().at(-1)!;
+const groups = careNav
+  .map((k) => ({ key: k, items: articles.filter((a) => a.topic === k) }))
+  .filter((g) => g.items.length);
+const ungrouped = articles.filter((a) => !careNav.includes(a.topic));
+const schema = pageGraph({ lang, key: 'articles', type: 'CollectionPage', title: copy.title, description: copy.description, dateModified: latest });
+(schema['@graph'] as unknown[]).push({
+  '@type': 'ItemList',
+  '@id': `${abs(path(lang, 'articles'))}#list`,
+  itemListElement: articles.map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(articlePath(lang, a.slug)), name: a[lang].h1 })),
+});
+---
+<BaseLayout lang={lang} pageKey="articles" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="articles" />
+    <header class="page-head prose">
+      <h1>{copy.h1}</h1>
+      <p class="lead">{copy.lead}</p>
+      <p class="page-dates">{copy.updated}: <time datetime={latest}>{formatDate(latest, lang)}</time></p>
+    </header>
+    {ungrouped.length > 0 && (
+      <section aria-labelledby="g-general">
+        <h2 id="g-general" class="flush">{copy.other}</h2>
+        <ArticleCards lang={lang} items={ungrouped} showTopic={false} />
+      </section>
+    )}
+    {groups.map((g) => (
+      <section aria-labelledby={`g-${g.key}`}>
+        <h2 id={`g-${g.key}`}><a href={path(lang, g.key)}>{pages[g.key].nav[lang]}</a></h2>
+        <ArticleCards lang={lang} items={g.items} showTopic={false} />
+      </section>
+    ))}
+  </div>
+</BaseLayout>

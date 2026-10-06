@@ -11,8 +11,12 @@ import Analytics from '../components/Analytics.astro';
 
 interface Props {
   lang: Lang;
-  /** Registry key; omit for pages outside the registry (404). */
+  /** Registry key; omit for pages outside the registry (404, articles). */
   pageKey?: PageKey;
+  /** Explicit per-language paths for pages outside the registry (articles). */
+  paths?: Record<Lang, string>;
+  /** Which main-nav item to mark current when pageKey is absent (e.g. 'articles'). */
+  navKey?: PageKey;
   title: string;
   description: string;
   schema?: object;
@@ -20,15 +24,16 @@ interface Props {
   ogType?: 'website' | 'profile' | 'article';
 }
 
-const { lang, pageKey, title, description, schema, noindex = false, ogType = 'website' } = Astro.props;
+const { lang, pageKey, paths, navKey, title, description, schema, noindex = false, ogType = 'website' } = Astro.props;
 const s = t(lang);
-const canonical = pageKey ? abs(path(lang, pageKey)) : undefined;
+const langPaths: Record<Lang, string> | undefined = pageKey ? { ar: path('ar', pageKey), en: path('en', pageKey) } : paths;
+const canonical = langPaths ? abs(langPaths[lang]) : undefined;
 const alt = otherLang(lang);
-const hreflangs = pageKey
+const hreflangs = langPaths
   ? [
-      { hreflang: 'ar-JO', href: abs(path('ar', pageKey)) },
-      { hreflang: 'en-JO', href: abs(path('en', pageKey)) },
-      { hreflang: 'x-default', href: abs(path('ar', pageKey)) },
+      { hreflang: 'ar-JO', href: abs(langPaths.ar) },
+      { hreflang: 'en-JO', href: abs(langPaths.en) },
+      { hreflang: 'x-default', href: abs(langPaths.ar) },
     ]
   : [];
 const ogImage = abs(`/og/${lang}.png`);
@@ -80,7 +85,7 @@ const ogImage = abs(`/og/${lang}.png`);
   <body>
     <a class="skip-link" href="#main">{s.skip}</a>
     <EmergencyBar lang={lang} />
-    <Header lang={lang} pageKey={pageKey} />
+    <Header lang={lang} pageKey={pageKey ?? navKey} altHref={langPaths ? langPaths[alt] : undefined} />
     <main id="main" tabindex="-1">
       <slot />
     </main>

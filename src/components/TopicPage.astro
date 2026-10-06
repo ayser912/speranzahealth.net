@@ -1,0 +1,27 @@
+---
+/** Full page for a clinical topic hub (pressure injuries, diabetic foot, …). */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import ClinicalBody from './ClinicalBody.astro';
+import type { Lang } from '../config/site';
+import type { PageKey } from '../lib/routes';
+import type { ClinicalPageData } from '../lib/content-types';
+import { pageGraph, videoNode } from '../lib/schema';
+import { path } from '../lib/routes';
+import { articlesForTopic } from '../content/articles/index';
+interface Props { lang: Lang; pageKey: PageKey; data: ClinicalPageData; topicName: Record<Lang, string> }
+const { lang, pageKey, data, topicName } = Astro.props;
+const c = data[lang];
+const schema = pageGraph({
+  lang, key: pageKey, type: 'MedicalWebPage', title: c.title, description: c.description,
+  datePublished: data.published, dateModified: data.reviewed, lastReviewed: data.reviewed, aboutTopic: topicName[lang],
+});
+if (data.video) (schema['@graph'] as unknown[]).push(videoNode(lang, path(lang, pageKey), data.video));
+const related = articlesForTopic(pageKey);
+---
+<BaseLayout lang={lang} pageKey={pageKey} title={c.title} description={c.description} schema={schema} ogType="article">
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey={pageKey} />
+    <ClinicalBody lang={lang} data={data} refId={pageKey} relatedArticles={related} />
+  </div>
+</BaseLayout>

@@ -7,6 +7,9 @@ import { path, langs } from '../../lib/routes';
 import { pageGraph } from '../../lib/schema';
 import { t } from '../../lib/i18n';
 import { track } from '../../lib/links';
+import ArticleCards from '../../components/ArticleCards.astro';
+import { articles } from '../../content/articles/index';
+import type { PageKey } from '../../lib/routes';
 
 export function getStaticPaths() {
   return langs.map((lang) => ({ params: { lang } }));
@@ -23,14 +26,14 @@ const copy = {
     h1Title: 'ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®',
     lead: `خبرة تمريضية تمتد لنحو ${yrs} سنوات في القطاع الصحي، تركّز على الجروح التي لا تلتئم كما يُتوقع: الجروح المزمنة، وقرح الضغط، وجروح القدم السكري، والعلاج بالضغط السلبي NPWT. يقدّم أيسر تثقيفًا واضحًا للمرضى والأسر وتدريبًا للكوادر الصحية في عمّان والأردن.`,
     areasH: 'مجالات الخبرة',
-    areasIntro: 'كل مجال أدناه سيحظى بصفحة تثقيفية مستقلة تشرح العلامات المهمة ومتى تحتاج إلى تقييم متخصص.',
+    areasIntro: 'لكل مجال صفحة تثقيفية تشرح العلامات المهمة، ومتى تحتاج إلى تقييم متخصص، وكيف تدعم الأسرة العناية.',
     areas: [
-      { h: 'الجروح المزمنة', p: 'جروح تتأخر في الالتئام أكثر من أربعة إلى ستة أسابيع رغم العناية المعتادة، ولماذا يحدث ذلك.', link: true },
-      { h: 'قرح الضغط (قرح الفراش)', p: 'الوقاية والمراحل وعلامات الخطر لدى المرضى طريحي الفراش أو قليلي الحركة.' },
-      { h: 'جروح القدم السكري', p: 'لماذا يحتاج جرح القدم لدى مريض السكري إلى تقييم سريع وعمل فريق متعدد التخصصات.' },
-      { h: 'الجروح الجراحية', p: 'متى يكون تأخر التئام جرح العملية علامة تستدعي مراجعة الجرّاح.' },
-      { h: 'العلاج بالضغط السلبي NPWT', p: 'كيف يعمل جهاز الضغط السلبي (VAC)، ولمن يناسب، وما الذي تتطلبه متابعته.' },
-      { h: 'التعليم والتدريب المهني', p: 'تدريب الممرضين ومقدمي الرعاية على تقييم الجروح واختيار الضمادات وNPWT.' },
+      { h: 'الجروح المزمنة', p: 'جروح تتأخر في الالتئام أكثر من أربعة إلى ستة أسابيع رغم العناية المعتادة، ولماذا يحدث ذلك.', key: 'chronic' },
+      { h: 'قرح الضغط (قرح الفراش)', p: 'الوقاية والمراحل وعلامات الخطر لدى المرضى طريحي الفراش أو قليلي الحركة.', key: 'pressure' },
+      { h: 'جروح القدم السكري', p: 'لماذا يحتاج جرح القدم لدى مريض السكري إلى تقييم سريع وعمل فريق متعدد التخصصات.', key: 'diabeticFoot' },
+      { h: 'الجروح الجراحية', p: 'متى يكون تأخر التئام جرح العملية علامة تستدعي مراجعة الجرّاح.', key: 'surgical' },
+      { h: 'العلاج بالضغط السلبي NPWT', p: 'كيف يعمل جهاز الضغط السلبي (VAC)، ولمن يناسب، وما الذي تتطلبه متابعته.', key: 'npwt' },
+      { h: 'التعليم والتدريب المهني', p: 'تدريب الممرضين ومقدمي الرعاية على تقييم الجروح واختيار الضمادات وNPWT.', key: 'education' },
     ],
     approachH: 'منهج العمل',
     approach: [
@@ -54,14 +57,14 @@ const copy = {
     h1Title: 'Registered Nurse and Certified Wound Specialist, CWS®',
     lead: `About ${yrs} years in healthcare, focused on wounds that are not healing as expected: chronic wounds, pressure injuries, diabetic foot wounds and negative pressure wound therapy (NPWT). Aissar provides clear education for patients and families and training for healthcare teams in Amman and across Jordan.`,
     areasH: 'Areas of experience',
-    areasIntro: 'Each area below will have its own educational page explaining the warning signs and when a specialist assessment is needed.',
+    areasIntro: 'Each area has its own educational page explaining the warning signs, when a specialist assessment is needed, and how families can support care.',
     areas: [
-      { h: 'Chronic wounds', p: 'Wounds that have not healed after four to six weeks of usual care, and why that happens.', link: true },
-      { h: 'Pressure injuries (bedsores)', p: 'Prevention, stages and warning signs in people who are bed-bound or have limited mobility.' },
-      { h: 'Diabetic foot wounds', p: 'Why a foot wound in a person with diabetes needs prompt assessment and a multidisciplinary team.' },
-      { h: 'Surgical wounds', p: 'When slow healing after an operation is a reason to contact the surgical team.' },
-      { h: 'Negative pressure wound therapy (NPWT)', p: 'How NPWT (VAC) works, who it may suit, and what follow-up it requires.' },
-      { h: 'Professional education', p: 'Training for nurses and caregivers in wound assessment, dressing selection and NPWT.' },
+      { h: 'Chronic wounds', p: 'Wounds that have not healed after four to six weeks of usual care, and why that happens.', key: 'chronic' },
+      { h: 'Pressure injuries (bedsores)', p: 'Prevention, stages and warning signs in people who are bed-bound or have limited mobility.', key: 'pressure' },
+      { h: 'Diabetic foot wounds', p: 'Why a foot wound in a person with diabetes needs prompt assessment and a multidisciplinary team.', key: 'diabeticFoot' },
+      { h: 'Surgical wounds', p: 'When slow healing after an operation is a reason to contact the surgical team.', key: 'surgical' },
+      { h: 'Negative pressure wound therapy (NPWT)', p: 'How NPWT (VAC) works, who it may suit, and what follow-up it requires.', key: 'npwt' },
+      { h: 'Professional education', p: 'Training for nurses and caregivers in wound assessment, dressing selection and NPWT.', key: 'education' },
     ],
     approachH: 'How Aissar works',
     approach: [
@@ -82,6 +85,7 @@ const copy = {
 
 const schema = pageGraph({ lang, key: 'home', type: 'WebPage', title: copy.title, description: copy.description, dateModified: '2026-10-05' });
 const ctaRef = { lang, page: 'home', placement: 'hero' };
+const featured = ['when-to-see-a-wound-care-specialist', 'pressure-injury-stages-warning-signs', 'wound-infection-warning-signs'].map((slug) => articles.find((a) => a.slug === slug)!).filter(Boolean);
 ---
 <BaseLayout lang={lang} pageKey="home" title={copy.title} description={copy.description} schema={schema} ogType="profile">
   <section class="hero">
@@ -105,7 +109,7 @@ const ctaRef = { lang, page: 'home', placement: 'hero' };
       <ul class="topic-list">
         {copy.areas.map((a) => (
           <li>
-            <h3>{a.link ? <a href={path(lang, 'chronic')}>{a.h}</a> : a.h}</h3>
+            <h3><a href={path(lang, a.key as PageKey)}>{a.h}</a></h3>
             <p>{a.p}</p>
           </li>
         ))}
@@ -132,12 +136,20 @@ const ctaRef = { lang, page: 'home', placement: 'hero' };
       <div class="prose">
         <h2 class="flush">{copy.proH}</h2>
         <p>{copy.proP}</p>
-        <p><a href={`${path(lang, 'contact')}?reason=education`} {...track('cta_click', { lang, page: 'home', placement: 'education' })}>{s.educationCta}</a></p>
+        <p><a href={path(lang, 'education')} {...track('cta_click', { lang, page: 'home', placement: 'education' })}>{lang === 'ar' ? 'تعرّف على برامج التدريب' : 'See training topics'}</a></p>
       </div>
     </div>
   </section>
 
-  <section class="section section-alt" aria-labelledby="contact-h">
+  <section class="section section-alt" aria-labelledby="articles-h">
+    <div class="wrap">
+      <h2 id="articles-h" class="flush">{lang === 'ar' ? 'مقالات تثقيفية' : 'Educational articles'}</h2>
+      <ArticleCards lang={lang} items={featured} />
+      <p><a href={path(lang, 'articles')}>{lang === 'ar' ? 'كل المقالات' : 'All articles'}</a></p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="contact-h">
     <div class="wrap prose">
       <h2 id="contact-h" class="flush">{copy.contactH}</h2>
       <p>{copy.contactP}</p>

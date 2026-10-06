@@ -1,12 +1,17 @@
 ---
 import type { Lang } from '../config/site';
 import { path, pages, type PageKey } from '../lib/routes';
-interface Props { lang: Lang; pageKey: PageKey }
-const { lang, pageKey } = Astro.props;
+interface Props { lang: Lang; pageKey?: PageKey; trail?: Array<{ name: string; path: string }> }
+const { lang, pageKey, trail } = Astro.props;
+const items = trail ?? [
+  { name: pages.home.nav[lang], path: path(lang, 'home') },
+  { name: pages[pageKey!].nav[lang], path: path(lang, pageKey!) },
+];
 ---
 <nav class="breadcrumbs" aria-label={lang === 'ar' ? 'مسار التنقل' : 'Breadcrumb'}>
   <ol>
-    <li><a href={path(lang, 'home')}>{pages.home.nav[lang]}</a></li>
-    <li><a href={path(lang, pageKey)} aria-current="page">{pages[pageKey].nav[lang]}</a></li>
+    {items.map((it, i) => (
+      <li><a href={it.path} aria-current={i === items.length - 1 ? 'page' : undefined}>{it.name}</a></li>
+    ))}
   </ol>
 </nav>

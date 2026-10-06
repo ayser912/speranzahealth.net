@@ -1,0 +1,31 @@
+---
+/**
+ * Privacy-friendly YouTube embed: shows a thumbnail + play button; the player (youtube-nocookie)
+ * loads only after a click. Pair with videoNode() schema on the same page.
+ */
+import type { Lang } from '../config/site';
+import type { Video } from '../lib/content-types';
+interface Props { lang: Lang; video: Video }
+const { lang, video } = Astro.props;
+const label = lang === 'ar' ? 'تشغيل الفيديو' : 'Play video';
+---
+<figure>
+  <div class="video" data-yt={video.youtubeId} data-title={video.title[lang]}>
+    <img src={`https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`} alt="" loading="lazy" width="480" height="360" />
+    <button type="button" aria-label={`${label}: ${video.title[lang]}`}><span>{label}</span></button>
+  </div>
+  <figcaption>{video.title[lang]}</figcaption>
+</figure>
+<script>
+  document.querySelectorAll<HTMLElement>('.video[data-yt]').forEach((box) => {
+    box.querySelector('button')?.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${box.dataset.yt}?autoplay=1&rel=0`;
+      f.title = box.dataset.title || 'Video';
+      f.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      box.replaceChildren(f);
+      (window as any).siteTrack?.('video_play', { video_id: box.dataset.yt });
+    });
+  });
+</script>

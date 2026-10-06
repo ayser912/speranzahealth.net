@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Disclosure from '../../components/Disclosure.astro';
+import ArticleCards from '../../components/ArticleCards.astro';
+import { profiles, type Lang } from '../../config/site';
+import { path, langs } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+import { t, formatDate } from '../../lib/i18n';
+import { track } from '../../lib/links';
+import { articles } from '../../content/articles/index';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const s = t(lang);
+const updated = '2026-10-06';
+const youtube = profiles.find((p) => p.id === 'youtube');
+
+const copy = {
+  ar: {
+    title: 'التعليم والتدريب في العناية بالجروح | أيسر شواقفه CWS®',
+    description: 'محاضرات وورش عمل تطبيقية للممرضين ومقدمي الرعاية والمنشآت الصحية في تقييم الجروح واختيار الضمادات وقرح الضغط والقدم السكري والعلاج بالضغط السلبي NPWT.',
+    h1: 'التعليم والتدريب في العناية بالجروح',
+    lead: 'يقدّم أيسر شواقفه، الممرض القانوني والأخصائي المعتمد في العناية بالجروح CWS®، محاضرات وورش عمل تطبيقية تساعد الفرق الصحية ومقدمي الرعاية على العناية بالجروح بثقة وأمان ووفق الدليل العلمي.',
+    topicsH: 'موضوعات التدريب',
+    topics: [
+      ['تقييم الجروح وتوثيقها', 'التاريخ الصحي، والقياس، ووصف الأنسجة والإفرازات والحواف، والتوثيق الذي يسمح بمتابعة التقدم.'],
+      ['تحضير قاع الجرح وإطار TIME', 'التعامل مع الأنسجة الميتة والعدوى والرطوبة والحواف بطريقة منظّمة.'],
+      ['اختيار الضمادات', 'اختيار الضماد حسب نوع الأنسجة وكمية الإفرازات وحالة الجلد المحيط، دون التحيز لعلامة تجارية.'],
+      ['الوقاية من قرح الضغط وتصنيفها', 'تقييم الخطر، وتغيير الوضعية، وأسطح توزيع الضغط، والتصنيف الصحيح.'],
+      ['القدم السكري', 'فحص القدم، وعلامات الخطر، وتخفيف الضغط، ومتى تكون الإحالة عاجلة.'],
+      ['أساسيات العلاج بالضغط السلبي NPWT', 'دواعي الاستعمال وموانعه، وتطبيق الضماد وإحكام إغلاقه، والتعامل مع الإنذارات.'],
+      ['التعرّف على عدوى الجروح', 'العلامات الموضعية والعامة، ومتى يجب إبلاغ الطبيب.'],
+      ['تثقيف المرضى والأسر', 'كيف تُشرح خطة العناية المنزلية بوضوح وأمان.'],
+    ],
+    audienceH: 'لمن هذا التدريب؟',
+    audience: ['الممرضون في المستشفيات والمراكز الصحية وخدمات الرعاية المنزلية.', 'طلبة التمريض.', 'مقدمو الرعاية وأفراد الأسرة الذين يعتنون بمريض في المنزل.', 'المنشآت الصحية التي ترغب في تدريب فرقها.'],
+    formatsH: 'أشكال التدريب',
+    formats: ['محاضرة أو عرض علمي.', 'ورشة عمل تطبيقية.', 'تدريب داخل المنشأة الصحية.', 'برنامج يُصمَّم حسب احتياج الفريق.'],
+    formatsNote: 'يتم الاتفاق على المحتوى والمدة واللغة (العربية أو الإنجليزية) مسبقًا مع الجهة الطالبة.',
+    approachH: 'منهج التدريب',
+    approach: 'يعتمد التدريب على الإرشادات الدولية في العناية بالجروح، ويراعي نطاق ممارسة التمريض في الأردن ومعايير وكفاءات تمريض العناية بالجروح الصادرة عن مجلس التمريض الأردني. يركّز على الحالات العملية والمهارات التي يحتاجها الممرض في عمله اليومي.',
+    ctaH: 'اطلب تدريبًا لفريقك',
+    ctaP: 'أرسل استفسارًا قصيرًا يتضمن نوع الجهة وعدد المشاركين والموضوعات التي تهمك، وسيتم التواصل معك لترتيب التفاصيل.',
+    cta: 'اطلب تدريبًا',
+    videos: 'شاهد الفيديوهات التعليمية',
+    readH: 'مقالات تعليمية للبدء',
+    updated: 'آخر تحديث',
+  },
+  en: {
+    title: 'Wound-Care Education and Training | Aissar Shawaqfeh, CWS®',
+    description: 'Lectures and hands-on workshops for nurses, caregivers and healthcare facilities on wound assessment, dressing selection, pressure injuries, diabetic foot and NPWT.',
+    h1: 'Wound-care education and training',
+    lead: 'Aissar Shawaqfeh, Registered Nurse and Certified Wound Specialist (CWS®), offers lectures and hands-on workshops that help healthcare teams and caregivers provide wound care confidently, safely and in line with the evidence.',
+    topicsH: 'Training topics',
+    topics: [
+      ['Wound assessment and documentation', 'Health history, measurement, describing tissue, exudate and edges, and documentation that makes progress visible.'],
+      ['Wound bed preparation and the TIME framework', 'A structured approach to dead tissue, infection, moisture and the wound edge.'],
+      ['Choosing dressings', 'Matching the dressing to tissue type, exudate level and surrounding skin, without brand bias.'],
+      ['Pressure injury prevention and staging', 'Risk assessment, repositioning, pressure-redistributing surfaces and accurate staging.'],
+      ['The diabetic foot', 'Foot checks, warning signs, offloading and when referral is urgent.'],
+      ['Fundamentals of negative pressure wound therapy', 'Indications and contraindications, applying and sealing the dressing, and managing alarms.'],
+      ['Recognising wound infection', 'Local and systemic signs, and when to inform the physician.'],
+      ['Educating patients and families', 'Explaining a home-care plan clearly and safely.'],
+    ],
+    audienceH: 'Who is it for?',
+    audience: ['Nurses in hospitals, healthcare centres and home-care services.', 'Nursing students.', 'Caregivers and family members looking after a patient at home.', 'Healthcare facilities that want to train their teams.'],
+    formatsH: 'Formats',
+    formats: ['A lecture or scientific talk.', 'A hands-on workshop.', 'On-site training at a healthcare facility.', 'A programme tailored to a team’s needs.'],
+    formatsNote: 'Content, duration and language (Arabic or English) are agreed in advance with the requesting organisation.',
+    approachH: 'Approach',
+    approach: 'Training is based on international wound-care guidelines and respects the nursing scope of practice in Jordan, including the wound-care nursing standards and competencies published by the Jordanian Nursing Council. It focuses on practical cases and the skills nurses need in daily work.',
+    ctaH: 'Request training for your team',
+    ctaP: 'Send a short enquiry with the type of organisation, the number of participants and the topics you are interested in, and you will be contacted to arrange the details.',
+    cta: 'Request training',
+    videos: 'Watch educational videos',
+    readH: 'Articles to start with',
+    updated: 'Last updated',
+  },
+}[lang];
+const starter = articles.filter((a) => ['choosing-wound-dressings', 'what-is-npwt-vac-therapy', 'pressure-injury-stages-warning-signs'].includes(a.slug));
+const schema = pageGraph({ lang, key: 'education', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated, aboutTopic: lang === 'ar' ? 'التدريب في العناية بالجروح' : 'Wound-care education' });
+---
+<BaseLayout lang={lang} pageKey="education" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="education" />
+    <header class="page-head prose">
+      <h1>{copy.h1}</h1>
+      <p class="page-dates">{copy.updated}: <time datetime={updated}>{formatDate(updated, lang)}</time></p>
+      <p class="lead">{copy.lead}</p>
+      <div class="actions">
+        <a class="btn btn-primary" href={`${path(lang, 'contact')}?reason=education`} {...track('cta_click', { lang, page: 'education', placement: 'intro' })}>{copy.cta}</a>
+        <a class="btn btn-secondary" href={path(lang, 'credentials')}>{s.credentialsCta}</a>
+        {youtube?.verified && <a class="btn btn-secondary" href={youtube.url} rel="noopener" {...track('outbound_profile', { lang, page: 'education', placement: 'youtube' })}>{copy.videos}</a>}
+      </div>
+    </header>
+
+    <section aria-labelledby="topics-h">
+      <h2 id="topics-h">{copy.topicsH}</h2>
+      <ul class="topic-list">
+        {copy.topics.map(([h, p]) => <li><h3>{h}</h3><p>{p}</p></li>)}
+      </ul>
+    </section>
+
+    <div class="grid-2">
+      <section class="prose" aria-labelledby="aud-h">
+        <h2 id="aud-h">{copy.audienceH}</h2>
+        <ul>{copy.audience.map((x) => <li>{x}</li>)}</ul>
+      </section>
+      <section class="prose" aria-labelledby="fmt-h">
+        <h2 id="fmt-h">{copy.formatsH}</h2>
+        <ul>{copy.formats.map((x) => <li>{x}</li>)}</ul>
+        <p>{copy.formatsNote}</p>
+      </section>
+    </div>
+
+    <section class="prose" aria-labelledby="appr-h">
+      <h2 id="appr-h">{copy.approachH}</h2>
+      <p>{copy.approach}</p>
+    </section>
+
+    <section class="callout prose" aria-labelledby="cta-h" style="margin-top:2.5rem">
+      <h2 id="cta-h" class="flush">{copy.ctaH}</h2>
+      <p>{copy.ctaP}</p>
+      <a class="btn btn-primary" href={`${path(lang, 'contact')}?reason=education`} {...track('cta_click', { lang, page: 'education', placement: 'cta' })}>{copy.cta}</a>
+    </section>
+
+    {starter.length > 0 && (
+      <section aria-labelledby="read-h">
+        <h2 id="read-h">{copy.readH}</h2>
+        <ArticleCards lang={lang} items={starter} />
+      </section>
+    )}
+
+    <Disclosure lang={lang} />
+  </div>
+</BaseLayout>

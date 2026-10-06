@@ -1,8 +1,8 @@
 ---
 import TopicPage from '../../components/TopicPage.astro';
-import data from '../../content/pages/chronic';
+import data from '../../content/pages/pressure';
 import { langs } from '../../lib/routes';
 import type { Lang } from '../../config/site';
 export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
 ---
-<TopicPage lang={Astro.params.lang as Lang} pageKey="chronic" data={data} topicName={{ ar: 'الجروح المزمنة', en: 'Chronic wounds' }} />
+<TopicPage lang={Astro.params.lang as Lang} pageKey="pressure" data={data} topicName={{ ar: 'قرح الضغط', en: 'Pressure injuries' }} />

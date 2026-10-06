@@ -1,12 +1,13 @@
 ---
 import { person, type Lang } from '../config/site';
-import { path, mainNav, pages, otherLang, type PageKey } from '../lib/routes';
+import { path, mainNav, careNav, careLabel, pages, otherLang, type PageKey } from '../lib/routes';
 import { t } from '../lib/i18n';
-interface Props { lang: Lang; pageKey?: PageKey }
-const { lang, pageKey } = Astro.props;
+interface Props { lang: Lang; pageKey?: PageKey; altHref?: string }
+const { lang, pageKey, altHref } = Astro.props;
 const s = t(lang);
 const alt = otherLang(lang);
-const altHref = path(alt, pageKey ?? 'home');
+const switchHref = altHref ?? path(alt, pageKey ?? 'home');
+const careActive = pageKey ? careNav.includes(pageKey) : false;
 ---
 <header class="site-header">
   <div class="wrap">
@@ -17,25 +18,48 @@ const altHref = path(alt, pageKey ?? 'home');
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">{s.menu}</button>
     <nav id="site-nav" class="site-nav" aria-label={lang === 'ar' ? 'القائمة الرئيسية' : 'Main'}>
       <ul>
-        {mainNav.map((k) => (
-          <li><a href={path(lang, k)} aria-current={k === pageKey ? 'page' : undefined}>{pages[k].nav[lang]}</a></li>
-        ))}
+        {mainNav.map((k) =>
+          k === 'care' ? (
+            <li class="has-sub">
+              <button type="button" class="sub-toggle" aria-expanded="false" aria-controls="sub-care" data-active={careActive ? 'true' : undefined}>
+                {careLabel[lang]}<svg aria-hidden="true" viewBox="0 0 12 12" width="12" height="12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+              </button>
+              <ul id="sub-care" class="sub">
+                {careNav.map((c) => (
+                  <li><a href={path(lang, c)} aria-current={c === pageKey ? 'page' : undefined}>{pages[c].nav[lang]}</a></li>
+                ))}
+              </ul>
+            </li>
+          ) : (
+            <li><a href={path(lang, k)} aria-current={k === pageKey ? 'page' : undefined}>{pages[k].nav[lang]}</a></li>
+          ),
+        )}
       </ul>
     </nav>
-    <a class="lang-switch" href={altHref} hreflang={alt === 'ar' ? 'ar-JO' : 'en-JO'} lang={alt} aria-label={s.switchLangLabel}>{s.switchLang}</a>
+    <a class="lang-switch" href={switchHref} hreflang={alt === 'ar' ? 'ar-JO' : 'en-JO'} lang={alt} aria-label={s.switchLangLabel}><span class="ls-long">{s.switchLang}</span><span class="ls-short" aria-hidden="true">{alt === 'en' ? 'EN' : 'ع'}</span></a>
   </div>
 </header>
 <script>
   const btn = document.querySelector<HTMLButtonElement>('.nav-toggle');
   const nav = document.getElementById('site-nav');
+  const subBtn = document.querySelector<HTMLButtonElement>('.sub-toggle');
+  const sub = document.getElementById('sub-care');
+  const setSub = (open: boolean) => { if (subBtn && sub) { subBtn.setAttribute('aria-expanded', String(open)); sub.classList.toggle('open', open); } };
   if (btn && nav) {
     btn.addEventListener('click', () => {
       const open = btn.getAttribute('aria-expanded') === 'true';
       btn.setAttribute('aria-expanded', String(!open));
       nav.classList.toggle('open', !open);
     });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && nav.classList.contains('open')) { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.focus(); }
-    });
   }
+  if (subBtn && sub) {
+    subBtn.addEventListener('click', (e) => { e.stopPropagation(); setSub(subBtn.getAttribute('aria-expanded') !== 'true'); });
+    document.addEventListener('click', (e) => { if (!subBtn.parentElement?.contains(e.target as Node)) setSub(false); });
+    sub.addEventListener('focusout', (e) => { if (!subBtn.parentElement?.contains(e.relatedTarget as Node)) setSub(false); });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (sub?.classList.contains('open')) { setSub(false); subBtn?.focus(); return; }
+    if (btn && nav?.classList.contains('open')) { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.focus(); }
+  });
 </script>

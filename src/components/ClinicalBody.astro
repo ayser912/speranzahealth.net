@@ -1,0 +1,113 @@
+---
+/**
+ * Shared body for every clinical page and article: title block, author/dates, educational note,
+ * table of contents, sections, optional video, CTA, related pages/articles, references, disclosure.
+ * Guarantees the trust elements required on every medical page.
+ */
+import AuthorBox from './AuthorBox.astro';
+import References from './References.astro';
+import Disclosure from './Disclosure.astro';
+import VideoEmbed from './VideoEmbed.astro';
+import ArticleCards from './ArticleCards.astro';
+import ContactActions from './ContactActions.astro';
+import { flags, type Lang } from '../config/site';
+import { path, pages, type PageKey } from '../lib/routes';
+import { t } from '../lib/i18n';
+import { track } from '../lib/links';
+import type { ClinicalPageData, Article } from '../lib/content-types';
+
+interface Props {
+  lang: Lang;
+  data: ClinicalPageData;
+  /** analytics/ref id for this page */
+  refId: string;
+  relatedArticles?: Article[];
+  /** hub page for an article (shown as "Back to …") */
+  hub?: PageKey;
+}
+const { lang, data, refId, relatedArticles = [], hub } = Astro.props;
+const s = t(lang);
+const c = data[lang];
+const L = lang === 'ar'
+  ? { toc: 'محتويات الصفحة', related: 'صفحات ذات صلة', relArticles: 'مقالات ذات صلة', ctaH: 'تواصل مهني', ctaP: 'للكوادر الصحية والمنشآت: للاستفسار عن التدريب أو التعاون المهني في هذا المجال.', patientsP: 'للمرضى والأسر: ناقش أي تغيير في خطة العناية مع الطبيب المعالج أو الفريق الصحي المسؤول عنك.', assessP: 'لتنسيق تقييم أو إحالة مناسبة:', hubLabel: 'العودة إلى' }
+  : { toc: 'On this page', related: 'Related pages', relArticles: 'Related articles', ctaH: 'Professional contact', ctaP: 'For healthcare professionals and facilities: ask about training or professional collaboration in this area.', patientsP: 'For patients and families: discuss any change to your care plan with your treating doctor or care team.', assessP: 'To coordinate an appropriate assessment or referral:', hubLabel: 'Back to' };
+---
+<article>
+  <header class="page-head prose">
+    <h1>{c.h1}</h1>
+    <p class="lead">{c.lead}</p>
+  </header>
+  <AuthorBox lang={lang} published={data.published} reviewed={data.reviewed} medicalReviewer={data.medicalReviewer ?? null} />
+  <div class="callout prose" role="note"><p>{s.educationalNote}</p></div>
+
+  {c.sections.length > 2 && (
+    <nav class="prose toc" aria-labelledby={`toc-h`}>
+      <h2 id="toc-h" class="toc-title">{L.toc}</h2>
+      <ul>{c.sections.map((sec) => <li><a href={`#${sec.id}`}>{sec.h}</a></li>)}</ul>
+    </nav>
+  )}
+
+  {c.sections.map((sec) => (
+    <section class="prose" id={sec.id} aria-labelledby={`${sec.id}-h`}>
+      <h2 id={`${sec.id}-h`}>{sec.h}</h2>
+      <div class={sec.warn ? 'callout callout-warn' : undefined}>
+        {sec.body?.map((p) => <p set:html={p} />)}
+        {sec.list?.intro && <p set:html={sec.list.intro} />}
+        {sec.list && (sec.list.ordered
+          ? <ol>{sec.list.items.map((i) => <li set:html={i} />)}</ol>
+          : <ul>{sec.list.items.map((i) => <li set:html={i} />)}</ul>)}
+      </div>
+      {sec.table && (
+        <table class="data stack">
+          <caption>{sec.table.caption}</caption>
+          <thead><tr>{sec.table.head.map((h) => <th scope="col">{h}</th>)}</tr></thead>
+          <tbody>{sec.table.rows.map((r) => <tr>{r.map((cell, i) => (i === 0 ? <th scope="row" data-label={sec.table!.head[i]}>{cell}</th> : <td data-label={sec.table!.head[i]} set:html={cell} />))}</tr>)}</tbody>
+        </table>
+      )}
+      {sec.subs?.map((sub) => (
+        <Fragment>
+          <h3>{sub.h}</h3>
+          {sub.body?.map((p) => <p set:html={p} />)}
+          {sub.list && <ul>{sub.list.map((i) => <li set:html={i} />)}</ul>}
+        </Fragment>
+      ))}
+      {sec.after?.map((p) => <p set:html={p} />)}
+    </section>
+  ))}
+
+  {data.video && <VideoEmbed lang={lang} video={data.video} />}
+
+  <section class="prose" aria-labelledby="cta-h">
+    <h2 id="cta-h">{L.ctaH}</h2>
+    <p>{L.patientsP}</p>
+    <p>{L.ctaP}</p>
+    <div class="actions">
+      <a class="btn btn-primary" href={`${path(lang, 'contact')}?reason=education`} {...track('cta_click', { lang, page: refId, placement: 'cta-education' })}>{s.educationCta}</a>
+      <a class="btn btn-secondary" href={path(lang, 'credentials')} {...track('cta_click', { lang, page: refId, placement: 'cta-credentials' })}>{s.credentialsCta}</a>
+    </div>
+    {flags.patientServicesConfirmed && (
+      <Fragment>
+        <p>{L.assessP}</p>
+        <ContactActions lang={lang} page={refId} placement="cta-assessment" show={['whatsapp', 'call']} />
+      </Fragment>
+    )}
+  </section>
+
+  {relatedArticles.length > 0 && (
+    <section aria-labelledby="relart-h">
+      <h2 id="relart-h">{L.relArticles}</h2>
+      <ArticleCards lang={lang} items={relatedArticles} />
+    </section>
+  )}
+
+  <section class="prose" aria-labelledby="related-h">
+    <h2 id="related-h">{L.related}</h2>
+    <ul>
+      {hub && <li><a href={path(lang, hub)}>{L.hubLabel} {pages[hub].nav[lang]}</a></li>}
+      {data.related.filter((k) => k !== hub).map((k) => <li><a href={path(lang, k)}>{pages[k].nav[lang]}</a></li>)}
+    </ul>
+  </section>
+
+  <References lang={lang} items={data.refs} />
+  <Disclosure lang={lang} />
+</article>

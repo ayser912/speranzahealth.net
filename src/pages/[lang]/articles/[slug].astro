@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import ClinicalBody from '../../../components/ClinicalBody.astro';
+import { articles, articleBySlug, articlePath } from '../../../content/articles/index';
+import { langs, pages, path } from '../../../lib/routes';
+import { docGraph, articleNode, videoNode, abs } from '../../../lib/schema';
+import type { Lang } from '../../../config/site';
+
+export function getStaticPaths() {
+  return langs.flatMap((lang) => articles.map((a) => ({ params: { lang, slug: a.slug } })));
+}
+const lang = Astro.params.lang as Lang;
+const a = articleBySlug(Astro.params.slug!)!;
+const c = a[lang];
+const p = articlePath(lang, a.slug);
+const trail = [
+  { name: pages.home.nav[lang], path: path(lang, 'home') },
+  { name: pages.articles.nav[lang], path: path(lang, 'articles') },
+  { name: c.card ?? c.h1, path: p },
+];
+const extra: Array<Record<string, unknown>> = [
+  articleNode({ lang, url: abs(p), headline: c.h1, description: c.description, datePublished: a.published, dateModified: a.reviewed, image: abs(`/og/${lang}.png`) }),
+];
+if (a.video) extra.push(videoNode(lang, p, a.video));
+const schema = docGraph({
+  lang, path: p, type: 'MedicalWebPage', title: c.title, description: c.description,
+  datePublished: a.published, dateModified: a.reviewed, lastReviewed: a.reviewed,
+  aboutTopic: pages[a.topic].nav[lang], trail, extra, reviewedBy: a.medicalReviewer ?? null,
+});
+const related = a.relatedArticles.map((s) => articleBySlug(s)).filter((x): x is NonNullable<typeof x> => !!x);
+---
+<BaseLayout lang={lang} paths={{ ar: articlePath('ar', a.slug), en: articlePath('en', a.slug) }} navKey="articles" title={c.title} description={c.description} schema={schema} ogType="article">
+  <div class="wrap">
+    <Breadcrumbs lang={lang} trail={trail} />
+    <ClinicalBody lang={lang} data={a} refId={`article-${a.slug}`} relatedArticles={related} hub={a.topic} />
+  </div>
+</BaseLayout>

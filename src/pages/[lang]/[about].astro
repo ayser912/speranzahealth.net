@@ -19,6 +19,7 @@ const s = t(lang);
 const yrs = yearsExperience();
 const updated = '2026-10-05';
 const linkedin = profiles.find((p) => p.id === 'linkedin')!;
+const focusKeys = ['chronic', 'pressure', 'diabeticFoot', 'surgical', 'npwt', 'education'] as const;
 
 const copy = {
   ar: {
@@ -120,7 +121,7 @@ const schema = pageGraph({ lang, key: 'about', type: 'ProfilePage', title: copy.
       <section class="prose" aria-labelledby="focus-h">
         <h2 id="focus-h" class="flush">{copy.focusH}</h2>
         <ul>
-          {copy.focus.map((f, i) => <li>{i === 0 ? <a href={path(lang, 'chronic')}>{f}</a> : f}</li>)}
+          {copy.focus.map((f, i) => <li><a href={path(lang, focusKeys[i])}>{f}</a></li>)}
         </ul>
       </section>
     </div>
