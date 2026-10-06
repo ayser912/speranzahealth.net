@@ -45,12 +45,37 @@ Confirmed by Ayser on 6 October 2026: **أيسر شواقفه** (Arabic) and **A
 
 To change the name again: edit `person.name`, `siteName` and `aboutSlug` in `src/config/site.ts`, move the old slug into `aboutSlugAliases`, search the page files for the old spelling, regenerate the OG images (`node scripts/make-og.mjs`) and run `npm test`.
 
-## Adding a page (Phase 2)
+## Editing clinical content
 
-1. In `src/lib/routes.ts`, set `built: true` for the page key (e.g. `pressure`) and add it to `mainNav`/`footerNav` if wanted.
-2. Create `src/pages/[lang]/<slug>.astro`. Copy `chronic-wound-care-jordan.astro` as the template: it already includes the breadcrumbs, author box, dates, educational note, references and disclosure.
-3. Use `type: 'MedicalWebPage'` in `pageGraph()` for clinical pages.
-4. Run `npm test`. The sitemap, hreflang and link checks update automatically.
+Clinical pages and articles are **data files**: Arabic and English copy sit side by side and share section ids. One template (`src/components/ClinicalBody.astro`) adds the author box, dates, educational note, contents list, warning callouts, related links, references and disclosure to every one of them.
+
+| Content | File |
+| --- | --- |
+| Topic pages (chronic, pressure, diabetic foot, surgical, NPWT) | `src/content/pages/*.ts` |
+| Articles | `src/content/articles/NN-slug.ts` (picked up automatically) |
+| Shared references | `src/content/refs.ts` |
+| Education page | `src/pages/[lang]/wound-care-education.astro` |
+
+**After editing clinical text**, update `reviewed` (the date of the real review) in that file. It is shown on the page and in the schema.
+
+### Adding an article
+
+1. Copy an existing file in `src/content/articles/`, give it the next number and a new English `slug`.
+2. Set `topic` (the hub page it belongs to), `order`, `relatedArticles`, `refs` and both `ar` and `en` copies. Keep titles at or under 65 characters and descriptions at or under 160.
+3. Only fill `medicalReviewer` with a physician who has agreed in writing to be named.
+4. Run `npm test`. The article index, related-article cards on the hub page, sitemap and hreflang update automatically.
+
+### Adding a video
+
+Add a `video` object (`youtubeId`, titles and descriptions in both languages, `uploadDate`, ISO `duration`) to a page or article. It renders a privacy-friendly player that loads YouTube (no-cookie) only after a click, and emits `VideoObject` schema. Only use original videos. When the channel exists, set the YouTube profile to `verified: true` so the "Watch educational videos" button appears on the Education page.
+
+## Review copy (preview without a server)
+
+```bash
+npm run build
+python3 scripts/export-review.py /tmp/review   # relative-link copy of dist/, marked noindex
+python3 scripts/review-hub.py /tmp/review      # adds a hub page listing every page in both languages
+```
 
 ## Environment variables
 
@@ -96,7 +121,10 @@ src/
   lib/links.ts            WhatsApp/phone/email links with ref codes + UTM helper
   layouts/BaseLayout.astro  <head>: SEO, hreflang, OG, fonts, JSON-LD
   components/             Header, Footer, EmergencyBar, AuthorBox, References, Disclosure, …
-  pages/[lang]/           Arabic + English pages (one file per page, both languages)
+  content/pages/          topic-page copy (AR + EN data)
+  content/articles/       article copy (AR + EN data), index.ts collects them
+  content/refs.ts         verified references
+  pages/[lang]/           Arabic + English routes (articles under pages/[lang]/articles/)
   pages/sitemap.xml.ts, robots.txt.ts, 404.astro
 public/fonts/             self-hosted IBM Plex Sans Arabic (400/600/700) + Inter variable
 public/og/                1200×630 sharing images

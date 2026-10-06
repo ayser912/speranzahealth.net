@@ -1,104 +1,107 @@
-# Implementation report — Phase 1
+# Implementation report — Phases 1, 2 and 3
 
 **Project:** Official website of Aissar Shawaqfeh (أيسر شواقفه), RN, CWS®, at speranzahealth.net
-**Date:** 5 October 2026
-**Status:** Phase 1 complete, built and tested. Not yet deployed: hosting and DNS need your accounts.
+**Date:** 6 October 2026
+**Status:** All three phases are built, tested and committed. A private review copy is published for Aissar to browse. The site is not live yet: that needs hosting and DNS access.
 
-## 1. Starting point
+## 1. What exists now
 
-- There was no existing website repository. The only source material was `Ayser_Shawaqfeh_SEO_Plan_2026.docx`, plus the facts Ayser confirmed in conversation (domain, email, WhatsApp, education, career, certificates, profiles).
-- Stack chosen: **Astro 7** static site with no UI framework and self-hosted fonts. This was the simplest way to hit the Lighthouse targets and make Arabic right-to-left a first-class layout.
+**48 indexable pages**: 24 in Arabic (RTL, the primary version) and 24 in English (LTR), plus a bilingual 404.
 
-## 2. Completed in Phase 1
+| Section | Pages (each in AR + EN) |
+| --- | --- |
+| Core | Home · About Aissar Shawaqfeh · Credentials and verification · Contact · Privacy policy · Medical disclaimer |
+| Wound care (menu group) | Chronic wound care in Jordan · Pressure injuries · Diabetic foot wounds · Surgical wound care · NPWT / VAC |
+| Education | Wound-care education and training |
+| Articles | Articles index + 11 articles |
 
-### Architecture
-- Arabic and English routes `/ar/…` and `/en/…` with identical slugs. `/` redirects 301 to `/ar/` (Arabic first).
-- **One configuration file** (`src/config/site.ts`) for every professional and contact fact.
-- **One page registry** (`src/lib/routes.ts`) for slugs, navigation, sitemap and redirects.
-- **One central schema system** (`src/lib/schema.ts`), so the Person is defined once and referenced by `@id` on every page.
-- Feature flags keep unconfirmed services switched off: patient services, home-visits page and Organization schema.
+### Articles (initial topics 1–11)
 
-### Pages (Arabic and English, 14 indexable pages)
+| # | Article | Hub page |
+| --- | --- | --- |
+| 1 | When should you see a wound-care specialist? | Chronic wounds |
+| 2 | Why does a chronic wound fail to heal? (TIME / TIMERS) | Chronic wounds |
+| 3 | Pressure injury stages and warning signs | Pressure injuries |
+| 4 | Diabetic foot wounds: common mistakes to avoid | Diabetic foot |
+| 5 | What is VAC therapy? What to expect during NPWT | NPWT |
+| 6 | Wound infection warning signs you should not ignore | Chronic wounds |
+| 7 | Choosing wound dressings by tissue type and exudate | Chronic wounds |
+| 8 | Wound care after surgery: a practical guide for home | Surgical wounds |
+| 9 | Venous and arterial leg ulcers: what is the difference? | Chronic wounds |
+| 10 | How to prepare for a wound-care assessment | Chronic wounds |
+| 11 | Common mistakes in home wound care | Chronic wounds |
 
-| Page | Arabic | English | Schema type |
-| --- | --- | --- | --- |
-| Home | `/ar/` | `/en/` | WebPage |
-| About Aissar Shawaqfeh | `/ar/about-aissar-shawaqfeh/` | `/en/about-aissar-shawaqfeh/` | ProfilePage → Person |
-| Credentials & verification | `/ar/credentials/` | `/en/credentials/` | AboutPage → Person |
-| Chronic wound care in Jordan | `/ar/chronic-wound-care-jordan/` | `/en/chronic-wound-care-jordan/` | MedicalWebPage |
-| Contact | `/ar/contact/` | `/en/contact/` | ContactPage |
-| Privacy policy | `/ar/privacy-policy/` | `/en/privacy-policy/` | WebPage |
-| Medical disclaimer | `/ar/medical-disclaimer/` | `/en/medical-disclaimer/` | WebPage |
-| 404 (bilingual, noindex) | `/404.html` | | none |
+**Topic 12, an anonymised wound-care journey, is not written.** It needs the patient's documented written consent and de-identified material first.
 
-The homepage title, H1 and meta description follow the project brief. The English meta description was shortened to 152 characters so it isn't truncated in search results.
+## 2. Work completed
 
-### Trust and medical safety
-- An emergency notice (nearest ER or 911) appears on every page, plus a stronger version on the Contact page.
-- The clinical page carries an author box (name, RN, CWS®, link to credentials), the publication date, the last-review date, a medical-review statement, an educational-purpose note, scope-of-practice wording, six primary references and the professional disclosure.
-- The industry-role disclosure appears on the About page, the clinical page and the disclaimer, and in the footer.
-- Claims were checked against the brief's restrictions: Ayser is never called a physician, there is no Physician schema, no "best/first/only", no promised outcomes, and no testimonials or statistics.
+### Phase 1: foundation (5–6 October)
+- Astro static site with Arabic and English routes, and a single settings file for every fact, contact detail and flag.
+- A central schema builder; core pages; technical SEO (canonical, hreflang ar-JO / en-JO / x-default, Open Graph, sitemap, robots.txt, 404, 301 redirects).
+- A consent-gated GA4 setup; a privacy-first contact form; bilingual sharing images.
+- The public name changed to **أيسر شواقفه / Aissar Shawaqfeh**. The old About URL redirects, and the old spellings are kept only as schema `alternateName`.
 
-### Conversion
-- WhatsApp, call and email buttons. Every link carries a `ref` code identifying its page and placement, plus GA4 event attributes.
-- Contact form with first name, city, reason, preferred method and consent. It runs client-side validation with accessible error messages, stores no data, and opens a pre-filled WhatsApp message or email.
-- `?reason=education` pre-selects the training reason. The education CTAs on Home, About and Chronic use it.
+### Phase 2: topic pages and article system
+- Five clinical topic pages and the education page, built on one shared clinical template.
+- That template puts the author box (name, RN, CWS®, link to credentials), the publication and last-review dates, a medical-review statement, an educational note, a contents list, amber emergency callouts, the professional CTA, related pages, related articles, references and the industry disclosure on **every** clinical page and article.
+- **Article system:** each article is one data file holding both languages. The system builds the article pages, the index grouped by topic, related-article cards on the hub pages, three-level breadcrumbs, `Article` + `MedicalWebPage` + `BreadcrumbList` schema, and an `ItemList` on the index.
+- **Navigation:** an accessible "Wound care" dropdown (keyboard, Esc and outside-click close it; it expands inline on mobile; without JavaScript it shows as a list). The footer now has a wound-care column. Every required page is reachable from the menu.
 
-### Technical SEO
-- A unique title and meta description on every page, plus canonical, hreflang `ar-JO` / `en-JO` / `x-default`, Open Graph and Twitter tags, and 1200×630 sharing images in Arabic and English.
-- `sitemap.xml` with hreflang alternates, `robots.txt` and a custom 404.
-- 301 redirects in `_redirects` (Netlify/Cloudflare) and `vercel.json`, plus HTML fallbacks. These cover `/`, `/about/`, `/contact/` and the old and alternate About spellings (`about-ayser-shawaqfeh`, `about-aysar-shawaqfeh`).
-- Semantic HTML with one H1 per page, breadcrumbs (visible and in schema), and no thin placeholder pages: Phase 2 topics are listed without links until their pages exist.
-- Search Console verification and GA4 run on environment variables. GA4 is consent-gated: no requests and no cookies before *Accept*.
+### Phase 3: content, linking, video readiness
+- 11 articles, written Arabic first with professionally edited English (not literal translation). Each one cites primary sources.
+- **Internal linking:** in-text links between topic pages and articles, "Related articles" cards, a "Back to [hub]" link on every article, homepage cards for every area plus featured articles, and About-page focus areas linked to their pages.
+- **Video:** a privacy-friendly YouTube component (loads youtube-nocookie only on click) plus `VideoObject` schema. Both stay inactive until an original video exists. The "Watch educational videos" button appears automatically once the YouTube profile is marked verified.
+- **Conversion events:** `video_play` added to the existing WhatsApp, phone, email, CTA and lead events.
 
-## 3. Test results (all run on the production build)
+### References used (verified sources)
+These are the EPUAP/NPIAP/PPPIA guideline (4th edition, 2026) and the NPIAP staging paper; IWGDF 2023; IWII 2022; WUWHS exudate consensus 2019; EWMA NPWT document 2017; NICE NG125; WHO SSI guidelines 2018; ESVS 2022 venous guidelines; the Global Vascular Guidelines on CLTI (2019); Atkin TIMERS 2019; Schultz 2003; Frykberg & Banks 2015; and the Jordanian Nursing Council standards.
+
+## 3. Test results (production build, 6 October 2026)
 
 | Check | Result |
 | --- | --- |
-| `npm run build` | Passes, 0 errors |
-| Internal links and anchors (`check:links`) | 389 links across 24 HTML files, **0 broken** |
-| SEO and structured data (`check:schema`) | 14 pages, 14 sitemap URLs, **0 errors**: JSON-LD valid, no forbidden types, no dangling `@id`, 1 H1 per page, unique titles and descriptions, reciprocal hreflang |
-| axe-core (WCAG 2.2 AA + best practice) | **0 violations** on all pages |
-| Lighthouse mobile, English pages | 100 / 100 / 100 / 100 (Performance / Accessibility / Best Practices / SEO) |
-| Lighthouse mobile, Arabic pages | 98–99 / 100 / 100 / 100. CLS 0, LCP about 2.0 s under Lighthouse's simulated slow 4G |
-| Mobile layout at 390 px | No horizontal overflow on any page (checked by script and screenshots) |
-| Keyboard | Skip link is the first focus stop; visible focus ring; Esc closes the mobile menu |
-| Form | Empty submit shows 5 errors and focuses the first; invalid names are rejected; a valid submit produces the correct WhatsApp message; without JavaScript the form hides and direct links remain |
-| Consent | Without consent: 0 Google requests and 0 cookies. After *Accept*, GA loads and the choice persists; *Decline* persists |
+| Build | Passes: 49 pages, 0 errors |
+| Internal links and anchors | 2,263 links across 58 HTML files, **0 broken** |
+| SEO and structured data | 48 pages, 48 sitemap URLs, **0 errors**, 0 warnings. Titles ≤ 65 characters, descriptions ≤ 160, one H1 per page, no skipped heading levels, reciprocal hreflang, no Physician or LocalBusiness types |
+| axe-core (WCAG 2.2 AA + best practice), all 48 pages | **0 violations** |
+| Mobile at 390 px, all 48 pages | 0 horizontal overflow, 0 JavaScript errors |
+| Lighthouse mobile (sample of every page type) | English 100/100/100/100; Arabic 99/100/100/100; CLS 0 everywhere |
+| Claims review | No "best / first / only / guaranteed" claims about Aissar; no physician wording; no invented services, partners, testimonials or statistics |
 
-**Why Arabic Performance is 98–99, not 100:** Arabic pages preload three Arabic font weights plus Inter (about 180 KB) so the text doesn't jump when fonts arrive (CLS went from 0.34 to 0). That download pushes simulated LCP to about 2.0 s. The figures will improve on a CDN, and they're well above the target of 90.
+Arabic Performance is 99 rather than 100 because Arabic pages preload three Arabic font weights so the text doesn't shift when fonts arrive.
 
-**Not yet testable here:** Google's Rich Results Test and the live Core Web Vitals field data both need the site to be deployed on its public URL.
+## 4. Assumptions
 
-## 4. Assumptions made
+1. The public name is أيسر شواقفه / Aissar Shawaqfeh, confirmed 6 October 2026.
+2. **Patient services stay off** (`patientServicesConfirmed: false`): no home-visits page, no assessment-booking CTA, no LocalBusiness schema. Clinical pages tell patients to discuss their care with their treating team, and offer professionals training and contact.
+3. **Training is described generically** (topics, audiences, formats). No institutions, durations or prices are named because none were given.
+4. **Al-Wafi is named in the disclosure** (`src/lib/i18n.ts`). Change it if the employer prefers not to be named.
+5. **Emergency number 911.**
+6. **No physician reviewer is listed.** Pages state that they contain no diagnostic or prescribing guidance requiring physician review. A named reviewer can be added per page, with their written agreement.
 
-1. **Public name: أيسر شواقفه / Aissar Shawaqfeh**, confirmed by Ayser on 6 October 2026 (the English spelling matches the CWS® certificate). Earlier spellings stay in schema `alternateName` only. LinkedIn and Instagram still use "ayser" in their URLs. Updating their display names to match is recommended (see the identity pack).
-2. **Patient services are off** (`patientServicesConfirmed: false`), because no licensed pathway has been confirmed yet. That means no home-visits page, no "book an assessment" CTA, and no LocalBusiness or Organization schema.
-3. **Contact details** (aissar@speranzahealth.net, +962 79 883 9394) were taken from Ayser's message of 5 October 2026.
-4. **Experience** is described as "about 9 years" and computed from the 2017 start year, so it updates automatically each year.
-5. **Training offer:** the site says Ayser offers lectures and workshops for healthcare teams. It does not name institutions, because none were given.
-6. **Al-Wafi** is named in the disclosure. If the employer doesn't allow that, change it to "a medical supplies distributor in Jordan" in `src/lib/i18n.ts`.
-7. **Emergency number 911** (Jordan's unified emergency number).
-
-## 5. Information still required from Ayser
+## 5. Information still required from Aissar
 
 | # | Item | Where it goes |
 | --- | --- | --- |
-| 1 | Are direct patient services provided now? Through which licensed entity or licence? | `flags.patientServicesConfirmed`, `flags.homeVisitsPage` |
+| 1 | Are direct patient services provided now, and through which licensed entity or licence? | `flags.patientServicesConfirmed`, `flags.homeVisitsPage` |
 | 2 | Is Speranza Health a registered organisation? | `flags.organizationConfirmed` |
 | 3 | Confirmed service areas beyond Amman | `contact.serviceAreas` |
 | 4 | Response hours | `contact.hours` |
-| 5 | Approved professional photo, plus a landscape photo | `person.photo`, About page, OG images |
-| 6 | Direct ABWM directory link for your listing | `credentials → cws.verifyUrl` |
-| 7 | Publishable nursing-licence wording (body, year) | `nursingLicence` |
+| 5 | Approved professional photos | `person.photo`, About page, sharing images |
+| 6 | Your direct ABWM directory listing link | `credentials → cws.verifyUrl` |
+| 7 | Publishable nursing-licence wording | `nursingLicence` |
 | 8 | Issuer of the Key Account Management certificate | `credentials → kam.issuer` |
-| 9 | YouTube channel URL | `profiles → youtube` (set `verified: true`) |
+| 9 | YouTube channel URL, and any original videos | `profiles → youtube`; `video` field on pages or articles |
 | 10 | GA4 measurement ID and Search Console token | host environment variables |
-| 11 | Al-Wafi permission to be named, and to do outside clinical work | `i18n.ts → disclosure` |
-| 12 | Hosting account (Cloudflare Pages recommended) and DNS access for speranzahealth.net | deployment |
+| 11 | Al-Wafi's permission to be named, and to do outside clinical work | `i18n.ts → disclosure` |
+| 12 | Hosting account (Cloudflare Pages recommended) and DNS access | deployment |
+| 13 | Written consent and material for article 12, if wanted | new article file |
+| 14 | A physician willing to be named as medical reviewer (optional) | `medicalReviewer` on relevant pages |
 
-## 6. Next: Phase 2 and Phase 3
+## 6. Next steps
 
-- **Phase 2:** Pressure injuries, Diabetic foot, Surgical wounds, NPWT/VAC, Education & training, and the article system with an index, the author block, Article + BreadcrumbList schema, and per-article references and review dates. The templates and schema builders (`articleNode`) are ready.
-- **Phase 3:** the 12 initial articles (topic 12 only with written consent), video embeds with VideoObject, a deeper internal-linking pass, the home-visits page if confirmed, and a re-run of Lighthouse on the live domain.
-- The **Google Business Profile** is prepared in `docs/google-business-profile.md`. It has not been created.
+1. Aissar reviews the published review copy and sends corrections.
+2. Deploy to Cloudflare Pages, connect speranzahealth.net, add the GA4 and Search Console values, and submit the sitemap.
+3. Re-run Lighthouse and the Rich Results Test on the live domain.
+4. Update the LinkedIn and Instagram display names to the new spelling, and link both to the site.
+5. Afterwards, publish new articles every two weeks (see the README).
