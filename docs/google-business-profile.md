@@ -18,7 +18,7 @@ No profile has been created. Create one only after the eligibility checks below 
 
 Use your real-world name exactly as it appears on your documents, signage and invoices, with **no keywords**:
 
-- If Speranza Health is **not** a registered business: **Ayser Shawaqfeh** (or Aissar Shawaqfeh, if you switch the public spelling).
+- If Speranza Health is **not** a registered business: **Aissar Shawaqfeh** (Arabic: أيسر شواقفه).
 - If Speranza Health **is** a registered business with signage or invoices: **Speranza Health**.
 
 Never add words like "best wound specialist in Jordan" or "wound care Amman" to the name.
@@ -35,7 +35,7 @@ Do **not** choose Doctor, Physician or any physician specialty.
 
 ## 4. Description (Arabic, 750 characters max)
 
-> آيسر شواقفة ممرض قانوني وأخصائي معتمد في العناية بالجروح (CWS®) من American Board of Wound Management. يقدّم زيارات منزلية للعناية بالجروح في عمّان: الجروح المزمنة، قرح الضغط، جروح القدم السكري، الجروح الجراحية، ومتابعة العلاج بالضغط السلبي NPWT. يعمل بالتنسيق مع الطبيب المعالج، ويركز على التقييم المبني على الدليل وتعليم المريض والأسرة. يقدّم أيضًا تدريبًا للممرضين ومقدمي الرعاية. للحالات الطارئة يرجى التوجه إلى أقرب قسم طوارئ. Registered Nurse and Certified Wound Specialist offering home wound care visits in Amman, Jordan.
+> أيسر شواقفه ممرض قانوني وأخصائي معتمد في العناية بالجروح (CWS®) من American Board of Wound Management. يقدّم زيارات منزلية للعناية بالجروح في عمّان: الجروح المزمنة، قرح الضغط، جروح القدم السكري، الجروح الجراحية، ومتابعة العلاج بالضغط السلبي NPWT. يعمل بالتنسيق مع الطبيب المعالج، ويركز على التقييم المبني على الدليل وتعليم المريض والأسرة. يقدّم أيضًا تدريبًا للممرضين ومقدمي الرعاية. للحالات الطارئة يرجى التوجه إلى أقرب قسم طوارئ. Registered Nurse and Certified Wound Specialist offering home wound care visits in Amman, Jordan.
 
 ## 5. Other fields
 

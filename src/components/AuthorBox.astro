@@ -6,7 +6,7 @@ import { t, formatDate } from '../lib/i18n';
 interface Props { lang: Lang; published: string; reviewed: string; medicalReviewer?: { name: string; title: string } | null }
 const { lang, published, reviewed, medicalReviewer = null } = Astro.props;
 const s = t(lang);
-const initials = lang === 'ar' ? 'آ ش' : 'AS';
+const initials = lang === 'ar' ? 'أ ش' : 'AS';
 ---
 <aside class="author-box" aria-label={lang === 'ar' ? 'عن الكاتب' : 'About the author'}>
   <div class="author-initials" aria-hidden="true">{initials}</div>

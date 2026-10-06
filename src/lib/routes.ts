@@ -18,7 +18,7 @@ interface PageDef {
 
 export const pages: Record<PageKey, PageDef> = {
   home: { slug: '', nav: { ar: 'الرئيسية', en: 'Home' }, built: true, priority: 1.0 },
-  about: { slug: person.aboutSlug, nav: { ar: 'عن آيسر', en: 'About Ayser' }, built: true, priority: 0.9 },
+  about: { slug: person.aboutSlug, nav: { ar: 'عن أيسر', en: 'About Aissar' }, built: true, priority: 0.9 },
   credentials: { slug: 'credentials', nav: { ar: 'المؤهلات', en: 'Credentials' }, built: true, priority: 0.8 },
   chronic: { slug: 'chronic-wound-care-jordan', nav: { ar: 'الجروح المزمنة', en: 'Chronic wounds' }, built: true, priority: 0.9 },
   contact: { slug: 'contact', nav: { ar: 'التواصل', en: 'Contact' }, built: true, priority: 0.7 },

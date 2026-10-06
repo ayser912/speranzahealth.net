@@ -1,6 +1,6 @@
 # Implementation report — Phase 1
 
-**Project:** Official website of Ayser Shawaqfeh, RN, CWS®, at speranzahealth.net
+**Project:** Official website of Aissar Shawaqfeh (أيسر شواقفه), RN, CWS®, at speranzahealth.net
 **Date:** 5 October 2026
 **Status:** Phase 1 complete, built and tested. Not yet deployed: hosting and DNS need your accounts.
 
@@ -23,7 +23,7 @@
 | Page | Arabic | English | Schema type |
 | --- | --- | --- | --- |
 | Home | `/ar/` | `/en/` | WebPage |
-| About Ayser Shawaqfeh | `/ar/about-ayser-shawaqfeh/` | `/en/about-ayser-shawaqfeh/` | ProfilePage → Person |
+| About Aissar Shawaqfeh | `/ar/about-aissar-shawaqfeh/` | `/en/about-aissar-shawaqfeh/` | ProfilePage → Person |
 | Credentials & verification | `/ar/credentials/` | `/en/credentials/` | AboutPage → Person |
 | Chronic wound care in Jordan | `/ar/chronic-wound-care-jordan/` | `/en/chronic-wound-care-jordan/` | MedicalWebPage |
 | Contact | `/ar/contact/` | `/en/contact/` | ContactPage |
@@ -47,7 +47,7 @@ The homepage title, H1 and meta description follow the project brief. The Englis
 ### Technical SEO
 - A unique title and meta description on every page, plus canonical, hreflang `ar-JO` / `en-JO` / `x-default`, Open Graph and Twitter tags, and 1200×630 sharing images in Arabic and English.
 - `sitemap.xml` with hreflang alternates, `robots.txt` and a custom 404.
-- 301 redirects in `_redirects` (Netlify/Cloudflare) and `vercel.json`, plus HTML fallbacks. These cover `/`, `/about/`, `/contact/` and the alternate About spellings (`about-aissar-shawaqfeh`, `about-aysar-shawaqfeh`).
+- 301 redirects in `_redirects` (Netlify/Cloudflare) and `vercel.json`, plus HTML fallbacks. These cover `/`, `/about/`, `/contact/` and the old and alternate About spellings (`about-ayser-shawaqfeh`, `about-aysar-shawaqfeh`).
 - Semantic HTML with one H1 per page, breadcrumbs (visible and in schema), and no thin placeholder pages: Phase 2 topics are listed without links until their pages exist.
 - Search Console verification and GA4 run on environment variables. GA4 is consent-gated: no requests and no cookies before *Accept*.
 
@@ -72,7 +72,7 @@ The homepage title, H1 and meta description follow the project brief. The Englis
 
 ## 4. Assumptions made
 
-1. **Public spelling "Ayser Shawaqfeh"**, as in the project brief, and it matches LinkedIn and Instagram. The certificate spelling "AISSAR SHAWAQFEH" appears on the Credentials page and in schema `alternateName`. Switching takes about 5 minutes (see README).
+1. **Public name: أيسر شواقفه / Aissar Shawaqfeh**, confirmed by Ayser on 6 October 2026 (the English spelling matches the CWS® certificate). Earlier spellings stay in schema `alternateName` only. LinkedIn and Instagram still use "ayser" in their URLs. Updating their display names to match is recommended (see the identity pack).
 2. **Patient services are off** (`patientServicesConfirmed: false`), because no licensed pathway has been confirmed yet. That means no home-visits page, no "book an assessment" CTA, and no LocalBusiness or Organization schema.
 3. **Contact details** (aissar@speranzahealth.net, +962 79 883 9394) were taken from Ayser's message of 5 October 2026.
 4. **Experience** is described as "about 9 years" and computed from the 2017 start year, so it updates automatically each year.
@@ -84,19 +84,18 @@ The homepage title, H1 and meta description follow the project brief. The Englis
 
 | # | Item | Where it goes |
 | --- | --- | --- |
-| 1 | Final public name spelling: Ayser or Aissar | `site.ts → person` |
-| 2 | Are direct patient services provided now? Through which licensed entity or licence? | `flags.patientServicesConfirmed`, `flags.homeVisitsPage` |
-| 3 | Is Speranza Health a registered organisation? | `flags.organizationConfirmed` |
-| 4 | Confirmed service areas beyond Amman | `contact.serviceAreas` |
-| 5 | Response hours | `contact.hours` |
-| 6 | Approved professional photo, plus a landscape photo | `person.photo`, About page, OG images |
-| 7 | Direct ABWM directory link for your listing | `credentials → cws.verifyUrl` |
-| 8 | Publishable nursing-licence wording (body, year) | `nursingLicence` |
-| 9 | Issuer of the Key Account Management certificate | `credentials → kam.issuer` |
-| 10 | YouTube channel URL | `profiles → youtube` (set `verified: true`) |
-| 11 | GA4 measurement ID and Search Console token | host environment variables |
-| 12 | Al-Wafi permission to be named, and to do outside clinical work | `i18n.ts → disclosure` |
-| 13 | Hosting account (Cloudflare Pages recommended) and DNS access for speranzahealth.net | deployment |
+| 1 | Are direct patient services provided now? Through which licensed entity or licence? | `flags.patientServicesConfirmed`, `flags.homeVisitsPage` |
+| 2 | Is Speranza Health a registered organisation? | `flags.organizationConfirmed` |
+| 3 | Confirmed service areas beyond Amman | `contact.serviceAreas` |
+| 4 | Response hours | `contact.hours` |
+| 5 | Approved professional photo, plus a landscape photo | `person.photo`, About page, OG images |
+| 6 | Direct ABWM directory link for your listing | `credentials → cws.verifyUrl` |
+| 7 | Publishable nursing-licence wording (body, year) | `nursingLicence` |
+| 8 | Issuer of the Key Account Management certificate | `credentials → kam.issuer` |
+| 9 | YouTube channel URL | `profiles → youtube` (set `verified: true`) |
+| 10 | GA4 measurement ID and Search Console token | host environment variables |
+| 11 | Al-Wafi permission to be named, and to do outside clinical work | `i18n.ts → disclosure` |
+| 12 | Hosting account (Cloudflare Pages recommended) and DNS access for speranzahealth.net | deployment |
 
 ## 6. Next: Phase 2 and Phase 3
 

@@ -1,6 +1,6 @@
-# Ayser Shawaqfeh — official website (speranzahealth.net)
+# Aissar Shawaqfeh — official website (speranzahealth.net)
 
-Bilingual (Arabic-first, RTL / English, LTR) static website for **Ayser Shawaqfeh, RN, CWS®**, built with [Astro](https://astro.build). It outputs plain HTML/CSS with almost no JavaScript, so it is fast, cheap to host and easy for Google to read.
+Bilingual (Arabic-first, RTL / English, LTR) static website for **Aissar Shawaqfeh (أيسر شواقفه), RN, CWS®**, built with [Astro](https://astro.build). It outputs plain HTML/CSS with almost no JavaScript, so it is fast, cheap to host and easy for Google to read.
 
 ## Quick start
 
@@ -39,13 +39,11 @@ npm test             # build + internal link check + SEO/structured-data check
 
 In `profiles`, only entries with `verified: true` appear on the site and in schema `sameAs`. Set YouTube to `verified: true` once the channel exists.
 
-### Changing the public name spelling
+### Public name spelling
 
-The CWS® certificate reads **AISSAR SHAWAQFEH**; the site currently uses **Ayser Shawaqfeh** to match existing LinkedIn/Instagram profiles. To switch:
+Confirmed by Ayser on 6 October 2026: **أيسر شواقفه** (Arabic) and **Aissar Shawaqfeh** (English, matching the CWS® certificate). Older spellings (Ayser Shawaqfeh, آيسر شواقفة, …) are kept only in schema `alternateName`, and the old About URL `/…/about-ayser-shawaqfeh/` 301-redirects to `/…/about-aissar-shawaqfeh/`.
 
-1. In `src/config/site.ts` change `person.name.en`, `aboutSlug` (e.g. `about-aissar-shawaqfeh`) and move the old slug into `aboutSlugAliases`.
-2. Update `siteName.en` and the English titles/descriptions in `src/pages/[lang]/*.astro` (search for "Ayser").
-3. Run `npm test`. 301 redirects from the old About URL are generated automatically.
+To change the name again: edit `person.name`, `siteName` and `aboutSlug` in `src/config/site.ts`, move the old slug into `aboutSlugAliases`, search the page files for the old spelling, regenerate the OG images (`node scripts/make-og.mjs`) and run `npm test`.
 
 ## Adding a page (Phase 2)
 

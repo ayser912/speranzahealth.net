@@ -2,13 +2,13 @@
  * SINGLE SOURCE OF TRUTH for every professional and contact detail on the site.
  * Edit values here only — pages, footer, schema and contact links all read from this file.
  *
- * Items marked TODO are waiting for confirmation from Ayser. Do not replace a TODO with a
+ * Items marked TODO are waiting for confirmation from Aissar. Do not replace a TODO with a
  * guess: leave it null/false until the fact is confirmed and publishable.
  */
 
 export const site = {
   /** Brand / site name shown in titles and Open Graph. */
-  siteName: { ar: 'آيسر شواقفة', en: 'Ayser Shawaqfeh' },
+  siteName: { ar: 'أيسر شواقفه', en: 'Aissar Shawaqfeh' },
   /** Organisation the domain belongs to. Not emitted as Organization schema until confirmed (see flags). */
   brandName: 'Speranza Health',
   domain: 'speranzahealth.net',
@@ -19,18 +19,18 @@ export const site = {
 
 export const person = {
   /**
-   * Public display name. NOTE: the CWS certificate reads "AISSAR SHAWAQFEH".
-   * To switch the public spelling, change `name.en` AND `aboutSlug` below — redirects
-   * from the other spelling are generated automatically (see src/lib/routes.ts).
+   * Public display name (confirmed by Aissar 2026-10-06; English matches the CWS certificate).
+   * To change it, edit `name` AND `aboutSlug` below and move the old slug into
+   * `aboutSlugAliases` — 301 redirects from old URLs are generated automatically.
    */
-  name: { ar: 'آيسر شواقفة', en: 'Ayser Shawaqfeh' },
+  name: { ar: 'أيسر شواقفه', en: 'Aissar Shawaqfeh' },
   /** Spelling printed on the CWS® certificate (shown on the Credentials page for verification). */
   certificateName: 'AISSAR SHAWAQFEH',
   /** Every other spelling people use — emitted only as schema alternateName, never shown as the name. */
-  alternateNames: ['Aissar Shawaqfeh', 'آيسر شواقفة', 'Aysar Shawaqfeh', 'Aysar Shawagfeh', 'Aisar Shawaqfeh'],
-  aboutSlug: 'about-ayser-shawaqfeh',
+  alternateNames: ['Ayser Shawaqfeh', 'آيسر شواقفة', 'أيسر شواقفة', 'Aysar Shawaqfeh', 'Aysar Shawagfeh', 'Aisar Shawaqfeh'],
+  aboutSlug: 'about-aissar-shawaqfeh',
   /** Slugs of the other spelling that should 301 to aboutSlug. */
-  aboutSlugAliases: ['about-aissar-shawaqfeh', 'about-aysar-shawaqfeh', 'about'],
+  aboutSlugAliases: ['about-ayser-shawaqfeh', 'about-aysar-shawaqfeh', 'about'],
   postNominals: 'RN, CWS®',
   title: {
     ar: 'ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®',
@@ -69,7 +69,7 @@ export const credentials = [
     issuerUrl: 'https://abwmcertified.org/',
     year: 2026,
     category: 'certification',
-    /** Public directory where the credential can be checked. TODO: replace with Ayser's direct listing URL once confirmed. */
+    /** Public directory where the credential can be checked. TODO: replace with Aissar's direct listing URL once confirmed. */
     verifyUrl: 'https://abwmcertified.org/find-a-specialist/',
     clinical: true,
   },
@@ -109,7 +109,7 @@ export const credentials = [
   },
 ] as const;
 
-/** Nursing licence: publish only what Ayser approves. */
+/** Nursing licence: publish only what Aissar approves. */
 export const nursingLicence = {
   /** TODO: confirm licensing body wording and whether the licence year/number may be published. */
   body: { ar: 'مجلس التمريض الأردني / وزارة الصحة', en: 'Jordanian Nursing Council / Ministry of Health' },
@@ -153,7 +153,7 @@ export const profiles = [
 ] as const;
 
 /**
- * Decisions that unlock features. Keep false until Ayser confirms in writing.
+ * Decisions that unlock features. Keep false until Aissar confirms in writing.
  * - patientServicesConfirmed: a licensed pathway for direct patient services exists → enables
  *   "coordinate an assessment" CTAs.
  * - homeVisitsPage: enables /ar/home-wound-care-amman/ (not built in Phase 1).
