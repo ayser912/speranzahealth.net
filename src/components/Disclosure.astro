@@ -5,7 +5,7 @@ interface Props { lang: Lang; id?: string }
 const { lang, id } = Astro.props;
 const s = t(lang);
 ---
-{flags.industryDisclosure && (
+{flags.brandNeutralNote && (
   <section class="disclosure" id={id} aria-labelledby={id ? `${id}-h` : undefined}>
     <h2 id={id ? `${id}-h` : undefined} class="visually-hidden">{s.disclosureTitle}</h2>
     <p><strong>{s.disclosureTitle}:</strong> {s.disclosure}</p>

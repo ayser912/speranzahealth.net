@@ -4,6 +4,7 @@ import { R } from '../refs';
 const page: ClinicalPageData = {
   published: '2026-10-06',
   reviewed: '2026-10-06',
+  illustration: 'npwt',
   refs: [R.ewmaNpwt, R.timers, R.iwii, R.niceSsi],
   related: ['chronic', 'surgical', 'diabeticFoot', 'pressure', 'education'],
   ar: {
@@ -75,12 +76,32 @@ const page: ClinicalPageData = {
         },
         after: [
           '<strong>تواصل فورًا مع الفريق المعالج أو توجّه إلى الطوارئ</strong> عند ظهور دم أحمر فاتح في الأنبوب أو العبوة، أو امتلاء العبوة بالدم بسرعة.',
-          'لمعرفة ما يمكن توقعه يوميًا أثناء استخدام الجهاز اقرأ: <a href="/ar/articles/what-is-npwt-vac-therapy/">ماذا تتوقع أثناء العلاج بالضغط السلبي؟</a>',
         ],
       },
       {
+        id: 'daily', h: 'الحياة اليومية مع الجهاز',
+        list: {
+          items: [
+            'قد تشعر بسحب أو شد خفيف عند التشغيل، ويخف عادة خلال وقت قصير. أخبر الفريق مسبقًا إذا كان تغيير الضماد مؤلمًا.',
+            'احمل الجهاز في حقيبته وتجنّب سحب الأنبوب أو ثنيه أو الجلوس عليه، وضعه في مكان آمن عند النوم.',
+            'لا تغمر الجهاز في الماء، واسأل الفريق عن طريقة الاستحمام الآمنة.',
+            'لا تفصل الجهاز أو تغيّر الضماد بنفسك.',
+          ],
+        },
+        table: {
+          caption: 'إنذارات شائعة وما تفعله',
+          head: ['الإنذار', 'ما الذي تفعله'],
+          rows: [
+            ['تسرّب هواء', 'تفقّد حواف الضماد واضغط بلطف على الغشاء. إذا استمر الإنذار تواصل مع الفريق.'],
+            ['امتلاء العبوة', 'تواصل مع الفريق لتغيير العبوة.'],
+            ['انسداد الأنبوب', 'تأكد أن الأنبوب غير مثني وأن المشابك مفتوحة. إذا استمر الإنذار تواصل مع الفريق.'],
+            ['انخفاض البطارية', 'صِل الجهاز بالشاحن.'],
+          ],
+        },
+      },
+      {
         id: 'nurse-role', h: 'دور الممرض المتخصص',
-        body: ['يتطلب NPWT مهارة في تطبيق الضماد وإحكام إغلاقه وحماية الجلد المحيط ومتابعة الإنذارات. يقدّم أيسر تدريبًا عمليًا للكوادر التمريضية على أساسيات هذا العلاج وتطبيقه الآمن، ضمن خطط الفرق المعالجة.'],
+        body: ['يتطلب NPWT مهارة في تطبيق الضماد وإحكام إغلاقه وحماية الجلد المحيط ومتابعة الإنذارات، بالتنسيق مع الطبيب والفريق متعدد التخصصات. يتوفر تدريب عملي للكوادر التمريضية على أساسيات هذا العلاج.'],
         after: ['<a href="/ar/wound-care-education/">التعليم والتدريب في العناية بالجروح</a>'],
       },
     ],
@@ -154,12 +175,32 @@ const page: ClinicalPageData = {
         },
         after: [
           '<strong>Contact the treating team immediately or go to the emergency department</strong> if you see bright red blood in the tubing or canister, or the canister fills quickly with blood.',
-          'For what to expect day to day while using the device, read <a href="/en/articles/what-is-npwt-vac-therapy/">What to expect during NPWT / VAC therapy</a>.',
         ],
       },
       {
+        id: 'daily', h: 'Daily life with the device',
+        list: {
+          items: [
+            'You may feel a gentle pulling when it starts, which usually eases soon. Tell the team in advance if dressing changes are painful.',
+            'Carry the device in its bag, avoid pulling, kinking or sitting on the tubing, and place it safely at night.',
+            'Never put the device in water; ask the team how to wash safely.',
+            'Don’t disconnect the device or change the dressing yourself.',
+          ],
+        },
+        table: {
+          caption: 'Common alarms and what to do',
+          head: ['Alarm', 'What to do'],
+          rows: [
+            ['Air leak', 'Check the dressing edges and press gently on the film. If the alarm continues, contact the team.'],
+            ['Canister full', 'Contact the team to change the canister.'],
+            ['Blockage', 'Make sure the tubing isn’t kinked and the clamps are open. If the alarm continues, contact the team.'],
+            ['Low battery', 'Plug the device into its charger.'],
+          ],
+        },
+      },
+      {
         id: 'nurse-role', h: 'The specialist nurse’s role',
-        body: ['NPWT requires skill in applying and sealing the dressing, protecting the surrounding skin and managing alarms. Aissar offers hands-on training for nursing teams in the fundamentals and safe application of this therapy, within the treating teams’ plans.'],
+        body: ['NPWT requires skill in applying and sealing the dressing, protecting the surrounding skin and managing alarms, in coordination with the physician and the multidisciplinary team. Hands-on training in the fundamentals is available for nursing teams.'],
         after: ['<a href="/en/wound-care-education/">Wound-care education and training</a>'],
       },
     ],

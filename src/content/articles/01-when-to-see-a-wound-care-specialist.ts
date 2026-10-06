@@ -8,14 +8,14 @@ const a: Article = {
   published: '2026-10-06',
   reviewed: '2026-10-06',
   refs: [R.timers, R.frykberg, R.iwgdf, R.piGuideline],
-  related: ['chronic', 'credentials', 'contact'],
-  relatedArticles: ['why-chronic-wounds-fail-to-heal', 'preparing-for-wound-care-assessment', 'wound-infection-warning-signs'],
+  related: ['chronic', 'contact'],
+  relatedArticles: ['wound-infection-warning-signs', 'home-wound-care-mistakes', 'venous-vs-arterial-leg-ulcers'],
   ar: {
-    title: 'متى تحتاج إلى أخصائي عناية بالجروح؟ | أيسر شواقفه CWS®',
-    description: 'علامات تدل على أن الجرح يحتاج إلى تقييم متخصص: تأخر الالتئام، وجروح القدم السكري، وقرح الضغط، وتكرار العدوى. وما الفرق بين دور الطبيب وأخصائي الجروح.',
-    h1: 'متى تحتاج إلى أخصائي عناية بالجروح؟',
-    card: 'متى تحتاج إلى أخصائي عناية بالجروح؟',
-    lead: 'معظم الجروح البسيطة تلتئم بعناية منزلية عادية. لكن بعض الجروح تحتاج إلى تقييم متخصص مبكر، لأن التأخر قد يعني أسابيع أو أشهرًا إضافية من المعاناة أو مضاعفات يمكن تجنبها.',
+    title: 'متى تحتاج إلى أخصائي جروح، وكيف تستعد للتقييم؟',
+    description: 'علامات تدل على أن الجرح يحتاج إلى تقييم متخصص، ومتى تتوجه إلى الطوارئ، وما الذي تحضره معك للتقييم وما الذي يحدث خلاله.',
+    h1: 'متى تحتاج إلى أخصائي جروح، وكيف تستعد للتقييم؟',
+    card: 'متى تحتاج إلى أخصائي جروح؟',
+    lead: 'معظم الجروح البسيطة تلتئم بعناية منزلية عادية، لكن بعضها يحتاج إلى تقييم متخصص مبكر. هذا الدليل يساعدك على معرفة متى تطلب التقييم، وكيف تستعد له لتستفيد منه من الزيارة الأولى.',
     sections: [
       {
         id: 'signs', h: 'علامات تدل على أن الجرح يحتاج إلى تقييم متخصص',
@@ -26,15 +26,14 @@ const a: Article = {
             'أي جرح في قدم مريض السكري.',
             'قرحة ضغط لدى مريض طريح الفراش، خصوصًا إذا تجاوزت الاحمرار السطحي.',
             'إفرازات كثيرة تبلل الضماد بسرعة أو تؤذي الجلد حول الجرح.',
-            'تكرر التهاب الجرح أو الحاجة المتكررة للمضادات الحيوية.',
-            'جرح يعود في المكان نفسه بعد التئامه.',
+            'تكرر التهاب الجرح أو عودته في المكان نفسه بعد التئامه.',
             'جرح جراحي انفتح أو تأخر التئامه بعد العملية.',
           ],
         },
       },
       {
         id: 'urgent', h: 'متى لا تنتظر موعدًا؟', warn: true,
-        body: ['بعض الحالات تحتاج إلى الطبيب أو الطوارئ أولًا، قبل أي تقييم تمريضي:'],
+        body: ['بعض الحالات تحتاج إلى الطبيب أو الطوارئ أولًا:'],
         list: {
           items: [
             'احمرار أو تورم ينتشر بسرعة حول الجرح.',
@@ -45,35 +44,50 @@ const a: Article = {
         },
       },
       {
-        id: 'roles', h: 'ما الفرق بين دور الطبيب وأخصائي الجروح؟',
+        id: 'team', h: 'من يشارك في العناية بالجرح؟',
         body: [
-          'الطبيب هو المسؤول عن التشخيص، ووصف الأدوية مثل المضادات الحيوية، وطلب الفحوصات، والتدخلات الجراحية.',
-          'أخصائي العناية بالجروح من الكادر التمريضي يقدّم تقييمًا تمريضيًا مفصلًا للجرح، ويضع خطة عناية بالضمادات وتخفيف الضغط والتثقيف، ويتابع التقدم بالقياس والتوثيق، وينسّق مع الطبيب عند ظهور أي تغيّر.',
-          'أفضل النتائج تأتي عادة من عمل الفريق معًا، وليس من طرف واحد.',
+          'الجروح المعقدة تحتاج عادة إلى فريق متعدد التخصصات: جراحة العظام، وجراحة الأوعية الدموية، والجراحة العامة، والجراحة التجميلية، وطب القدم، والأمراض المعدية، والتغذية العلاجية، وغيرهم حسب الحالة.',
+          'أخصائي الجروح من الكادر التمريضي يقيّم الجرح، ويضع خطة العناية بالضمادات وتخفيف الضغط والتثقيف، ويتابع التقدم، وينسّق مع الطبيب والفريق. التشخيص ووصف الأدوية والقرارات الجراحية تبقى من مسؤولية الطبيب.',
         ],
       },
       {
-        id: 'how', h: 'كيف تصل إلى تقييم متخصص؟',
+        id: 'prepare', h: 'كيف تستعد للتقييم؟',
         list: {
+          intro: 'أحضر معك:',
           items: [
-            'اسأل طبيبك المعالج عن خدمة عناية بالجروح أو أخصائي جروح معتمد.',
-            'جهّز المعلومات المهمة قبل الموعد: الأدوية، والتقارير، ومدة الجرح، والعلاجات السابقة.',
-            'تحقق من مؤهلات من يقدّم العناية، مثل الترخيص المهني والاعتمادات المتخصصة.',
+            'قائمة بجميع الأدوية الحالية، بما فيها مميعات الدم والكورتيزون والمكملات.',
+            'التقارير الطبية المتعلقة بالجرح أو بالأمراض المزمنة، ونتائج التحاليل الحديثة مثل السكر التراكمي لمرضى السكري.',
+            'أسماء الضمادات والكريمات التي استُخدمت سابقًا ومدة استخدامها.',
+            'ملاحظات عن تطور الجرح: متى بدأ، وكيف تغيّر، وما الذي ساعد أو لم يساعد.',
           ],
         },
-        after: [
-          'اقرأ: <a href="/ar/articles/preparing-for-wound-care-assessment/">كيف تستعد لتقييم الجرح؟</a>',
-          'اعتماد CWS® يمنحه American Board of Wound Management للممارسين المرخصين ذوي الخبرة المثبتة في العناية بالجروح بعد اجتياز اختبار. <a href="/ar/credentials/">اطّلع على مؤهلات أيسر شواقفه وطرق التحقق</a>.',
-        ],
+        after: ['ارتدِ ملابس فضفاضة تسمح بالوصول إلى الجرح، واصطحب أحد أفراد الأسرة إذا كان سيساعد في العناية بالجرح.'],
+      },
+      {
+        id: 'during', h: 'ماذا يحدث خلال التقييم؟',
+        list: {
+          items: [
+            'مراجعة التاريخ الصحي والأدوية.',
+            'فحص الجرح وقياسه، ووصف الأنسجة والإفرازات والحواف والجلد المحيط.',
+            'فحص أولي للدورة الدموية والإحساس، خصوصًا في جروح الساق والقدم.',
+            'تقييم الألم والتغذية والحركة والضغط.',
+            'الاتفاق على خطة عناية واضحة، والتنسيق مع الطبيب والتخصصات الأخرى عند الحاجة.',
+          ],
+        },
+        after: ['اسأل: ما السبب المحتمل لتأخر الالتئام؟ كل كم يتغير الضماد ومن يغيّره؟ ما العلامات التي تستدعي التواصل فورًا؟ ومتى موعد إعادة التقييم؟'],
+      },
+      {
+        id: 'privacy', h: 'الصور والخصوصية',
+        body: ['قد تساعد صور الجرح المؤرخة على متابعة التقدم، لكن شاركها فقط عبر طريقة آمنة يتفق عليها الفريق المعالج. لا تُستخدم صور المرضى في أي محتوى إلا بموافقة خطية واضحة وبعد إخفاء ما يدل على الهوية.'],
       },
     ],
   },
   en: {
-    title: 'When Should You See a Wound-Care Specialist? | Aissar Shawaqfeh',
-    description: 'Signs a wound needs specialist assessment, such as slow healing, diabetic foot wounds and repeated infection, and how the doctor’s and specialist’s roles differ.',
-    h1: 'When should you see a wound-care specialist?',
-    card: 'When should you see a wound-care specialist?',
-    lead: 'Most minor wounds heal with ordinary care at home. Some wounds, however, need an early specialist assessment, because delay can mean weeks or months of extra suffering, or complications that could have been avoided.',
+    title: 'When to See a Wound-Care Specialist, and How to Prepare',
+    description: 'Signs a wound needs specialist assessment, when to go to the emergency department, what to bring to the assessment and what happens during it.',
+    h1: 'When to see a wound-care specialist, and how to prepare',
+    card: 'When to see a wound-care specialist',
+    lead: 'Most minor wounds heal with ordinary care at home, but some need an early specialist assessment. This guide helps you know when to ask for one, and how to prepare so the first visit counts.',
     sections: [
       {
         id: 'signs', h: 'Signs a wound needs specialist assessment',
@@ -84,15 +98,14 @@ const a: Article = {
             'Any wound on the foot of a person with diabetes.',
             'A pressure injury in a bed-bound person, especially beyond surface redness.',
             'Heavy fluid that soaks the dressing quickly or damages the skin around the wound.',
-            'Repeated wound infections or repeated courses of antibiotics.',
-            'A wound that keeps coming back in the same place after healing.',
+            'Repeated infections, or a wound that keeps coming back in the same place.',
             'A surgical wound that has opened or is slow to heal.',
           ],
         },
       },
       {
         id: 'urgent', h: 'When not to wait for an appointment', warn: true,
-        body: ['Some situations need a doctor or the emergency department first, before any nursing assessment:'],
+        body: ['Some situations need a doctor or the emergency department first:'],
         list: {
           items: [
             'Redness or swelling spreading quickly around the wound.',
@@ -103,26 +116,41 @@ const a: Article = {
         },
       },
       {
-        id: 'roles', h: 'How does the doctor’s role differ from the wound specialist’s?',
+        id: 'team', h: 'Who is involved in wound care?',
         body: [
-          'The physician is responsible for diagnosis, prescribing medicines such as antibiotics, ordering tests and surgical procedures.',
-          'A nursing wound-care specialist provides a detailed nursing assessment of the wound, plans care with dressings, pressure relief and education, tracks progress through measurement and documentation, and coordinates with the doctor whenever something changes.',
-          'The best results usually come from the team working together, not from one person alone.',
+          'Complex wounds usually need a multidisciplinary team: orthopaedic, vascular, general and plastic surgery, podiatry, infectious diseases, clinical nutrition and others as the case requires.',
+          'The nursing wound specialist assesses the wound, plans care with dressings, pressure relief and education, tracks progress and coordinates with the doctor and the team. Diagnosis, prescribing and surgical decisions remain the physician’s responsibility.',
         ],
       },
       {
-        id: 'how', h: 'How to get a specialist assessment',
+        id: 'prepare', h: 'How to prepare for the assessment',
         list: {
+          intro: 'Bring:',
           items: [
-            'Ask your treating doctor about a wound-care service or a certified wound specialist.',
-            'Gather the key information before the appointment: medicines, reports, how long the wound has been present and previous treatments.',
-            'Check the qualifications of whoever provides care, such as professional licensing and specialist certification.',
+            'A list of all current medicines, including blood thinners, corticosteroids and supplements.',
+            'Medical reports related to the wound or long-term conditions, and recent tests such as HbA1c for people with diabetes.',
+            'The names of dressings and creams used before, and for how long.',
+            'Notes on how the wound has developed: when it started, how it changed, and what helped or didn’t.',
           ],
         },
-        after: [
-          'Read <a href="/en/articles/preparing-for-wound-care-assessment/">How to prepare for a wound-care assessment</a>.',
-          'The CWS® credential is awarded by the American Board of Wound Management to licensed clinicians with documented wound-care experience who pass an exam. <a href="/en/credentials/">See Aissar Shawaqfeh’s credentials and how to verify them</a>.',
-        ],
+        after: ['Wear loose clothing that gives easy access to the wound, and bring a family member if they will help with care.'],
+      },
+      {
+        id: 'during', h: 'What happens during the assessment',
+        list: {
+          items: [
+            'A review of your health history and medicines.',
+            'Examining and measuring the wound, and describing the tissue, exudate, edges and surrounding skin.',
+            'An initial check of circulation and sensation, especially for leg and foot wounds.',
+            'Assessing pain, nutrition, mobility and pressure.',
+            'Agreeing a clear care plan, coordinated with the doctor and other specialties when needed.',
+          ],
+        },
+        after: ['Ask: what is the likely reason for slow healing? How often is the dressing changed, and by whom? Which signs mean I should get in touch straight away? When is the next review?'],
+      },
+      {
+        id: 'privacy', h: 'Photos and privacy',
+        body: ['Dated photos can help track progress, but share them only through a secure method agreed with the care team. Patient photos are never used in any content without clear written consent and removal of anything that could identify the patient.'],
       },
     ],
   },

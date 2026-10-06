@@ -9,7 +9,7 @@ const a: Article = {
   reviewed: '2026-10-06',
   refs: [R.esvsVenous, R.clti, R.timers],
   related: ['chronic', 'diabeticFoot'],
-  relatedArticles: ['why-chronic-wounds-fail-to-heal', 'when-to-see-a-wound-care-specialist', 'choosing-wound-dressings'],
+  relatedArticles: ['when-to-see-a-wound-care-specialist', 'choosing-wound-dressings', 'home-wound-care-mistakes'],
   ar: {
     title: 'الفرق بين القرحة الوريدية والقرحة الشريانية في الساق',
     description: 'مقارنة واضحة بين قرح الساق الوريدية والشريانية: المكان والشكل والألم والجلد المحيط، ولماذا يجب تقييم الدورة الدموية قبل استخدام الضغط (الرباط الضاغط).',

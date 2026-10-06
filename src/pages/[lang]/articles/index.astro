@@ -15,24 +15,22 @@ const copy = {
     title: 'مقالات تثقيفية في العناية بالجروح | أيسر شواقفه CWS®',
     description: 'مقالات تثقيفية موثقة للمرضى والأسر والكوادر الصحية حول الجروح المزمنة وقرح الضغط والقدم السكري والجروح الجراحية والعلاج بالضغط السلبي.',
     h1: 'مقالات تثقيفية في العناية بالجروح',
-    lead: 'إجابات واضحة ومبنية على الإرشادات العلمية عن أكثر الأسئلة شيوعًا لدى المرضى والأسر والممرضين. كل مقال يذكر الكاتب وتاريخ النشر وآخر مراجعة والمراجع.',
+    lead: 'إجابات واضحة ومبنية على الإرشادات العلمية عن أكثر الأسئلة شيوعًا لدى المرضى والأسر والممرضين في الأردن.',
     updated: 'آخر تحديث للمكتبة',
-    other: 'مقالات عامة',
+    topicsH: 'أدلة حسب نوع الجرح',
+    topicsP: 'لكل نوع من الجروح صفحة واحدة شاملة تجمع الوقاية والعناية وعلامات الخطر:',
   },
   en: {
     title: 'Wound-Care Articles and Educational Resources | Aissar Shawaqfeh',
     description: 'Referenced educational articles for patients, families and clinicians on chronic wounds, pressure injuries, diabetic foot, surgical wounds and NPWT.',
     h1: 'Wound-care articles and educational resources',
-    lead: 'Clear, guideline-based answers to the questions patients, families and nurses ask most. Every article shows the author, publication date, last review date and references.',
+    lead: 'Clear, guideline-based answers to the questions patients, families and nurses in Jordan ask most.',
     updated: 'Library last updated',
-    other: 'General articles',
+    topicsH: 'Guides by wound type',
+    topicsP: 'Each wound type has one complete page covering prevention, care and warning signs:',
   },
 }[lang];
 const latest = articles.map((a) => a.reviewed).sort().at(-1)!;
-const groups = careNav
-  .map((k) => ({ key: k, items: articles.filter((a) => a.topic === k) }))
-  .filter((g) => g.items.length);
-const ungrouped = articles.filter((a) => !careNav.includes(a.topic));
 const schema = pageGraph({ lang, key: 'articles', type: 'CollectionPage', title: copy.title, description: copy.description, dateModified: latest });
 (schema['@graph'] as unknown[]).push({
   '@type': 'ItemList',
@@ -48,17 +46,14 @@ const schema = pageGraph({ lang, key: 'articles', type: 'CollectionPage', title:
       <p class="lead">{copy.lead}</p>
       <p class="page-dates">{copy.updated}: <time datetime={latest}>{formatDate(latest, lang)}</time></p>
     </header>
-    {ungrouped.length > 0 && (
-      <section aria-labelledby="g-general">
-        <h2 id="g-general" class="flush">{copy.other}</h2>
-        <ArticleCards lang={lang} items={ungrouped} showTopic={false} />
-      </section>
-    )}
-    {groups.map((g) => (
-      <section aria-labelledby={`g-${g.key}`}>
-        <h2 id={`g-${g.key}`}><a href={path(lang, g.key)}>{pages[g.key].nav[lang]}</a></h2>
-        <ArticleCards lang={lang} items={g.items} showTopic={false} />
-      </section>
-    ))}
+    <section aria-labelledby="list-h">
+      <h2 id="list-h" class="visually-hidden">{copy.h1}</h2>
+      <ArticleCards lang={lang} items={articles} showTopic={false} />
+    </section>
+    <section class="prose" aria-labelledby="topics-h">
+      <h2 id="topics-h">{copy.topicsH}</h2>
+      <p>{copy.topicsP}</p>
+      <ul>{careNav.map((k) => <li><a href={path(lang, k)}>{pages[k].nav[lang]}</a></li>)}</ul>
+    </section>
   </div>
 </BaseLayout>

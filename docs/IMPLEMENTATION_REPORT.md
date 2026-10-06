@@ -4,34 +4,25 @@
 **Date:** 6 October 2026
 **Status:** All three phases are built, tested and committed. A private review copy is published for Aissar to browse. The site is not live yet: that needs hosting and DNS access.
 
-## 1. What exists now
+## 1. What exists now (simplified 6 October 2026)
 
-**48 indexable pages**: 24 in Arabic (RTL, the primary version) and 24 in English (LTR), plus a bilingual 404.
+**32 indexable pages**: 16 in Arabic (RTL, the primary version) and 16 in English. Pages that covered the same concept were merged, cutting the total from 48 to 32.
 
 | Section | Pages (each in AR + EN) |
 | --- | --- |
-| Core | Home · About Aissar Shawaqfeh · Credentials and verification · Contact · Privacy policy · Medical disclaimer |
-| Wound care (menu group) | Chronic wound care in Jordan · Pressure injuries · Diabetic foot wounds · Surgical wound care · NPWT / VAC |
+| Core | Home · About (includes credentials and verification) · Contact · Privacy and medical disclaimer |
+| Wound care (menu group) | Chronic wounds · Pressure injuries · Diabetic foot · Surgical wounds · NPWT / VAC. Each is one complete page per wound type. |
 | Education | Wound-care education and training |
-| Articles | Articles index + 11 articles |
+| Articles | Index + 5 articles: when to see a specialist and how to prepare · wound infection warning signs · choosing dressings · venous vs arterial leg ulcers · home wound-care mistakes |
 
-### Articles (initial topics 1–11)
-
-| # | Article | Hub page |
-| --- | --- | --- |
-| 1 | When should you see a wound-care specialist? | Chronic wounds |
-| 2 | Why does a chronic wound fail to heal? (TIME / TIMERS) | Chronic wounds |
-| 3 | Pressure injury stages and warning signs | Pressure injuries |
-| 4 | Diabetic foot wounds: common mistakes to avoid | Diabetic foot |
-| 5 | What is VAC therapy? What to expect during NPWT | NPWT |
-| 6 | Wound infection warning signs you should not ignore | Chronic wounds |
-| 7 | Choosing wound dressings by tissue type and exudate | Chronic wounds |
-| 8 | Wound care after surgery: a practical guide for home | Surgical wounds |
-| 9 | Venous and arterial leg ulcers: what is the difference? | Chronic wounds |
-| 10 | How to prepare for a wound-care assessment | Chronic wounds |
-| 11 | Common mistakes in home wound care | Chronic wounds |
-
-**Topic 12, an anonymised wound-care journey, is not written.** It needs the patient's documented written consent and de-identified material first.
+### Changes requested on 6 October 2026
+- **Fewer pages:** About and Credentials merged; Privacy and Disclaimer merged; five articles folded into their topic pages (pressure stages, diabetic foot mistakes, NPWT daily life, after-surgery care, why chronic wounds stall); "preparing for an assessment" merged into "when to see a specialist".
+- **Less personal detail:** the career timeline, the employer, the Key Account role and certificate, and the AI certificate were removed. Experience now reads "about 9 years in healthcare". Article bylines are one compact line.
+- **No employment wording:** the employer disclosure was replaced with a brand-neutral note ("content is educational, independent and does not promote any brand").
+- **Jordan, not Amman:** all copy, titles, schema (`areaServed: Jordan`, no city) and sharing images now say Jordan.
+- **Contact form:** first name, preferred contact method and consent only. City and reason were removed.
+- **Multidisciplinary team:** a new section on the home, about and every clinical page lists orthopaedic, vascular, general and plastic surgery, podiatry, infectious diseases, clinical nutrition and other healthcare professionals, with a team diagram.
+- **Pictures and videos:** six original explanatory illustrations (team, TIME framework, pressure points, diabetic foot check, NPWT parts, surgical wound signs); a photo slot in the hero and About page (ready for an approved photo); and a video section on every main page. It embeds videos from `videos` in the settings file and links to Instagram until videos are added.
 
 ## 2. Work completed
 
@@ -60,12 +51,12 @@ These are the EPUAP/NPIAP/PPPIA guideline (4th edition, 2026) and the NPIAP stag
 
 | Check | Result |
 | --- | --- |
-| Build | Passes: 49 pages, 0 errors |
-| Internal links and anchors | 2,263 links across 58 HTML files, **0 broken** |
-| SEO and structured data | 48 pages, 48 sitemap URLs, **0 errors**, 0 warnings. Titles ≤ 65 characters, descriptions ≤ 160, one H1 per page, no skipped heading levels, reciprocal hreflang, no Physician or LocalBusiness types |
-| axe-core (WCAG 2.2 AA + best practice), all 48 pages | **0 violations** |
-| Mobile at 390 px, all 48 pages | 0 horizontal overflow, 0 JavaScript errors |
-| Lighthouse mobile (sample of every page type) | English 100/100/100/100; Arabic 99/100/100/100; CLS 0 everywhere |
+| Build | Passes: 33 pages, 0 errors |
+| Internal links and anchors | 1,365 links across 42 HTML files, **0 broken** |
+| SEO and structured data | 32 pages, 32 sitemap URLs, **0 errors**, 0 warnings. Titles ≤ 65 characters, descriptions ≤ 160, one H1 per page, no skipped heading levels, reciprocal hreflang, no Physician or LocalBusiness types |
+| axe-core (WCAG 2.2 AA + best practice), all 32 pages | **0 violations** |
+| Mobile at 390 px, all 32 pages | 0 horizontal overflow, 0 JavaScript errors |
+| Lighthouse mobile (sample) | English 100/100/100/100; Arabic 99/100/100/100; CLS 0 |
 | Claims review | No "best / first / only / guaranteed" claims about Aissar; no physician wording; no invented services, partners, testimonials or statistics |
 
 Arabic Performance is 99 rather than 100 because Arabic pages preload three Arabic font weights so the text doesn't shift when fonts arrive.
@@ -75,7 +66,7 @@ Arabic Performance is 99 rather than 100 because Arabic pages preload three Arab
 1. The public name is أيسر شواقفه / Aissar Shawaqfeh, confirmed 6 October 2026.
 2. **Patient services stay off** (`patientServicesConfirmed: false`): no home-visits page, no assessment-booking CTA, no LocalBusiness schema. Clinical pages tell patients to discuss their care with their treating team, and offer professionals training and contact.
 3. **Training is described generically** (topics, audiences, formats). No institutions, durations or prices are named because none were given.
-4. **Al-Wafi is named in the disclosure** (`src/lib/i18n.ts`). Change it if the employer prefers not to be named.
+4. **No employment information** appears anywhere on the site (removed at Aissar's request).
 5. **Emergency number 911.**
 6. **No physician reviewer is listed.** Pages state that they contain no diagnostic or prescribing guidance requiring physician review. A named reviewer can be added per page, with their written agreement.
 
@@ -85,18 +76,15 @@ Arabic Performance is 99 rather than 100 because Arabic pages preload three Arab
 | --- | --- | --- |
 | 1 | Are direct patient services provided now, and through which licensed entity or licence? | `flags.patientServicesConfirmed`, `flags.homeVisitsPage` |
 | 2 | Is Speranza Health a registered organisation? | `flags.organizationConfirmed` |
-| 3 | Confirmed service areas beyond Amman | `contact.serviceAreas` |
-| 4 | Response hours | `contact.hours` |
-| 5 | Approved professional photos | `person.photo`, About page, sharing images |
-| 6 | Your direct ABWM directory listing link | `credentials → cws.verifyUrl` |
-| 7 | Publishable nursing-licence wording | `nursingLicence` |
-| 8 | Issuer of the Key Account Management certificate | `credentials → kam.issuer` |
-| 9 | YouTube channel URL, and any original videos | `profiles → youtube`; `video` field on pages or articles |
-| 10 | GA4 measurement ID and Search Console token | host environment variables |
-| 11 | Al-Wafi's permission to be named, and to do outside clinical work | `i18n.ts → disclosure` |
-| 12 | Hosting account (Cloudflare Pages recommended) and DNS access | deployment |
-| 13 | Written consent and material for article 12, if wanted | new article file |
-| 14 | A physician willing to be named as medical reviewer (optional) | `medicalReviewer` on relevant pages |
+| 3 | Response hours | `contact.hours` |
+| 4 | Approved professional photo (portrait) | `person.photo` → hero + About |
+| 5 | Your direct ABWM directory listing link | `credentials → cws.verifyUrl` |
+| 6 | Publishable nursing-licence wording | `nursingLicence` |
+| 7 | Video links (Instagram reels or YouTube) for each topic | `videos` in `src/config/site.ts` |
+| 8 | GA4 measurement ID and Search Console token | host environment variables |
+| 9 | Hosting account (Cloudflare Pages recommended) and DNS access | deployment |
+| 10 | Written consent and material for article 12, if wanted | new article file |
+| 11 | A physician willing to be named as medical reviewer (optional) | `medicalReviewer` on relevant pages |
 
 ## 6. Next steps
 

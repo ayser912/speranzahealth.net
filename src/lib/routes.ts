@@ -5,7 +5,7 @@ import { person, flags, type Lang } from '../config/site';
  * `built: false` pages are planned (Phase 2/3) and are never linked or listed in the sitemap.
  */
 export type PageKey =
-  | 'home' | 'about' | 'credentials' | 'chronic' | 'contact' | 'privacy' | 'disclaimer'
+  | 'home' | 'about' | 'chronic' | 'contact' | 'legal'
   | 'pressure' | 'diabeticFoot' | 'surgical' | 'npwt' | 'education' | 'articles' | 'homeVisits';
 
 interface PageDef {
@@ -19,11 +19,9 @@ interface PageDef {
 export const pages: Record<PageKey, PageDef> = {
   home: { slug: '', nav: { ar: 'الرئيسية', en: 'Home' }, built: true, priority: 1.0 },
   about: { slug: person.aboutSlug, nav: { ar: 'عن أيسر', en: 'About Aissar' }, built: true, priority: 0.9 },
-  credentials: { slug: 'credentials', nav: { ar: 'المؤهلات', en: 'Credentials' }, built: true, priority: 0.8 },
   chronic: { slug: 'chronic-wound-care-jordan', nav: { ar: 'الجروح المزمنة', en: 'Chronic wounds' }, built: true, priority: 0.9 },
   contact: { slug: 'contact', nav: { ar: 'التواصل', en: 'Contact' }, built: true, priority: 0.7 },
-  privacy: { slug: 'privacy-policy', nav: { ar: 'سياسة الخصوصية', en: 'Privacy policy' }, built: true, priority: 0.3 },
-  disclaimer: { slug: 'medical-disclaimer', nav: { ar: 'إخلاء المسؤولية الطبية', en: 'Medical disclaimer' }, built: true, priority: 0.3 },
+  legal: { slug: 'privacy-and-disclaimer', nav: { ar: 'الخصوصية وإخلاء المسؤولية', en: 'Privacy & disclaimer' }, built: true, priority: 0.3 },
   // Phase 2
   pressure: { slug: 'pressure-injury-care', nav: { ar: 'قرح الضغط', en: 'Pressure injuries' }, built: true, priority: 0.8 },
   diabeticFoot: { slug: 'diabetic-foot-wounds', nav: { ar: 'القدم السكري', en: 'Diabetic foot' }, built: true, priority: 0.8 },
@@ -31,7 +29,7 @@ export const pages: Record<PageKey, PageDef> = {
   npwt: { slug: 'negative-pressure-wound-therapy', nav: { ar: 'العلاج بالضغط السلبي', en: 'NPWT / VAC' }, built: true, priority: 0.8 },
   education: { slug: 'wound-care-education', nav: { ar: 'التعليم والتدريب', en: 'Education' }, built: true, priority: 0.7 },
   articles: { slug: 'articles', nav: { ar: 'المقالات', en: 'Articles' }, built: true, priority: 0.7 },
-  homeVisits: { slug: 'home-wound-care-amman', nav: { ar: 'الزيارات المنزلية', en: 'Home visits' }, built: false && flags.homeVisitsPage, priority: 0.8 },
+  homeVisits: { slug: 'home-wound-care', nav: { ar: 'الزيارات المنزلية', en: 'Home visits' }, built: false && flags.homeVisitsPage, priority: 0.8 },
 };
 
 export const langs: Lang[] = ['ar', 'en'];
@@ -49,9 +47,12 @@ export const isBuilt = (key: PageKey) => pages[key].built;
 export const careNav: PageKey[] = ['chronic', 'pressure', 'diabeticFoot', 'surgical', 'npwt'];
 export const careLabel: Record<Lang, string> = { ar: 'العناية بالجروح', en: 'Wound care' };
 /** Main navigation, in display order. 'care' renders the careNav group as a submenu. */
-export const mainNav: Array<PageKey | 'care'> = ['about', 'care', 'education', 'articles', 'credentials', 'contact'];
+export const mainNav: Array<PageKey | 'care'> = ['about', 'care', 'education', 'articles', 'contact'];
 /** Footer "site" column. */
-export const footerNav: PageKey[] = ['about', 'credentials', 'education', 'articles', 'contact', 'privacy', 'disclaimer'];
+export const footerNav: PageKey[] = ['about', 'education', 'articles', 'contact', 'legal'];
+
+/** Credentials live on the About page (merged 6 Oct 2026). */
+export const credentialsHref = (lang: Lang) => `${path(lang, 'about')}#credentials`;
 
 /** 301 redirects (from → to). Consumed by public/_redirects generation and vercel.json. */
 export function redirects(): Array<[string, string]> {

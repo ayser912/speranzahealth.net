@@ -5,10 +5,10 @@ idx = json.load(open(os.path.join(OUT, '_pages.json'), encoding='utf-8'))
 idx['index.html'] = {'ar': 'الصفحة الرئيسية', 'en': 'Homepage'}
 os.remove(os.path.join(OUT, '_pages.json'))
 groups = [
-  ('Main pages', 'الصفحات الرئيسية', ['index.html', 'about-aissar-shawaqfeh/index.html', 'credentials/index.html', 'wound-care-education/index.html', 'contact/index.html']),
+  ('Main pages', 'الصفحات الرئيسية', ['index.html', 'about-aissar-shawaqfeh/index.html', 'wound-care-education/index.html', 'contact/index.html']),
   ('Wound care', 'العناية بالجروح', ['chronic-wound-care-jordan/index.html', 'pressure-injury-care/index.html', 'diabetic-foot-wounds/index.html', 'surgical-wound-care/index.html', 'negative-pressure-wound-therapy/index.html']),
   ('Articles', 'المقالات', ['articles/index.html'] + sorted([k for k in idx if k.startswith('articles/') and k != 'articles/index.html'], key=lambda k: k)),
-  ('Legal', 'الصفحات القانونية', ['privacy-policy/index.html', 'medical-disclaimer/index.html']),
+  ('Legal', 'الصفحات القانونية', ['privacy-and-disclaimer/index.html']),
 ]
 seen = set(k for _, _, ks in groups for k in ks)
 missing = [k for k in idx if k not in seen]

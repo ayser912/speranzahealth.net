@@ -9,7 +9,7 @@ const a: Article = {
   reviewed: '2026-10-06',
   refs: [R.iwii, R.timers, R.exudate, R.piGuideline],
   related: ['chronic', 'pressure', 'surgical'],
-  relatedArticles: ['choosing-wound-dressings', 'wound-infection-warning-signs', 'diabetic-foot-wound-care-mistakes'],
+  relatedArticles: ['choosing-wound-dressings', 'wound-infection-warning-signs', 'venous-vs-arterial-leg-ulcers'],
   ar: {
     title: 'أخطاء شائعة في العناية المنزلية بالجروح | أيسر شواقفه CWS®',
     description: 'أخطاء منتشرة تؤخر التئام الجروح في المنزل: ترك الجرح «يتنفس»، والمطهرات القوية، والخلطات الشعبية، وتغيير الضماد بكثرة، وإهمال الضغط والتغذية.',

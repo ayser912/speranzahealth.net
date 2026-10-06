@@ -4,8 +4,9 @@ import { R } from '../refs';
 const page: ClinicalPageData = {
   published: '2026-10-05',
   reviewed: '2026-10-06',
+  illustration: 'time',
   refs: [R.frykberg, R.schultz, R.timers, R.iwii, R.piGuideline, R.iwgdfSite, R.jnc],
-  related: ['pressure', 'diabeticFoot', 'surgical', 'npwt', 'credentials'],
+  related: ['pressure', 'diabeticFoot', 'surgical', 'npwt', 'education'],
   ar: {
     title: 'العناية بالجروح المزمنة في الأردن | أيسر شواقفه CWS®',
     description: 'متى يُعد الجرح مزمنًا، ولماذا يتأخر التئامه، وما علامات الخطر التي تستدعي مراجعة طبية عاجلة؟ دليل تثقيفي من أخصائي جروح معتمد CWS® في الأردن.',
@@ -46,10 +47,21 @@ const page: ClinicalPageData = {
             'التورم المزمن في الساقين.',
           ],
         },
-        after: [
-          'يستخدم المختصون إطارًا منظّمًا يُعرف بـ TIME لتقييم قاع الجرح: الأنسجة (Tissue)، والعدوى أو الالتهاب (Infection/Inflammation)، والرطوبة (Moisture)، وحواف الجرح (Edge).',
-          'للتفاصيل اقرأ: <a href="/ar/articles/why-chronic-wounds-fail-to-heal/">لماذا لا يلتئم الجرح المزمن؟</a>',
-        ],
+      },
+      {
+        id: 'time', h: 'كيف يقيّم المختصون الجرح: إطار TIME',
+        body: ['يستخدم أخصائيو الجروح إطارًا منظّمًا حتى لا يُغفل أي عنصر يمنع الالتئام:'],
+        table: {
+          caption: 'إطار TIME لتحضير قاع الجرح',
+          head: ['العنصر', 'السؤال الذي يطرحه المختص'],
+          rows: [
+            ['T — الأنسجة (Tissue)', 'هل يوجد نسيج ميت أو متليف يحتاج إلى إزالة؟'],
+            ['I — العدوى والالتهاب (Infection)', 'هل توجد علامات عدوى أو طبقة بكتيرية (biofilm) تحتاج إلى معالجة؟'],
+            ['M — الرطوبة (Moisture)', 'هل الجرح جاف جدًا أو رطب جدًا؟ وهل الجلد المحيط سليم؟'],
+            ['E — الحواف (Edge)', 'هل تتقدم الحواف أم أنها متوقفة أو ملتفة؟'],
+          ],
+        },
+        after: ['طوّرت الإرشادات الحديثة هذا الإطار إلى TIMERS بإضافة الإصلاح والتجديد (Repair/Regeneration) والعوامل الاجتماعية والمتعلقة بالمريض (Social factors). لهذا نادرًا ما يحل تغيير الضماد وحده المشكلة إذا بقي السبب قائمًا.'],
       },
       {
         id: 'red-flags', h: 'علامات تستدعي مراجعة طبية عاجلة', warn: true,
@@ -82,7 +94,7 @@ const page: ClinicalPageData = {
         },
         after: [
           'التشخيص الطبي، ووصف المضادات الحيوية أو الأدوية، والتدخلات الجراحية، تبقى من مسؤولية الطبيب. دور الممرض المتخصص أن يقدّم تقييمًا تمريضيًا دقيقًا ويطبّق خطة العناية ويتابعها.',
-          'لمعرفة كيف تستعد لهذا التقييم اقرأ: <a href="/ar/articles/preparing-for-wound-care-assessment/">كيف تستعد لتقييم الجرح؟</a>',
+          'لمعرفة متى تحتاج إلى هذا التقييم وكيف تستعد له اقرأ: <a href="/ar/articles/when-to-see-a-wound-care-specialist/">متى تحتاج إلى أخصائي عناية بالجروح؟</a>',
         ],
       },
       {
@@ -141,10 +153,21 @@ const page: ClinicalPageData = {
             'Long-standing swelling in the legs.',
           ],
         },
-        after: [
-          'Specialists often use a structured framework called TIME to assess the wound bed: Tissue, Infection or inflammation, Moisture balance and the wound Edge.',
-          'For more detail, read <a href="/en/articles/why-chronic-wounds-fail-to-heal/">Why does a chronic wound fail to heal?</a>',
-        ],
+      },
+      {
+        id: 'time', h: 'How specialists assess a wound: the TIME framework',
+        body: ['Wound specialists use a structured framework so that nothing stopping healing is missed:'],
+        table: {
+          caption: 'The TIME framework for wound bed preparation',
+          head: ['Element', 'The question the specialist asks'],
+          rows: [
+            ['T — Tissue', 'Is there dead or sloughy tissue that needs removing?'],
+            ['I — Infection / inflammation', 'Are there signs of infection or biofilm that need treating?'],
+            ['M — Moisture', 'Is the wound too dry or too wet, and is the surrounding skin healthy?'],
+            ['E — Edge', 'Are the edges advancing, or stalled or rolled?'],
+          ],
+        },
+        after: ['Recent guidance extends this to TIMERS, adding Repair/Regeneration and Social and patient-related factors. This is why changing the dressing alone rarely solves the problem if the cause remains.'],
       },
       {
         id: 'red-flags', h: 'Warning signs that need urgent medical review', warn: true,
@@ -177,7 +200,7 @@ const page: ClinicalPageData = {
         },
         after: [
           'Medical diagnosis, prescribing antibiotics or other medicines, and surgical procedures remain the physician’s responsibility. The specialist nurse’s role is to provide an accurate nursing assessment and to carry out and follow up the care plan.',
-          'To get ready for an assessment, read <a href="/en/articles/preparing-for-wound-care-assessment/">How to prepare for a wound-care assessment</a>.',
+          'To know when you need this assessment and how to prepare, read <a href="/en/articles/when-to-see-a-wound-care-specialist/">When to see a wound-care specialist</a>.',
         ],
       },
       {

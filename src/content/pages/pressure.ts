@@ -4,8 +4,9 @@ import { R } from '../refs';
 const page: ClinicalPageData = {
   published: '2026-10-06',
   reviewed: '2026-10-06',
+  illustration: 'pressure',
   refs: [R.piGuideline, R.npiapStaging, R.iwii, R.timers],
-  related: ['chronic', 'diabeticFoot', 'npwt', 'credentials'],
+  related: ['chronic', 'diabeticFoot', 'npwt'],
   ar: {
     title: 'علاج قرح الضغط (قرح الفراش) والوقاية منها في الأردن',
     description: 'ما هي قرح الضغط (قرح الفراش)، ومن الأكثر عرضة لها، وكيف نقي منها ونعتني بها في المنزل والمستشفى؟ دليل تثقيفي من أخصائي جروح معتمد CWS®.',
@@ -53,7 +54,19 @@ const page: ClinicalPageData = {
             ['إصابة الأنسجة العميقة', 'لون أحمر داكن أو بنفسجي أو بني لا يزول، أو فقاعة دموية، تدل على ضرر تحت الجلد.'],
           ],
         },
-        after: ['للتفاصيل وعلامات الخطر في كل مرحلة اقرأ: <a href="/ar/articles/pressure-injury-stages-warning-signs/">مراحل قرح الضغط وعلامات الخطر</a>.'],
+        after: ['قرحة الأنسجة العميقة قد تتطور بسرعة إلى جرح عميق حتى مع العناية الجيدة، ولا تحاول إزالة القشرة السوداء بنفسك، خصوصًا في الكعب.'],
+      },
+      {
+        id: 'check', h: 'كيف تفحص الجلد يوميًا؟',
+        list: {
+          items: [
+            'افحص المناطق المعرّضة للضغط مرة يوميًا على الأقل.',
+            'عند وجود احمرار، اضغط عليه بلطف بإصبعك ثم ارفعه: إذا لم يتحول لونه إلى الأفتح ثم يعود، فقد تكون هذه بداية قرحة ضغط.',
+            'في البشرة الداكنة قد لا يظهر الاحمرار بوضوح؛ لاحظ اختلاف الحرارة أو القوام أو اللون مقارنة بالجلد المجاور.',
+            'افحص الجلد تحت الأجهزة الطبية وحولها.',
+            'عند ملاحظة أي تغيّر: أبعد الضغط عن المنطقة، ولا تدلكها، وأبلغ الفريق الصحي.',
+          ],
+        },
       },
       {
         id: 'prevention', h: 'كيف نقي من قرح الضغط؟',
@@ -147,7 +160,19 @@ const page: ClinicalPageData = {
             ['Deep tissue injury', 'Persistent dark red, purple or maroon discolouration, or a blood blister, signalling damage under the skin.'],
           ],
         },
-        after: ['For more detail and the warning signs at each stage, read <a href="/en/articles/pressure-injury-stages-warning-signs/">Pressure injury stages and warning signs</a>.'],
+        after: ['A deep tissue injury can turn into a deep wound quickly even with good care. Don’t try to remove black eschar yourself, especially on the heel.'],
+      },
+      {
+        id: 'check', h: 'How to check the skin every day',
+        list: {
+          items: [
+            'Check pressure areas at least once a day.',
+            'If you see redness, press it gently with a finger and lift. If it doesn’t go paler and then return, it may be the start of a pressure injury.',
+            'On darker skin, redness can be hard to see. Look for differences in warmth, texture or colour compared with nearby skin.',
+            'Check the skin under and around medical devices.',
+            'If you notice a change: take pressure off the area, don’t massage it, and tell the care team.',
+          ],
+        },
       },
       {
         id: 'prevention', h: 'How are pressure injuries prevented?',

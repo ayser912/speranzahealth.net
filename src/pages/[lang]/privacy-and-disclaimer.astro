@@ -1,0 +1,59 @@
+---
+/** Privacy policy and medical disclaimer, merged into one page (6 Oct 2026). */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LegalBody from '../../components/LegalBody.astro';
+import { contact, person, site, type Lang } from '../../config/site';
+import { langs, credentialsHref } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const updated = '2026-10-06';
+const mail = `<a href="mailto:${contact.email}"><span class="ltr">${contact.email}</span></a>`;
+const cred = `<a href="${credentialsHref(lang)}">${lang === 'ar' ? 'المؤهلات' : 'credentials'}</a>`;
+
+const copy = {
+  ar: {
+    title: 'الخصوصية وإخلاء المسؤولية الطبية | أيسر شواقفه',
+    description: 'كيف يتعامل الموقع مع البيانات، وحدود المحتوى التثقيفي، وما يجب فعله في الحالات الطارئة.',
+    h1: 'الخصوصية وإخلاء المسؤولية الطبية',
+    lead: `يجمع موقع ${site.domain} أقل قدر ممكن من البيانات، ومحتواه تثقيفي عام لا يغني عن التقييم الطبي الفردي.`,
+    sections: [
+      { h: 'الحالات الطارئة', p: ['لا يدير هذا الموقع ولا WhatsApp ولا البريد الإلكتروني أي حالات طارئة. عند وجود احمرار ينتشر حول الجرح أو حرارة أو تشوّش أو نزيف لا يتوقف، توجّه فورًا إلى أقرب قسم طوارئ أو اتصل بالرقم <span class="ltr">911</span>.'] },
+      { h: 'محتوى تثقيفي وليس نصيحة طبية فردية', p: ['كل جرح وكل مريض حالة مختلفة. لا تبدأ علاجًا ولا تغيّره ولا توقفه، ولا تغيّر نوع الضماد، بناءً على محتوى الموقع وحده. ناقش أي قرار مع الطبيب المعالج أو الفريق الصحي المسؤول عنك.', 'قراءة المحتوى أو إرسال استفسار لا يُنشئ علاقة علاجية، ولا يَعِد الموقع بالتئام الجروح أو بأي نتيجة علاجية محددة.'] },
+      { h: 'نطاق الممارسة', p: [`${person.name.ar} ممرض قانوني وأخصائي معتمد في العناية بالجروح، وليس طبيبًا. التشخيص الطبي ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات. اطّلع على ${cred}.`] },
+      { h: 'المراجع والتحديث', p: ['يستند المحتوى السريري إلى إرشادات علمية موثوقة مذكورة في كل صفحة، ويظهر تاريخ آخر مراجعة. قد تتغير التوصيات بعد هذا التاريخ.'] },
+      { h: 'نموذج التواصل', p: ['لا يرسل النموذج بياناتك إلى خادم ولا يخزنها. عند الضغط على زر الإرسال تُفتح رسالة في WhatsApp أو البريد الإلكتروني، ولا تُرسل إلا عندما تضغط أنت على إرسال. يطلب النموذج الاسم الأول وطريقة التواصل المفضلة فقط.'] },
+      { h: 'المعلومات الصحية', p: ['لا نطلب معلومات صحية عبر الموقع. لا ترسل صور الجروح أو التقارير الطبية عبر النموذج أو الرسائل قبل الاتفاق على طريقة آمنة.'] },
+      { h: 'التحليلات وملفات تعريف الارتباط', p: ['قد يستخدم الموقع Google Analytics 4 لفهم عدد الزيارات. لا تُحمّل أدوات التحليل ولا ملفات تعريف الارتباط الخاصة بها إلا بعد موافقتك، ويُحفظ اختيارك في متصفحك فقط.'] },
+      { h: 'حقوقك', p: [`يمكنك طلب معرفة البيانات التي لدينا عنك أو تصحيحها أو حذفها، أو سحب موافقتك في أي وقت، بمراسلة ${mail}. نتعامل مع البيانات وفق التشريعات الأردنية المعمول بها، بما فيها قانون حماية البيانات الشخصية رقم 24 لسنة 2023.`] },
+      { h: 'الروابط الخارجية والاستقلالية', p: ['قد يحتوي الموقع على روابط لمواقع أخرى للمرجعية، ولسنا مسؤولين عن محتواها. المحتوى مستقل ولا يروّج لأي علامة تجارية.'] },
+    ],
+  },
+  en: {
+    title: 'Privacy and Medical Disclaimer | Aissar Shawaqfeh',
+    description: 'How this website handles data, the limits of its educational content, and what to do in an emergency.',
+    h1: 'Privacy and medical disclaimer',
+    lead: `${site.domain} collects as little data as possible, and its content is general education that does not replace an individual medical assessment.`,
+    sections: [
+      { h: 'Emergencies', p: ['This website, WhatsApp and email do not handle emergencies. If there is redness spreading around a wound, fever, confusion or bleeding that will not stop, go to the nearest emergency department or call <span class="ltr">911</span> immediately.'] },
+      { h: 'Education, not individual medical advice', p: ['Every wound and every patient is different. Do not start, change or stop treatment, or change your dressing type, based on this website alone. Discuss any decision with your treating doctor or care team.', 'Reading this content or sending an enquiry does not create a care relationship, and this website does not promise wound healing or any specific clinical result.'] },
+      { h: 'Scope of practice', p: [`${person.name.en} is a Registered Nurse and Certified Wound Specialist, not a physician. Diagnosis, prescribing and surgical decisions are the physician’s responsibility within the multidisciplinary team. See the ${cred}.`] },
+      { h: 'References and updates', p: ['Clinical content is based on reliable guidelines cited on each page, with the last review date shown. Recommendations may change after that date.'] },
+      { h: 'Contact form', p: ['The form does not send your details to a server or store them. When you press send, a message opens in WhatsApp or your email app, and it is only sent when you press send yourself. The form asks only for your first name and preferred contact method.'] },
+      { h: 'Health information', p: ['We do not ask for health information through this website. Please don’t send wound photos or medical reports through the form or by message until a secure method has been agreed.'] },
+      { h: 'Analytics and cookies', p: ['The website may use Google Analytics 4 to understand visit numbers. Analytics tools and their cookies load only after you consent, and your choice is stored only in your browser.'] },
+      { h: 'Your rights', p: [`You can ask what data we hold about you, ask us to correct or delete it, or withdraw your consent at any time by emailing ${mail}. We handle data in line with applicable Jordanian law, including Personal Data Protection Law No. 24 of 2023.`] },
+      { h: 'External links and independence', p: ['The website may link to other sites for reference; we are not responsible for their content. The content is independent and does not promote any brand.'] },
+    ],
+  },
+}[lang];
+const schema = pageGraph({ lang, key: 'legal', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated });
+---
+<BaseLayout lang={lang} pageKey="legal" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="legal" />
+    <LegalBody lang={lang} h1={copy.h1} lead={copy.lead} updated={updated} sections={copy.sections} />
+  </div>
+</BaseLayout>

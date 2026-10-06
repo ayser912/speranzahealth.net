@@ -9,7 +9,7 @@ const a: Article = {
   reviewed: '2026-10-06',
   refs: [R.exudate, R.timers, R.schultz, R.iwii],
   related: ['chronic', 'education', 'npwt'],
-  relatedArticles: ['why-chronic-wounds-fail-to-heal', 'home-wound-care-mistakes', 'wound-infection-warning-signs'],
+  relatedArticles: ['home-wound-care-mistakes', 'wound-infection-warning-signs', 'venous-vs-arterial-leg-ulcers'],
   ar: {
     title: 'اختيار ضماد الجرح حسب الأنسجة والإفرازات | أيسر شواقفه CWS®',
     description: 'لا يوجد ضماد واحد مثالي لكل الجروح. تعرّف إلى أنواع الضمادات الرئيسية واستخداماتها، وكيف يختار المختص الضماد حسب نوع الأنسجة وكمية الإفرازات.',

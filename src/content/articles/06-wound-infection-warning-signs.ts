@@ -9,7 +9,7 @@ const a: Article = {
   reviewed: '2026-10-06',
   refs: [R.iwii, R.niceSsi, R.iwgdf],
   related: ['chronic', 'surgical', 'diabeticFoot'],
-  relatedArticles: ['why-chronic-wounds-fail-to-heal', 'wound-care-after-surgery', 'home-wound-care-mistakes'],
+  relatedArticles: ['home-wound-care-mistakes', 'choosing-wound-dressings', 'venous-vs-arterial-leg-ulcers'],
   ar: {
     title: 'علامات التهاب الجرح التي لا ينبغي تجاهلها | أيسر شواقفه CWS®',
     description: 'كيف تميّز بين التئام الجرح الطبيعي وعدوى الجرح؟ العلامات الموضعية، وعلامات انتشار العدوى في الجسم التي تستدعي الطوارئ، وما الذي لا يجب فعله.',

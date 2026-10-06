@@ -16,7 +16,7 @@ const id = analytics.ga4Id;
 ---
 {id && (
   <div class="consent" id="consent" role="region" aria-label={lang === 'ar' ? 'موافقة ملفات تعريف الارتباط' : 'Cookie consent'} hidden>
-    <p>{s.consentText} <a href={path(lang, 'privacy')}>{s.privacyLink}</a></p>
+    <p>{s.consentText} <a href={path(lang, 'legal')}>{s.privacyLink}</a></p>
     <div class="actions">
       <button type="button" class="btn btn-primary" data-consent="granted">{s.consentAccept}</button>
       <button type="button" class="btn btn-secondary" data-consent="denied">{s.consentDecline}</button>

@@ -9,8 +9,8 @@ import { dirname, join } from 'node:path';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const fonts = `file://${root}/public/fonts`;
 const variants = {
-  ar: { dir: 'rtl', name: 'أيسر شواقفه', title: 'ممرض قانوني وأخصائي معتمد في العناية بالجروح', place: 'عمّان، الأردن', font: 'Plex' },
-  en: { dir: 'ltr', name: 'Aissar Shawaqfeh', title: 'Registered Nurse and Certified Wound Specialist', place: 'Amman, Jordan', font: 'Inter' },
+  ar: { dir: 'rtl', name: 'أيسر شواقفه', title: 'ممرض قانوني وأخصائي معتمد في العناية بالجروح', place: 'الأردن', font: 'Plex' },
+  en: { dir: 'ltr', name: 'Aissar Shawaqfeh', title: 'Registered Nurse and Certified Wound Specialist', place: 'Jordan', font: 'Inter' },
 };
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined }).catch(() => chromium.launch({ executablePath: '/opt/pw-browsers/chromium' }));
 for (const [lang, v] of Object.entries(variants)) {

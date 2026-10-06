@@ -3,8 +3,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Disclosure from '../../components/Disclosure.astro';
 import ArticleCards from '../../components/ArticleCards.astro';
+import VideoSection from '../../components/VideoSection.astro';
+import Illustration from '../../components/Illustration.astro';
 import { profiles, type Lang } from '../../config/site';
-import { path, langs } from '../../lib/routes';
+import { path, langs, credentialsHref } from '../../lib/routes';
 import { pageGraph } from '../../lib/schema';
 import { t, formatDate } from '../../lib/i18n';
 import { track } from '../../lib/links';
@@ -21,7 +23,7 @@ const copy = {
     title: 'التعليم والتدريب في العناية بالجروح | أيسر شواقفه CWS®',
     description: 'محاضرات وورش عمل تطبيقية للممرضين ومقدمي الرعاية والمنشآت الصحية في تقييم الجروح واختيار الضمادات وقرح الضغط والقدم السكري والعلاج بالضغط السلبي NPWT.',
     h1: 'التعليم والتدريب في العناية بالجروح',
-    lead: 'يقدّم أيسر شواقفه، الممرض القانوني والأخصائي المعتمد في العناية بالجروح CWS®، محاضرات وورش عمل تطبيقية تساعد الفرق الصحية ومقدمي الرعاية على العناية بالجروح بثقة وأمان ووفق الدليل العلمي.',
+    lead: 'محاضرات وورش عمل تطبيقية في جميع أنحاء الأردن، تساعد الفرق الصحية ومقدمي الرعاية على العناية بالجروح بثقة وأمان ووفق الدليل العلمي.',
     topicsH: 'موضوعات التدريب',
     topics: [
       ['تقييم الجروح وتوثيقها', 'التاريخ الصحي، والقياس، ووصف الأنسجة والإفرازات والحواف، والتوثيق الذي يسمح بمتابعة التقدم.'],
@@ -51,7 +53,7 @@ const copy = {
     title: 'Wound-Care Education and Training | Aissar Shawaqfeh, CWS®',
     description: 'Lectures and hands-on workshops for nurses, caregivers and healthcare facilities on wound assessment, dressing selection, pressure injuries, diabetic foot and NPWT.',
     h1: 'Wound-care education and training',
-    lead: 'Aissar Shawaqfeh, Registered Nurse and Certified Wound Specialist (CWS®), offers lectures and hands-on workshops that help healthcare teams and caregivers provide wound care confidently, safely and in line with the evidence.',
+    lead: 'Lectures and hands-on workshops across Jordan that help healthcare teams and caregivers provide wound care confidently, safely and in line with the evidence.',
     topicsH: 'Training topics',
     topics: [
       ['Wound assessment and documentation', 'Health history, measurement, describing tissue, exudate and edges, and documentation that makes progress visible.'],
@@ -78,7 +80,7 @@ const copy = {
     updated: 'Last updated',
   },
 }[lang];
-const starter = articles.filter((a) => ['choosing-wound-dressings', 'what-is-npwt-vac-therapy', 'pressure-injury-stages-warning-signs'].includes(a.slug));
+const starter = articles.filter((a) => ['choosing-wound-dressings', 'wound-infection-warning-signs', 'venous-vs-arterial-leg-ulcers'].includes(a.slug));
 const schema = pageGraph({ lang, key: 'education', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated, aboutTopic: lang === 'ar' ? 'التدريب في العناية بالجروح' : 'Wound-care education' });
 ---
 <BaseLayout lang={lang} pageKey="education" title={copy.title} description={copy.description} schema={schema}>
@@ -90,7 +92,7 @@ const schema = pageGraph({ lang, key: 'education', type: 'WebPage', title: copy.
       <p class="lead">{copy.lead}</p>
       <div class="actions">
         <a class="btn btn-primary" href={`${path(lang, 'contact')}?reason=education`} {...track('cta_click', { lang, page: 'education', placement: 'intro' })}>{copy.cta}</a>
-        <a class="btn btn-secondary" href={path(lang, 'credentials')}>{s.credentialsCta}</a>
+        <a class="btn btn-secondary" href={credentialsHref(lang)}>{s.credentialsCta}</a>
         {youtube?.verified && <a class="btn btn-secondary" href={youtube.url} rel="noopener" {...track('outbound_profile', { lang, page: 'education', placement: 'youtube' })}>{copy.videos}</a>}
       </div>
     </header>
@@ -114,6 +116,8 @@ const schema = pageGraph({ lang, key: 'education', type: 'WebPage', title: copy.
       </section>
     </div>
 
+    <Illustration lang={lang} name="time" />
+
     <section class="prose" aria-labelledby="appr-h">
       <h2 id="appr-h">{copy.approachH}</h2>
       <p>{copy.approach}</p>
@@ -131,6 +135,8 @@ const schema = pageGraph({ lang, key: 'education', type: 'WebPage', title: copy.
         <ArticleCards lang={lang} items={starter} />
       </section>
     )}
+
+    <VideoSection lang={lang} page="education" />
 
     <Disclosure lang={lang} />
   </div>

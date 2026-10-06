@@ -30,7 +30,8 @@ export function personNode(lang: Lang) {
     url: abs(path(lang, 'about')),
     email: `mailto:${contact.email}`,
     knowsLanguage: ['ar', 'en'],
-    address: { '@type': 'PostalAddress', addressLocality: person.city.en, addressCountry: person.countryCode },
+    address: { '@type': 'PostalAddress', addressCountry: person.countryCode },
+    areaServed: { '@type': 'Country', name: 'Jordan' },
     alumniOf: { '@type': 'CollegeOrUniversity', name: 'Jordan University of Science and Technology', url: 'https://www.just.edu.jo/' },
     hasCredential: credentials
       .filter((c) => c.clinical)

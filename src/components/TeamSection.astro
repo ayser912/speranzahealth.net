@@ -1,0 +1,20 @@
+---
+/** Multidisciplinary team section. Specialties come from config `team`. */
+import { team, type Lang } from '../config/site';
+import Illustration from './Illustration.astro';
+interface Props { lang: Lang; withDiagram?: boolean; headingLevel?: 2 | 3 }
+const { lang, withDiagram = true } = Astro.props;
+const L = lang === 'ar'
+  ? { h: 'فريق متعدد التخصصات', p: 'لا يُعالج الجرح المعقد من تخصص واحد. تُنسَّق العناية مع فريق متعدد التخصصات حسب حاجة كل حالة، لأن نجاح الالتئام يعتمد على معالجة السبب: الدورة الدموية، والعدوى، والضغط، والتغذية، والحاجة إلى تدخل جراحي.' }
+  : { h: 'A multidisciplinary team', p: 'A complex wound is never treated by one specialty alone. Care is coordinated with a multidisciplinary team according to each case, because healing depends on treating the cause: circulation, infection, pressure, nutrition and the need for surgery.' };
+---
+<section class="team" aria-labelledby={`team-h-${lang}`}>
+  <div class={withDiagram ? 'team-grid' : undefined}>
+    <div class="prose">
+      <h2 id={`team-h-${lang}`} class="flush">{L.h}</h2>
+      <p>{L.p}</p>
+      <ul class="team-list">{team.map((m) => <li>{m[lang]}</li>)}</ul>
+    </div>
+    {withDiagram && <Illustration lang={lang} name="team" />}
+  </div>
+</section>

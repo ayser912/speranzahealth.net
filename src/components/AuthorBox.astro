@@ -1,21 +1,15 @@
 ---
-/** Author identity block required on every clinical/educational page. */
+/** Compact author line required on every clinical page: name, credentials, link to verification, review date. */
 import { person, type Lang } from '../config/site';
-import { path } from '../lib/routes';
+import { path, credentialsHref } from '../lib/routes';
 import { t, formatDate } from '../lib/i18n';
 interface Props { lang: Lang; published: string; reviewed: string; medicalReviewer?: { name: string; title: string } | null }
-const { lang, published, reviewed, medicalReviewer = null } = Astro.props;
+const { lang, reviewed, medicalReviewer = null } = Astro.props;
 const s = t(lang);
-const initials = lang === 'ar' ? 'أ ش' : 'AS';
 ---
-<aside class="author-box" aria-label={lang === 'ar' ? 'عن الكاتب' : 'About the author'}>
-  <div class="author-initials" aria-hidden="true">{initials}</div>
-  <div>
-    <p>{s.authorBy}: <a href={path(lang, 'about')}><strong>{person.name[lang]}</strong></a>{lang === 'ar' ? '، ' : ', '}<span class="ltr">{person.postNominals}</span></p>
-    <p class="meta">{person.title[lang]}. <a href={path(lang, 'credentials')}>{s.credentialsCta}</a></p>
-    <p class="meta">{s.published}: <time datetime={published}>{formatDate(published, lang)}</time>. {s.reviewed}: <time datetime={reviewed}>{formatDate(reviewed, lang)}</time>.</p>
-    {medicalReviewer
-      ? <p class="meta">{lang === 'ar' ? 'المراجعة الطبية' : 'Medical review'}: {medicalReviewer.name}, {medicalReviewer.title}</p>
-      : <p class="meta">{lang === 'ar' ? 'المراجعة الطبية: لا تتضمن هذه الصفحة قرارات تشخيصية أو علاجية تتطلب مراجعة طبيب.' : 'Medical review: this page contains no diagnostic or prescribing guidance requiring physician review.'}</p>}
-  </div>
-</aside>
+<p class="byline">
+  <span>{s.authorBy}: <a href={path(lang, 'about')}>{person.name[lang]}</a>{lang === 'ar' ? '، ' : ', '}<span class="ltr">{person.postNominals}</span></span>
+  <span>{s.reviewed}: <time datetime={reviewed}>{formatDate(reviewed, lang)}</time></span>
+  {medicalReviewer && <span>{lang === 'ar' ? 'المراجعة الطبية' : 'Medical review'}: {medicalReviewer.name}, {medicalReviewer.title}</span>}
+  <a href={credentialsHref(lang)}>{s.credentialsCta}</a>
+</p>

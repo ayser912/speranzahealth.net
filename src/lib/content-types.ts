@@ -44,6 +44,8 @@ export interface ClinicalPageData {
   ar: LangCopy;
   en: LangCopy;
   video?: Video;
+  /** original explanatory illustration shown after the first section */
+  illustration?: 'team' | 'time' | 'pressure' | 'foot' | 'npwt' | 'surgical';
   /** physician who reviewed the content (only with their written agreement) */
   medicalReviewer?: { name: string; title: string } | null;
 }

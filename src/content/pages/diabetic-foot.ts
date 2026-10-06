@@ -4,8 +4,9 @@ import { R } from '../refs';
 const page: ClinicalPageData = {
   published: '2026-10-06',
   reviewed: '2026-10-06',
+  illustration: 'foot',
   refs: [R.iwgdf, R.iwgdfSite, R.iwii, R.clti],
-  related: ['chronic', 'surgical', 'npwt', 'credentials'],
+  related: ['chronic', 'surgical', 'npwt'],
   ar: {
     title: 'العناية بجروح القدم السكري في الأردن | أيسر شواقفه CWS®',
     description: 'لماذا يحتاج جرح القدم لدى مريض السكري إلى اهتمام سريع؟ علامات الخطر، والوقاية اليومية، ودور الفريق متعدد التخصصات في العناية بجروح القدم السكري.',
@@ -72,7 +73,19 @@ const page: ClinicalPageData = {
       {
         id: 'after-healing', h: 'بعد التئام الجرح',
         body: ['خطر عودة القرحة مرتفع بعد الالتئام. لذلك يستمر فحص القدم اليومي، والحذاء المناسب، والمتابعة الدورية مع الفريق الصحي حتى بعد شفاء الجرح.'],
-        after: ['اقرأ أيضًا: <a href="/ar/articles/diabetic-foot-wound-care-mistakes/">أخطاء شائعة في العناية بجرح القدم السكري</a>.'],
+      },
+      {
+        id: 'mistakes', h: 'أخطاء شائعة يجب تجنبها',
+        list: {
+          items: [
+            '<strong>انتظار الجرح ليلتئم وحده</strong>، لأن ضعف الإحساس قد يجعله غير مؤلم ويبدو بسيطًا.',
+            '<strong>المشي على الجرح</strong> وعدم الالتزام بطريقة تخفيف الضغط التي يحددها الفريق.',
+            '<strong>الخلطات المنزلية</strong> مثل البن ومعجون الأسنان والأعشاب والكريمات غير الموصوفة.',
+            '<strong>نقع القدم</strong> لفترات طويلة أو في ماء ساخن.',
+            '<strong>قص المسامير اللحمية أو الجلد السميك</strong> بالشفرات أو استخدام لاصقات إزالة المسامير.',
+            '<strong>إهمال ضبط سكر الدم</strong> والتوقف عن المتابعة بعد الالتئام.',
+          ],
+        },
       },
     ],
   },
@@ -142,7 +155,19 @@ const page: ClinicalPageData = {
       {
         id: 'after-healing', h: 'After the wound heals',
         body: ['The risk of an ulcer coming back is high after healing. Daily foot checks, suitable footwear and regular follow-up with the care team continue even after the wound has closed.'],
-        after: ['Read also: <a href="/en/articles/diabetic-foot-wound-care-mistakes/">Common mistakes in diabetic foot wound care</a>.'],
+      },
+      {
+        id: 'mistakes', h: 'Common mistakes to avoid',
+        list: {
+          items: [
+            '<strong>Waiting for the wound to heal on its own</strong>, because reduced sensation can make it painless and seem minor.',
+            '<strong>Walking on the wound</strong> and not following the offloading plan set by the team.',
+            '<strong>Home remedies</strong> such as coffee, toothpaste, herbs or unprescribed creams.',
+            '<strong>Soaking the foot</strong> for long periods or in hot water.',
+            '<strong>Cutting corns or hard skin</strong> with blades, or using corn plasters.',
+            '<strong>Neglecting blood glucose control</strong>, or stopping follow-up after healing.',
+          ],
+        },
       },
     ],
   },

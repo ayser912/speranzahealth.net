@@ -41,12 +41,11 @@ export const person = {
     en: 'Registered Nurse · Certified Wound Specialist (CWS®)',
   },
   jobTitleSchema: 'Registered Nurse and Certified Wound Specialist',
-  city: { ar: 'عمّان', en: 'Amman' },
   country: { ar: 'الأردن', en: 'Jordan' },
   countryCode: 'JO',
   /** Approx. years in healthcare (since 2017). Update yearly or compute. */
   careerStartYear: 2017,
-  /** Professional photo — TODO: supply approved photo, then set path e.g. '/images/ayser-shawaqfeh-certified-wound-specialist-amman.jpg' */
+  /** Professional photo — TODO: supply an approved photo, save it in public/images/ and set e.g. '/images/aissar-shawaqfeh-certified-wound-specialist-jordan.jpg' */
   photo: null as string | null,
   knowsAbout: [
     'Chronic wound care',
@@ -59,7 +58,7 @@ export const person = {
   ],
 };
 
-/** Education, certification and career — rendered on About/Credentials and in schema. */
+/** Clinical qualifications — rendered on the About page and in schema. */
 export const credentials = [
   {
     id: 'cws',
@@ -84,29 +83,6 @@ export const credentials = [
     verifyUrl: null,
     clinical: true,
   },
-  {
-    id: 'ai-health',
-    name: { ar: 'الذكاء الاصطناعي في الرعاية الصحية', en: 'Artificial Intelligence in Healthcare' },
-    schemaName: 'Artificial Intelligence in Healthcare',
-    issuer: { ar: 'RCSI University of Medicine and Health Sciences', en: 'RCSI University of Medicine and Health Sciences' },
-    issuerUrl: 'https://www.rcsi.com/',
-    year: 2026,
-    category: 'certificate',
-    verifyUrl: null,
-    clinical: false,
-  },
-  {
-    id: 'kam',
-    name: { ar: 'إدارة الحسابات الرئيسية', en: 'Key Account Management' },
-    schemaName: 'Key Account Management certificate',
-    /** TODO: confirm issuing body (null = not shown) */
-    issuer: null,
-    issuerUrl: null,
-    year: 2025,
-    category: 'certificate',
-    verifyUrl: null,
-    clinical: false,
-  },
 ] as const;
 
 /** Nursing licence: publish only what Aissar approves. */
@@ -117,19 +93,6 @@ export const nursingLicence = {
   publishNumber: false,
 };
 
-export const career = [
-  {
-    from: 2017, to: 2019,
-    role: { ar: 'ممرض عناية حثيثة', en: 'Intensive Care Unit (ICU) Nurse' },
-    org: { ar: 'المستشفى الاستشاري، عمّان', en: 'Istishari Hospital, Amman' },
-  },
-  {
-    from: 2019, to: null,
-    role: { ar: 'Key Account Specialist — خط العناية بالجروح', en: 'Key Account Specialist — Wound Care Line' },
-    org: { ar: 'مستودع أدوية الوافي، عمّان', en: 'Al-Wafi Drug Store, Amman' },
-  },
-] as const;
-
 /** All contact channels. Used by header, footer, contact page and tracking links. */
 export const contact = {
   email: 'aissar@speranzahealth.net',
@@ -139,8 +102,8 @@ export const contact = {
   phoneDisplay: '+962 79 883 9394',
   /** TODO: confirm public response hours, e.g. { ar: 'الأحد–الخميس، 9 صباحًا – 6 مساءً', en: 'Sun–Thu, 9 am – 6 pm' } (null = not shown) */
   hours: null as { ar: string; en: string } | null,
-  /** TODO: confirm service areas actually served */
-  serviceAreas: { ar: ['عمّان'], en: ['Amman'] },
+  /** The website serves all of Jordan. */
+  serviceArea: { ar: 'جميع أنحاء الأردن', en: 'All of Jordan' },
 };
 
 /** Profiles: only `verified: true` entries are emitted in schema sameAs and shown publicly. */
@@ -156,16 +119,50 @@ export const profiles = [
  * Decisions that unlock features. Keep false until Aissar confirms in writing.
  * - patientServicesConfirmed: a licensed pathway for direct patient services exists → enables
  *   "coordinate an assessment" CTAs.
- * - homeVisitsPage: enables /ar/home-wound-care-amman/ (not built in Phase 1).
+ * - homeVisitsPage: enables a home-visits page (not built).
  * - organizationConfirmed: Speranza Health is a real registered organisation → emit Organization schema.
- * - industryDisclosure: show the employment disclosure on product-related pages.
+ * - brandNeutralNote: show the short "educational and brand-neutral" note on clinical pages.
  */
 export const flags = {
   patientServicesConfirmed: false,
   homeVisitsPage: false,
   organizationConfirmed: false,
-  industryDisclosure: true,
+  brandNeutralNote: true,
 };
+
+/**
+ * Multidisciplinary team (MDT) that care is coordinated with, as stated by Aissar (6 Oct 2026).
+ * Shown on the home, about and wound-care pages. Do not add named individuals or institutions
+ * without their written agreement.
+ */
+export const team = [
+  { id: 'ortho', ar: 'جراحة العظام', en: 'Orthopaedic surgery' },
+  { id: 'vascular', ar: 'جراحة الأوعية الدموية', en: 'Vascular surgery' },
+  { id: 'general', ar: 'الجراحة العامة', en: 'General surgery' },
+  { id: 'plastic', ar: 'الجراحة التجميلية والترميمية', en: 'Plastic and reconstructive surgery' },
+  { id: 'podiatry', ar: 'طب وجراحة القدم (Podiatry)', en: 'Podiatry' },
+  { id: 'id', ar: 'الأمراض المعدية', en: 'Infectious diseases' },
+  { id: 'nutrition', ar: 'التغذية العلاجية', en: 'Clinical nutrition' },
+  { id: 'other', ar: 'وغيرهم من الكوادر الصحية حسب حاجة كل حالة', en: 'Other healthcare professionals as each case requires' },
+] as const;
+
+/**
+ * Educational videos. Add entries as they are published (YouTube id or Instagram reel URL).
+ * Until the list has entries, video sections link to the Instagram profile instead.
+ * Never include patient footage without documented written consent.
+ */
+export const videos: Array<{
+  id: string;
+  /** 'youtube' → embedded with a privacy-friendly player; 'instagram' → linked */
+  platform: 'youtube' | 'instagram';
+  /** YouTube video id, or full Instagram reel URL */
+  ref: string;
+  title: { ar: string; en: string };
+  /** registry key of the page this video belongs to; 'home' shows on the homepage */
+  page: string;
+  uploadDate?: string;
+  duration?: string;
+}> = [];
 
 export const analytics = {
   ga4Id: (import.meta.env?.PUBLIC_GA4_ID as string | undefined) || '',

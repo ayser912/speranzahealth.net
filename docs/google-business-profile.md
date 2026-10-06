@@ -9,7 +9,6 @@ No profile has been created. Create one only after the eligibility checks below 
 - [ ] **Profile type decided:**
   - Home visits only → **service-area business**: hide your home address and list only the areas you really visit.
   - You see patients at a facility → that facility has its own profile. A separate practitioner profile is allowed only if you are public-facing there.
-- [ ] **Employer check.** Your Al-Wafi contract allows outside clinical work.
 - [ ] **One profile only.** Never create a second profile for the same person or specialty.
 - [ ] **A real business phone** that you answer during the listed hours (+962 79 883 9394).
 - [ ] **Website pages ready**: the profile links to `/ar/contact/` (or the home-visits page once it exists).
@@ -21,7 +20,7 @@ Use your real-world name exactly as it appears on your documents, signage and in
 - If Speranza Health is **not** a registered business: **Aissar Shawaqfeh** (Arabic: أيسر شواقفه).
 - If Speranza Health **is** a registered business with signage or invoices: **Speranza Health**.
 
-Never add words like "best wound specialist in Jordan" or "wound care Amman" to the name.
+Never add words like "best wound specialist in Jordan" or "wound care Jordan" to the name.
 
 ## 3. Category options (pick the closest real one in the GBP category picker)
 
@@ -35,11 +34,11 @@ Do **not** choose Doctor, Physician or any physician specialty.
 
 ## 4. Description (Arabic, 750 characters max)
 
-> أيسر شواقفه ممرض قانوني وأخصائي معتمد في العناية بالجروح (CWS®) من American Board of Wound Management. يقدّم زيارات منزلية للعناية بالجروح في عمّان: الجروح المزمنة، قرح الضغط، جروح القدم السكري، الجروح الجراحية، ومتابعة العلاج بالضغط السلبي NPWT. يعمل بالتنسيق مع الطبيب المعالج، ويركز على التقييم المبني على الدليل وتعليم المريض والأسرة. يقدّم أيضًا تدريبًا للممرضين ومقدمي الرعاية. للحالات الطارئة يرجى التوجه إلى أقرب قسم طوارئ. Registered Nurse and Certified Wound Specialist offering home wound care visits in Amman, Jordan.
+> أيسر شواقفه ممرض قانوني وأخصائي معتمد في العناية بالجروح (CWS®) من American Board of Wound Management. يقدّم العناية بالجروح في الأردن بالتنسيق مع فريق متعدد التخصصات: الجروح المزمنة، قرح الضغط، جروح القدم السكري، الجروح الجراحية، ومتابعة العلاج بالضغط السلبي NPWT. يركز على التقييم المبني على الدليل وتعليم المريض والأسرة. يقدّم أيضًا تدريبًا للممرضين ومقدمي الرعاية. للحالات الطارئة يرجى التوجه إلى أقرب قسم طوارئ. Registered Nurse and Certified Wound Specialist providing wound care across Jordan with a multidisciplinary team.
 
 ## 5. Other fields
 
-- **Service areas:** Amman first. Add other governorates one by one, only once you actually serve them.
+- **Service areas:** Jordan. List only the governorates you actually serve (Google allows up to 20 areas).
 - **Hours:** your real response hours (still a TODO in the site config).
 - **Website link:** `https://speranzahealth.net/ar/?utm_source=google&utm_medium=organic&utm_campaign=gbp`
 - **Photos:** a professional head-and-shoulders photo, your certificates with the ID number blurred, and training sessions. **No patient or wound photos.**

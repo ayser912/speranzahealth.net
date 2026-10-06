@@ -1,0 +1,16 @@
+---
+/**
+ * Professional photo. Renders only when an approved photo is configured (person.photo).
+ * Never use stock photos presented as Aissar, or any patient image.
+ */
+import { person, type Lang } from '../config/site';
+interface Props { lang: Lang; eager?: boolean }
+const { lang, eager = false } = Astro.props;
+const alt = lang === 'ar' ? `${person.name.ar}، ممرض قانوني وأخصائي جروح معتمد CWS® في الأردن` : `${person.name.en}, Registered Nurse and Certified Wound Specialist in Jordan`;
+---
+{person.photo && (
+  <figure class="portrait">
+    <img src={person.photo} alt={alt} width="800" height="1000" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+    <span class="badge">CWS®</span>
+  </figure>
+)}

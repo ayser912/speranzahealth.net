@@ -4,8 +4,9 @@ import { R } from '../refs';
 const page: ClinicalPageData = {
   published: '2026-10-06',
   reviewed: '2026-10-06',
+  illustration: 'surgical',
   refs: [R.niceSsi, R.whoSsi, R.iwii, R.ewmaNpwt],
-  related: ['chronic', 'npwt', 'diabeticFoot', 'credentials'],
+  related: ['chronic', 'npwt', 'diabeticFoot'],
   ar: {
     title: 'العناية بالجروح الجراحية وجرح العملية الذي لا يلتئم | الأردن',
     description: 'كيف يلتئم جرح العملية، وما علامات التهاب الجرح أو انفتاحه، ومتى تتواصل مع الجرّاح؟ دليل تثقيفي حول العناية بالجروح الجراحية.',
@@ -50,6 +51,9 @@ const page: ClinicalPageData = {
         list: {
           items: [
             'اتّبع تعليمات الجرّاح المكتوبة حول الضماد والاستحمام وموعد إزالة الغرز.',
+            'اترك الضماد الأول حتى الموعد الذي يحدده الفريق الجراحي، إلا إذا تبلل بالكامل أو انفصل.',
+            'يسمح كثير من الجرّاحين بالاستحمام بعد نحو يومين من العملية؛ جفف الجرح بالتربيت دون فرك، وتجنّب الحوض والسباحة حتى يسمح الجرّاح.',
+            'يُزال كثير من الغرز أو الدبابيس خلال أسبوع إلى أسبوعين حسب نوع العملية، ولا تنزعها بنفسك.',
             'اغسل يديك قبل لمس الجرح أو الضماد وبعده.',
             'لا تضع كريمات أو مراهم أو خلطات منزلية على الجرح ما لم يصفها الفريق المعالج.',
             'تجنّب حمل الأوزان الثقيلة أو الحركات التي تشد الجرح خلال الفترة التي يحددها الجرّاح.',
@@ -57,7 +61,7 @@ const page: ClinicalPageData = {
             'راقب الجرح يوميًا ودوّن أي تغيّر.',
           ],
         },
-        after: ['للتفاصيل العملية يومًا بيوم اقرأ: <a href="/ar/articles/wound-care-after-surgery/">العناية بالجرح بعد العملية</a>.'],
+        after: ['بعد التئام الجرح، احمِ الندبة من أشعة الشمس المباشرة في الأشهر الأولى.'],
       },
       {
         id: 'complex', h: 'الجروح الجراحية المعقدة',
@@ -112,6 +116,9 @@ const page: ClinicalPageData = {
         list: {
           items: [
             'Follow the surgeon’s written instructions on the dressing, showering and when stitches come out.',
+            'Leave the first dressing in place until the time your surgical team gives, unless it becomes soaked or comes off.',
+            'Many surgeons allow showering about two days after surgery. Pat the wound dry, and avoid baths and swimming until your surgeon agrees.',
+            'Stitches or staples often come out within one to two weeks, depending on the operation. Don’t remove them yourself.',
             'Wash your hands before and after touching the wound or dressing.',
             'Don’t put creams, ointments or home remedies on the wound unless your care team prescribed them.',
             'Avoid heavy lifting or movements that strain the wound for as long as your surgeon advises.',
@@ -119,7 +126,7 @@ const page: ClinicalPageData = {
             'Look at the wound daily and note any change.',
           ],
         },
-        after: ['For practical day-by-day advice, read <a href="/en/articles/wound-care-after-surgery/">Wound care after surgery</a>.'],
+        after: ['Once the wound has healed, protect the scar from direct sun in the first months.'],
       },
       {
         id: 'complex', h: 'Complex surgical wounds',

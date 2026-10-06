@@ -1,15 +1,16 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import CredentialRecord from '../../components/CredentialRecord.astro';
 import ContactActions from '../../components/ContactActions.astro';
-import { person, yearsExperience, type Lang } from '../../config/site';
-import { path, langs } from '../../lib/routes';
+import TeamSection from '../../components/TeamSection.astro';
+import VideoSection from '../../components/VideoSection.astro';
+import Portrait from '../../components/Portrait.astro';
+import ArticleCards from '../../components/ArticleCards.astro';
+import { person, credentials, yearsExperience, type Lang } from '../../config/site';
+import { path, langs, credentialsHref, type PageKey } from '../../lib/routes';
 import { pageGraph } from '../../lib/schema';
 import { t } from '../../lib/i18n';
 import { track } from '../../lib/links';
-import ArticleCards from '../../components/ArticleCards.astro';
 import { articles } from '../../content/articles/index';
-import type { PageKey } from '../../lib/routes';
 
 export function getStaticPaths() {
   return langs.map((lang) => ({ params: { lang } }));
@@ -17,75 +18,74 @@ export function getStaticPaths() {
 const lang = Astro.params.lang as Lang;
 const s = t(lang);
 const yrs = yearsExperience();
+const cws = credentials.find((c) => c.id === 'cws')!;
 
 const copy = {
   ar: {
     title: 'أيسر شواقفه | أخصائي معتمد للعناية بالجروح في الأردن',
-    description: 'تعرف إلى أيسر شواقفه، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في الأردن، بخبرة في الجروح المزمنة وقرح الضغط والقدم السكري والعلاج بالضغط السلبي.',
+    description: 'أيسر شواقفه، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في الأردن، بخبرة في الجروح المزمنة وقرح الضغط والقدم السكري والعلاج بالضغط السلبي.',
     h1Name: 'أيسر شواقفه',
     h1Title: 'ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®',
-    lead: `خبرة تمريضية تمتد لنحو ${yrs} سنوات في القطاع الصحي، تركّز على الجروح التي لا تلتئم كما يُتوقع: الجروح المزمنة، وقرح الضغط، وجروح القدم السكري، والعلاج بالضغط السلبي NPWT. يقدّم أيسر تثقيفًا واضحًا للمرضى والأسر وتدريبًا للكوادر الصحية في عمّان والأردن.`,
-    areasH: 'مجالات الخبرة',
-    areasIntro: 'لكل مجال صفحة تثقيفية تشرح العلامات المهمة، ومتى تحتاج إلى تقييم متخصص، وكيف تدعم الأسرة العناية.',
+    lead: `خبرة تمتد لنحو ${yrs} سنوات في القطاع الصحي، تركّز على الجروح التي لا تلتئم كما يُتوقع، بالتنسيق مع فريق متعدد التخصصات، مع تثقيف واضح للمرضى والأسر وتدريب للكوادر الصحية في جميع أنحاء الأردن.`,
+    badgeSub: 'أخصائي معتمد في العناية بالجروح',
+    verify: 'تحقق من الاعتماد',
+    areasH: 'العناية بالجروح',
     areas: [
-      { h: 'الجروح المزمنة', p: 'جروح تتأخر في الالتئام أكثر من أربعة إلى ستة أسابيع رغم العناية المعتادة، ولماذا يحدث ذلك.', key: 'chronic' },
-      { h: 'قرح الضغط (قرح الفراش)', p: 'الوقاية والمراحل وعلامات الخطر لدى المرضى طريحي الفراش أو قليلي الحركة.', key: 'pressure' },
-      { h: 'جروح القدم السكري', p: 'لماذا يحتاج جرح القدم لدى مريض السكري إلى تقييم سريع وعمل فريق متعدد التخصصات.', key: 'diabeticFoot' },
-      { h: 'الجروح الجراحية', p: 'متى يكون تأخر التئام جرح العملية علامة تستدعي مراجعة الجرّاح.', key: 'surgical' },
-      { h: 'العلاج بالضغط السلبي NPWT', p: 'كيف يعمل جهاز الضغط السلبي (VAC)، ولمن يناسب، وما الذي تتطلبه متابعته.', key: 'npwt' },
-      { h: 'التعليم والتدريب المهني', p: 'تدريب الممرضين ومقدمي الرعاية على تقييم الجروح واختيار الضمادات وNPWT.', key: 'education' },
+      ['chronic', 'الجروح المزمنة', 'لماذا يتأخر التئام الجرح، وعلامات الخطر، وما يشمله التقييم المتخصص.'],
+      ['pressure', 'قرح الضغط (قرح الفراش)', 'الوقاية والمراحل وفحص الجلد اليومي للمرضى قليلي الحركة.'],
+      ['diabeticFoot', 'جروح القدم السكري', 'لماذا يحتاج جرح القدم لدى مريض السكري إلى اهتمام سريع.'],
+      ['surgical', 'الجروح الجراحية', 'ما هو طبيعي بعد العملية، ومتى تتواصل مع الجرّاح.'],
+      ['npwt', 'العلاج بالضغط السلبي NPWT', 'كيف يعمل جهاز VAC، ولمن يناسب، والحياة اليومية معه.'],
+      ['education', 'التعليم والتدريب', 'محاضرات وورش عملية للممرضين ومقدمي الرعاية.'],
     ],
     approachH: 'منهج العمل',
     approach: [
-      { h: 'تقييم مبني على الدليل', p: 'قرارات العناية تستند إلى الإرشادات الدولية المعتمدة في العناية بالجروح، لا إلى التجربة الفردية وحدها.' },
-      { h: 'تنسيق مع الطبيب المعالج', p: 'التشخيص ووصف الأدوية من مسؤولية الطبيب. دور الممرض المتخصص هو التقييم التمريضي والعناية بالجرح والتثقيف ضمن خطة الفريق.' },
-      { h: 'تثقيف المريض والأسرة', p: 'الأسرة جزء أساسي من نجاح العناية في المنزل، لذلك يكون الشرح واضحًا وعمليًا ومكتوبًا عند الحاجة.' },
-      { h: 'وضوح في نطاق الممارسة', p: 'العمل ضمن نطاق ممارسة التمريض في الأردن، دون وعود بنتائج علاجية مضمونة.' },
+      ['تقييم مبني على الدليل', 'قرارات العناية تستند إلى الإرشادات الدولية المعتمدة في العناية بالجروح.'],
+      ['متابعة وقياس التقدم', 'قياس الجرح وتوثيقه بانتظام لمعرفة ما إذا كانت الخطة تعمل أو تحتاج إلى تعديل.'],
+      ['تثقيف المريض والأسرة', 'شرح واضح وعملي ومكتوب عند الحاجة، لأن الأسرة جزء أساسي من العناية.'],
+      ['وضوح في نطاق الممارسة', 'العمل ضمن نطاق ممارسة التمريض في الأردن، دون وعود بنتائج علاجية مضمونة.'],
     ],
-    proH: 'للكوادر الصحية والجهات التعليمية',
-    proP: 'يقدّم أيسر محاضرات وورش عمل تطبيقية للفرق الصحية في تقييم الجروح، واختيار الضمادات حسب نوع الأنسجة وكمية الإفرازات، وأساسيات العلاج بالضغط السلبي.',
-    aboutH: 'من هو أيسر شواقفه؟',
-    aboutP: 'تخرّج أيسر من كلية التمريض في جامعة العلوم والتكنولوجيا الأردنية عام 2017، وبدأ مسيرته في وحدة العناية الحثيثة في المستشفى الاستشاري في عمّان، ثم تخصص في مجال العناية بالجروح منذ عام 2019. حصل على اعتماد Certified Wound Specialist (CWS®) من American Board of Wound Management.',
-    aboutLink: 'اقرأ النبذة الكاملة',
-    contactH: 'التواصل المهني',
-    contactP: 'للاستفسارات المهنية والتدريب والتعاون، يمكنك التواصل مباشرة. لا تُرسل صورًا أو تقارير طبية عبر الرسائل قبل الاتفاق على طريقة آمنة.',
+    articlesH: 'مقالات تثقيفية',
+    allArticles: 'كل المقالات',
+    contactH: 'التواصل',
+    contactP: 'للاستفسارات والتدريب والتعاون من جميع أنحاء الأردن. لا تُرسل صورًا أو تقارير طبية عبر الرسائل قبل الاتفاق على طريقة آمنة.',
   },
   en: {
     title: 'Aissar Shawaqfeh | Certified Wound Specialist in Jordan',
     description: 'Aissar Shawaqfeh is a Registered Nurse and Certified Wound Specialist in Jordan, experienced in chronic wounds, pressure injuries, diabetic foot and NPWT.',
     h1Name: 'Aissar Shawaqfeh',
     h1Title: 'Registered Nurse and Certified Wound Specialist, CWS®',
-    lead: `About ${yrs} years in healthcare, focused on wounds that are not healing as expected: chronic wounds, pressure injuries, diabetic foot wounds and negative pressure wound therapy (NPWT). Aissar provides clear education for patients and families and training for healthcare teams in Amman and across Jordan.`,
-    areasH: 'Areas of experience',
-    areasIntro: 'Each area has its own educational page explaining the warning signs, when a specialist assessment is needed, and how families can support care.',
+    lead: `About ${yrs} years in healthcare, focused on wounds that are not healing as expected, coordinated with a multidisciplinary team, with clear education for patients and families and training for healthcare teams across Jordan.`,
+    badgeSub: 'Certified Wound Specialist',
+    verify: 'Verify the credential',
+    areasH: 'Wound care',
     areas: [
-      { h: 'Chronic wounds', p: 'Wounds that have not healed after four to six weeks of usual care, and why that happens.', key: 'chronic' },
-      { h: 'Pressure injuries (bedsores)', p: 'Prevention, stages and warning signs in people who are bed-bound or have limited mobility.', key: 'pressure' },
-      { h: 'Diabetic foot wounds', p: 'Why a foot wound in a person with diabetes needs prompt assessment and a multidisciplinary team.', key: 'diabeticFoot' },
-      { h: 'Surgical wounds', p: 'When slow healing after an operation is a reason to contact the surgical team.', key: 'surgical' },
-      { h: 'Negative pressure wound therapy (NPWT)', p: 'How NPWT (VAC) works, who it may suit, and what follow-up it requires.', key: 'npwt' },
-      { h: 'Professional education', p: 'Training for nurses and caregivers in wound assessment, dressing selection and NPWT.', key: 'education' },
+      ['chronic', 'Chronic wounds', 'Why healing stalls, the warning signs, and what a specialist assessment covers.'],
+      ['pressure', 'Pressure injuries (bedsores)', 'Prevention, stages and daily skin checks for people with limited mobility.'],
+      ['diabeticFoot', 'Diabetic foot wounds', 'Why a foot wound in a person with diabetes needs prompt attention.'],
+      ['surgical', 'Surgical wounds', 'What is normal after surgery, and when to contact your surgeon.'],
+      ['npwt', 'Negative pressure wound therapy', 'How VAC therapy works, who it may suit, and daily life with the device.'],
+      ['education', 'Education and training', 'Lectures and hands-on workshops for nurses and caregivers.'],
     ],
-    approachH: 'How Aissar works',
+    approachH: 'How care is approached',
     approach: [
-      { h: 'Evidence-based assessment', p: 'Care decisions follow recognised international wound-care guidelines, not personal habit alone.' },
-      { h: 'Coordination with the treating physician', p: 'Diagnosis and prescribing belong to the physician. The specialist nurse’s role is nursing assessment, wound care and education within the team’s plan.' },
-      { h: 'Education for patients and families', p: 'Families are central to good care at home, so explanations are clear, practical and written down when needed.' },
-      { h: 'A clear scope of practice', p: 'Work stays within the nursing scope of practice in Jordan, with no promises of guaranteed outcomes.' },
+      ['Evidence-based assessment', 'Care decisions follow recognised international wound-care guidelines.'],
+      ['Follow-up and measurement', 'Measuring and documenting the wound regularly to see whether the plan is working or needs to change.'],
+      ['Education for patients and families', 'Clear, practical explanations, written down when needed, because families are central to care.'],
+      ['A clear scope of practice', 'Work stays within the nursing scope of practice in Jordan, with no promises of guaranteed outcomes.'],
     ],
-    proH: 'For healthcare professionals and educators',
-    proP: 'Aissar offers lectures and hands-on workshops for healthcare teams on wound assessment, choosing dressings by tissue type and exudate level, and the fundamentals of negative pressure wound therapy.',
-    aboutH: 'Who is Aissar Shawaqfeh?',
-    aboutP: 'Aissar graduated in nursing from Jordan University of Science and Technology in 2017 and began his career in the intensive care unit at Istishari Hospital in Amman. He has specialised in wound care since 2019 and holds the Certified Wound Specialist (CWS®) credential from the American Board of Wound Management.',
-    aboutLink: 'Read the full profile',
-    contactH: 'Professional contact',
-    contactP: 'For professional enquiries, training and collaboration, you can get in touch directly. Please don’t send photos or medical reports by message until a secure method has been agreed.',
+    articlesH: 'Educational articles',
+    allArticles: 'All articles',
+    contactH: 'Contact',
+    contactP: 'For enquiries, training and collaboration from anywhere in Jordan. Please don’t send photos or medical reports by message until a secure method has been agreed.',
   },
 }[lang];
 
-const schema = pageGraph({ lang, key: 'home', type: 'WebPage', title: copy.title, description: copy.description, dateModified: '2026-10-05' });
+const schema = pageGraph({ lang, key: 'home', type: 'WebPage', title: copy.title, description: copy.description, dateModified: '2026-10-06' });
 const ctaRef = { lang, page: 'home', placement: 'hero' };
-const featured = ['when-to-see-a-wound-care-specialist', 'pressure-injury-stages-warning-signs', 'wound-infection-warning-signs'].map((slug) => articles.find((a) => a.slug === slug)!).filter(Boolean);
+const featured = ['when-to-see-a-wound-care-specialist', 'wound-infection-warning-signs', 'home-wound-care-mistakes']
+  .map((slug) => articles.find((a) => a.slug === slug)!)
+  .filter(Boolean);
 ---
 <BaseLayout lang={lang} pageKey="home" title={copy.title} description={copy.description} schema={schema} ogType="profile">
   <section class="hero">
@@ -95,61 +95,61 @@ const featured = ['when-to-see-a-wound-care-specialist', 'pressure-injury-stages
         <p class="lead">{copy.lead}</p>
         <div class="actions">
           <a class="btn btn-primary" href={path(lang, 'contact')} {...track('cta_click', { ...ctaRef, placement: 'hero-contact' })}>{s.contactCta}</a>
-          <a class="btn btn-secondary" href={path(lang, 'credentials')} {...track('cta_click', { ...ctaRef, placement: 'hero-credentials' })}>{s.credentialsCta}</a>
+          <a class="btn btn-secondary" href={credentialsHref(lang)} {...track('cta_click', { ...ctaRef, placement: 'hero-credentials' })}>{s.credentialsCta}</a>
         </div>
       </div>
-      <CredentialRecord lang={lang} />
+      {person.photo
+        ? <Portrait lang={lang} eager />
+        : (
+          <div class="record">
+            <div class="record-head">
+              <span class="record-mark" aria-hidden="true">CWS®</span>
+            </div>
+            <p class="record-line"><strong>{copy.badgeSub}</strong></p>
+            <p class="record-line" lang="en">{cws.issuer.en}</p>
+            <p class="record-verify"><a href={cws.verifyUrl} rel="noopener">{copy.verify}</a></p>
+          </div>
+        )}
     </div>
   </section>
 
   <section class="section" aria-labelledby="areas-h">
     <div class="wrap">
-      <h2 id="areas-h">{copy.areasH}</h2>
-      <p class="prose">{copy.areasIntro}</p>
+      <h2 id="areas-h" class="flush">{copy.areasH}</h2>
       <ul class="topic-list">
-        {copy.areas.map((a) => (
-          <li>
-            <h3><a href={path(lang, a.key as PageKey)}>{a.h}</a></h3>
-            <p>{a.p}</p>
-          </li>
+        {copy.areas.map(([k, h, p]) => (
+          <li><h3><a href={path(lang, k as PageKey)}>{h}</a></h3><p>{p}</p></li>
         ))}
       </ul>
     </div>
   </section>
 
-  <section class="section section-alt" aria-labelledby="approach-h">
+  <section class="section section-alt">
+    <div class="wrap"><TeamSection lang={lang} /></div>
+  </section>
+
+  <section class="section" aria-labelledby="approach-h">
     <div class="wrap">
-      <h2 id="approach-h">{copy.approachH}</h2>
+      <h2 id="approach-h" class="flush">{copy.approachH}</h2>
       <div class="grid-2">
-        {copy.approach.map((a) => (<div><h3 style="margin-top:0">{a.h}</h3><p>{a.p}</p></div>))}
+        {copy.approach.map(([h, p]) => (<div><h3 style="margin-top:0">{h}</h3><p>{p}</p></div>))}
       </div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="about-h">
-    <div class="wrap split">
-      <div class="prose">
-        <h2 id="about-h" class="flush">{copy.aboutH}</h2>
-        <p>{copy.aboutP}</p>
-        <p><a href={path(lang, 'about')}>{copy.aboutLink}</a></p>
-      </div>
-      <div class="prose">
-        <h2 class="flush">{copy.proH}</h2>
-        <p>{copy.proP}</p>
-        <p><a href={path(lang, 'education')} {...track('cta_click', { lang, page: 'home', placement: 'education' })}>{lang === 'ar' ? 'تعرّف على برامج التدريب' : 'See training topics'}</a></p>
-      </div>
-    </div>
+  <section class="section section-alt">
+    <div class="wrap"><VideoSection lang={lang} page="home" /></div>
   </section>
 
-  <section class="section section-alt" aria-labelledby="articles-h">
+  <section class="section" aria-labelledby="articles-h">
     <div class="wrap">
-      <h2 id="articles-h" class="flush">{lang === 'ar' ? 'مقالات تثقيفية' : 'Educational articles'}</h2>
-      <ArticleCards lang={lang} items={featured} />
-      <p><a href={path(lang, 'articles')}>{lang === 'ar' ? 'كل المقالات' : 'All articles'}</a></p>
+      <h2 id="articles-h" class="flush">{copy.articlesH}</h2>
+      <ArticleCards lang={lang} items={featured} showTopic={false} />
+      <p><a href={path(lang, 'articles')}>{copy.allArticles}</a></p>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="contact-h">
+  <section class="section section-alt" aria-labelledby="contact-h">
     <div class="wrap prose">
       <h2 id="contact-h" class="flush">{copy.contactH}</h2>
       <p>{copy.contactP}</p>

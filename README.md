@@ -51,7 +51,7 @@ Clinical pages and articles are **data files**: Arabic and English copy sit side
 
 | Content | File |
 | --- | --- |
-| Topic pages (chronic, pressure, diabetic foot, surgical, NPWT) | `src/content/pages/*.ts` |
+| Topic pages (chronic, pressure, diabetic foot, surgical, NPWT) — one complete page per wound type | `src/content/pages/*.ts` |
 | Articles | `src/content/articles/NN-slug.ts` (picked up automatically) |
 | Shared references | `src/content/refs.ts` |
 | Education page | `src/pages/[lang]/wound-care-education.astro` |
@@ -65,7 +65,14 @@ Clinical pages and articles are **data files**: Arabic and English copy sit side
 3. Only fill `medicalReviewer` with a physician who has agreed in writing to be named.
 4. Run `npm test`. The article index, related-article cards on the hub page, sitemap and hreflang update automatically.
 
-### Adding a video
+### Pictures, team and videos
+
+- **Illustrations:** original diagrams in `src/components/Illustration.astro` (team, TIME, pressure points, foot check, NPWT parts, surgical wound). Each topic page picks one with `illustration:` in its data file. No wound or patient photos are used.
+- **Professional photo:** save it in `public/images/` and set `person.photo` in `src/config/site.ts`. It appears in the homepage hero and on the About page.
+- **Team:** the multidisciplinary specialties are listed in `team` in `src/config/site.ts`.
+- **Videos:** add entries to `videos` in `src/config/site.ts` (YouTube id or Instagram reel URL, the page it belongs to and titles in both languages). Until there are entries, every video section links to the Instagram profile.
+
+### Adding a video to a single page
 
 Add a `video` object (`youtubeId`, titles and descriptions in both languages, `uploadDate`, ISO `duration`) to a page or article. It renders a privacy-friendly player that loads YouTube (no-cookie) only after a click, and emits `VideoObject` schema. Only use original videos. When the channel exists, set the YouTube profile to `verified: true` so the "Watch educational videos" button appears on the Education page.
 

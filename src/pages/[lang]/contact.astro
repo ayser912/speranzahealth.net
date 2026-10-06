@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ContactActions from '../../components/ContactActions.astro';
-import { contact, flags, type Lang } from '../../config/site';
+import { contact, type Lang } from '../../config/site';
 import { path, langs } from '../../lib/routes';
 import { pageGraph } from '../../lib/schema';
 import { t } from '../../lib/i18n';
@@ -13,89 +13,61 @@ export function getStaticPaths() {
 const lang = Astro.params.lang as Lang;
 const s = t(lang);
 
-const cities = {
-  ar: ['عمّان', 'إربد', 'الزرقاء', 'البلقاء', 'مأدبا', 'جرش', 'عجلون', 'المفرق', 'الكرك', 'الطفيلة', 'معان', 'العقبة', 'خارج الأردن'],
-  en: ['Amman', 'Irbid', 'Zarqa', 'Balqa', 'Madaba', 'Jerash', 'Ajloun', 'Mafraq', 'Karak', 'Tafilah', 'Ma’an', 'Aqaba', 'Outside Jordan'],
-}[lang];
-
-// Reasons offered. Patient-assessment coordination appears only once a licensed pathway is confirmed.
-const reasons = [
-  { v: 'professional', ar: 'استفسار مهني', en: 'Professional enquiry' },
-  { v: 'education', ar: 'التدريب والتعليم في العناية بالجروح', en: 'Wound-care education and training' },
-  { v: 'collaboration', ar: 'تعاون مهني أو محاضرة أو مقابلة', en: 'Collaboration, talk or interview' },
-  ...(flags.patientServicesConfirmed ? [{ v: 'assessment', ar: 'تنسيق تقييم أو إحالة', en: 'Coordinate an assessment or referral' }] : []),
-  { v: 'other', ar: 'سبب آخر', en: 'Something else' },
-];
-
 const copy = {
   ar: {
-    title: 'التواصل مع أيسر شواقفه | استفسارات مهنية وتدريب',
-    description: 'تواصل مع أيسر شواقفه، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في عمّان، للاستفسارات المهنية والتدريب والتعاون عبر WhatsApp أو الهاتف أو البريد الإلكتروني.',
-    h1: 'التواصل مع أيسر شواقفه',
-    lead: 'للاستفسارات المهنية، والتدريب في العناية بالجروح، والتعاون مع المنشآت والجهات التعليمية.',
+    title: 'التواصل مع أيسر شواقفه | العناية بالجروح في الأردن',
+    description: 'تواصل مع أيسر شواقفه، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في الأردن، عبر WhatsApp أو الهاتف أو البريد الإلكتروني.',
+    h1: 'التواصل',
+    lead: 'للاستفسارات والتدريب والتعاون من جميع أنحاء الأردن.',
     direct: 'تواصل مباشر',
-    formH: 'أرسل استفسارًا قصيرًا',
+    formH: 'أرسل رسالة قصيرة',
     formIntro: 'لا يحفظ الموقع أي بيانات. عند الإرسال تُفتح رسالة جاهزة في WhatsApp أو البريد الإلكتروني لتراجعها قبل إرسالها.',
-    privacyWarn: 'لا ترسل صور الجروح أو التقارير الطبية أو تفاصيل التشخيص عبر هذا النموذج أو الرسائل.',
-    firstName: 'الاسم الأول', firstNameHint: 'الاسم الأول فقط',
-    city: 'المدينة', cityPlaceholder: 'اختر المدينة',
-    reason: 'سبب التواصل', reasonPlaceholder: 'اختر السبب',
+    privacyWarn: 'لا ترسل صور الجروح أو التقارير الطبية أو تفاصيل التشخيص عبر الرسائل قبل الاتفاق على طريقة آمنة.',
+    firstName: 'الاسم الأول',
     method: 'طريقة التواصل المفضلة',
     methods: { whatsapp: 'WhatsApp', phone: 'مكالمة هاتفية', email: 'البريد الإلكتروني' },
-    consent: 'أوافق على أن يتواصل معي أيسر شواقفه بخصوص هذا الاستفسار، وقد قرأت سياسة الخصوصية.',
-    submit: 'تجهيز الرسالة',
+    consent: 'أوافق على أن يتم التواصل معي بخصوص رسالتي، وقد قرأت',
+    submit: 'إرسال',
     errors: {
       firstName: 'اكتب اسمك الأول (حرفان على الأقل، دون أرقام).',
-      city: 'اختر المدينة.',
-      reason: 'اختر سبب التواصل.',
       method: 'اختر طريقة التواصل المفضلة.',
-      consent: 'يلزم الموافقة على التواصل لإرسال الاستفسار.',
+      consent: 'يلزم الموافقة على التواصل لإرسال الرسالة.',
       summary: 'يرجى تصحيح الحقول المشار إليها.',
     },
     ok: 'تم تجهيز رسالتك. راجعها في التطبيق الذي فُتح ثم اضغط إرسال.',
-    msg: { hello: 'مرحبًا، أرسل استفسارًا من الموقع.', name: 'الاسم', city: 'المدينة', reason: 'السبب', method: 'طريقة التواصل المفضلة' },
+    msg: { hello: 'مرحبًا، أتواصل معك من الموقع.', name: 'الاسم', method: 'طريقة التواصل المفضلة', topic: 'الموضوع: التدريب والتعليم' },
     hours: 'ساعات الرد',
-    areas: 'المناطق',
     emergencyH: 'الحالات الطارئة',
   },
   en: {
-    title: 'Contact Aissar Shawaqfeh | Professional Enquiries and Training',
-    description: 'Contact Aissar Shawaqfeh, Registered Nurse and Certified Wound Specialist in Amman, about professional enquiries, training and collaboration.',
-    h1: 'Contact Aissar Shawaqfeh',
-    lead: 'For professional enquiries, wound-care education and training, and collaboration with healthcare facilities and educators.',
+    title: 'Contact Aissar Shawaqfeh | Wound Care in Jordan',
+    description: 'Contact Aissar Shawaqfeh, Registered Nurse and Certified Wound Specialist (CWS®) in Jordan, by WhatsApp, phone or email.',
+    h1: 'Contact',
+    lead: 'For enquiries, training and collaboration from anywhere in Jordan.',
     direct: 'Direct contact',
-    formH: 'Send a short enquiry',
-    formIntro: 'This website stores no data. When you send, a ready-made message opens in WhatsApp or your email app so you can review it before sending.',
-    privacyWarn: 'Please don’t send wound photos, medical reports or diagnosis details through this form or by message.',
-    firstName: 'First name', firstNameHint: 'First name only',
-    city: 'City', cityPlaceholder: 'Choose a city',
-    reason: 'Reason for contacting', reasonPlaceholder: 'Choose a reason',
+    formH: 'Send a short message',
+    formIntro: 'This website stores no data. When you send, a ready-made message opens in WhatsApp or your email app so you can review it first.',
+    privacyWarn: 'Please don’t send wound photos, medical reports or diagnosis details by message until a secure method has been agreed.',
+    firstName: 'First name',
     method: 'Preferred contact method',
     methods: { whatsapp: 'WhatsApp', phone: 'Phone call', email: 'Email' },
-    consent: 'I agree to be contacted by Aissar Shawaqfeh about this enquiry, and I have read the privacy policy.',
-    submit: 'Prepare my message',
+    consent: 'I agree to be contacted about my message, and I have read the',
+    submit: 'Send',
     errors: {
       firstName: 'Enter your first name (at least 2 letters, no numbers).',
-      city: 'Choose your city.',
-      reason: 'Choose a reason for contacting.',
       method: 'Choose how you would like to be contacted.',
-      consent: 'Consent to be contacted is required to send an enquiry.',
+      consent: 'Consent to be contacted is required to send a message.',
       summary: 'Please correct the highlighted fields.',
     },
     ok: 'Your message is ready. Review it in the app that opened, then press send.',
-    msg: { hello: 'Hello, I am sending an enquiry from the website.', name: 'Name', city: 'City', reason: 'Reason', method: 'Preferred contact' },
+    msg: { hello: 'Hello, I am contacting you from the website.', name: 'Name', method: 'Preferred contact', topic: 'Topic: education and training' },
     hours: 'Response hours',
-    areas: 'Areas',
     emergencyH: 'Emergencies',
   },
 }[lang];
 
-const schema = pageGraph({ lang, key: 'contact', type: 'ContactPage', title: copy.title, description: copy.description, dateModified: '2026-10-05' });
-const formConfig = {
-  lang, wa: contact.whatsappE164, email: contact.email,
-  errors: copy.errors, ok: copy.ok, msg: copy.msg, methods: copy.methods,
-  reasons: Object.fromEntries(reasons.map((r) => [r.v, r[lang]])),
-};
+const schema = pageGraph({ lang, key: 'contact', type: 'ContactPage', title: copy.title, description: copy.description, dateModified: '2026-10-06' });
+const formConfig = { lang, wa: contact.whatsappE164, email: contact.email, errors: copy.errors, ok: copy.ok, msg: copy.msg, methods: copy.methods };
 ---
 <BaseLayout lang={lang} pageKey="contact" title={copy.title} description={copy.description} schema={schema}>
   <div class="wrap">
@@ -126,27 +98,8 @@ const formConfig = {
 
           <div class="field">
             <label for="f-name">{copy.firstName}</label>
-            <span class="hint" id="f-name-hint">{copy.firstNameHint}</span>
-            <input type="text" id="f-name" name="firstName" autocomplete="given-name" maxlength="40" required aria-describedby="f-name-hint f-name-err" />
+            <input type="text" id="f-name" name="firstName" autocomplete="given-name" maxlength="40" required aria-describedby="f-name-err" />
             <p class="error" id="f-name-err"></p>
-          </div>
-
-          <div class="field">
-            <label for="f-city">{copy.city}</label>
-            <select id="f-city" name="city" required aria-describedby="f-city-err">
-              <option value="">{copy.cityPlaceholder}</option>
-              {cities.map((c) => <option value={c}>{c}</option>)}
-            </select>
-            <p class="error" id="f-city-err"></p>
-          </div>
-
-          <div class="field">
-            <label for="f-reason">{copy.reason}</label>
-            <select id="f-reason" name="reason" required aria-describedby="f-reason-err">
-              <option value="">{copy.reasonPlaceholder}</option>
-              {reasons.map((r) => <option value={r.v}>{r[lang]}</option>)}
-            </select>
-            <p class="error" id="f-reason-err"></p>
           </div>
 
           <div class="field">
@@ -162,7 +115,7 @@ const formConfig = {
           <div class="field">
             <div class="choice" style="align-items:flex-start">
               <input type="checkbox" id="f-consent" name="consent" required aria-describedby="f-consent-err" style="margin-top:0.3rem" />
-              <label for="f-consent">{copy.consent} <a href={path(lang, 'privacy')}>{s.privacyLink}</a></label>
+              <label for="f-consent">{copy.consent} <a href={path(lang, 'legal')}>{s.privacyLink}</a></label>
             </div>
             <p class="error" id="f-consent-err"></p>
           </div>
@@ -179,10 +132,7 @@ const formConfig = {
   (function () {
     var form = document.getElementById('enquiry');
     if (!form) return;
-    var params = new URLSearchParams(location.search);
-    var pre = params.get('reason');
-    if (pre && cfg.reasons[pre]) form.reason.value = pre;
-
+    var topic = new URLSearchParams(location.search).get('reason') === 'education' ? cfg.msg.topic : '';
     var nameRe = /^[\p{L}][\p{L}\p{M}' \-]{1,39}$/u;
     function setErr(id, field, msg) {
       document.getElementById(id).textContent = msg || '';
@@ -195,8 +145,6 @@ const formConfig = {
       var method = (form.querySelector('input[name="method"]:checked') || {}).value;
       var ok = [
         setErr('f-name-err', form.firstName, nameRe.test(name) ? '' : cfg.errors.firstName),
-        setErr('f-city-err', form.city, form.city.value ? '' : cfg.errors.city),
-        setErr('f-reason-err', form.reason, form.reason.value ? '' : cfg.errors.reason),
         setErr('f-method-err', null, method ? '' : cfg.errors.method),
         setErr('f-consent-err', form.consent, form.consent.checked ? '' : cfg.errors.consent),
       ].every(Boolean);
@@ -209,19 +157,14 @@ const formConfig = {
       }
       summary.textContent = '';
       var ref = cfg.lang + '-contact-form';
-      var lines = [
-        cfg.msg.hello,
-        cfg.msg.name + ': ' + name,
-        cfg.msg.city + ': ' + form.city.value,
-        cfg.msg.reason + ': ' + cfg.reasons[form.reason.value],
-        cfg.msg.method + ': ' + cfg.methods[method],
-        '(ref: ' + ref + ')',
-      ];
+      var lines = [cfg.msg.hello, cfg.msg.name + ': ' + name, cfg.msg.method + ': ' + cfg.methods[method]];
+      if (topic) lines.push(topic);
+      lines.push('(ref: ' + ref + ')');
       var text = lines.join('\n');
       var url = method === 'email'
-        ? 'mailto:' + cfg.email + '?subject=' + encodeURIComponent(cfg.reasons[form.reason.value] + ' [' + ref + ']') + '&body=' + encodeURIComponent(text)
+        ? 'mailto:' + cfg.email + '?subject=' + encodeURIComponent(cfg.msg.hello + ' [' + ref + ']') + '&body=' + encodeURIComponent(text)
         : 'https://wa.me/' + cfg.wa + '?text=' + encodeURIComponent(text);
-      if (window.siteTrack) window.siteTrack('generate_lead', { reason: form.reason.value, method: method, ref: ref });
+      if (window.siteTrack) window.siteTrack('generate_lead', { method: method, ref: ref });
       document.getElementById('form-status').textContent = cfg.ok;
       if (method === 'email') location.href = url; else window.open(url, '_blank', 'noopener');
     });
