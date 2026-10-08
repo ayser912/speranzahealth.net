@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/motion.css';
 import { site, analytics, person, type Lang } from '../config/site';
 import { path, otherLang, type PageKey } from '../lib/routes';
 import { abs } from '../lib/schema';
@@ -91,5 +92,38 @@ const ogImage = abs(`/og/${lang}.png`);
     </main>
     <Footer lang={lang} pageKey={pageKey} />
     <Analytics lang={lang} />
+    <script is:inline>
+      /* Scroll reveal: only for elements that start below the fold, only when motion is welcome. */
+      (function () {
+        if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var sel = [
+          'main h2', '.topic-list > li', '.card-list > li', '.team-list > li', '.grid-2 > *',
+          '.ill', '.record', '.author-box', '.callout', '.toc', '.video-cta', '.video',
+          '.form', 'table.data', '.references', '.disclosure', '.portrait', '.contact-actions', '.actions'
+        ].join(',');
+        var fold = window.innerHeight * 0.92;
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (!e.isIntersecting) return;
+            var t = e.target;
+            io.unobserve(t);
+            t.classList.add('in');
+            /* Once settled, drop the reveal classes so hover transitions behave normally. */
+            setTimeout(function () { t.classList.remove('reveal'); if (!t.matches('.ill')) t.classList.remove('in'); t.style.removeProperty('--i'); }, 1100);
+          });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+        document.querySelectorAll('main ' + sel.split(',').join(', main ')).forEach(function (el) {
+          if (el.closest('.hero, .page-head') || el.getBoundingClientRect().top < fold) {
+            if (el.matches('.ill')) el.classList.add('in');
+            return;
+          }
+          if (el.parentElement && el.parentElement.closest('.reveal')) return; /* parent already animates */
+          var sib = el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
+          if (el.matches('li, .grid-2 > *')) el.style.setProperty('--i', String(Math.min(sib, 5)));
+          el.classList.add('reveal');
+          io.observe(el);
+        });
+      })();
+    </script>
   </body>
 </html>

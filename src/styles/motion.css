@@ -1,0 +1,105 @@
+/* ==========================================================================
+   Motion layer — calm, short, purposeful.
+   - Everything here is switched off for visitors who ask for reduced motion.
+   - Content is never hidden without JavaScript: scroll reveals only apply to
+     elements the script marks (and only those that start below the fold), so
+     nothing above the fold waits for an animation and there is no layout shift.
+   ========================================================================== */
+
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);   /* smooth "settle" curve */
+  --ease-std: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-1: 160ms;   /* hovers, presses */
+  --dur-2: 260ms;   /* menus, small panels */
+  --dur-3: 620ms;   /* reveals, entrances */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+  html { scroll-behavior: smooth; }
+
+  /* ---------- Page-to-page transition (browsers that support it) ---------- */
+  @view-transition { navigation: auto; }
+  .site-header { view-transition-name: site-header; }
+  .emergency { view-transition-name: emergency; }
+  ::view-transition-old(root) { animation: vt-out 180ms var(--ease-std) both; }
+  ::view-transition-new(root) { animation: vt-in 320ms var(--ease-out) both; }
+  @keyframes vt-out { to { opacity: 0; } }
+  @keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
+
+  /* ---------- Hero entrance (home page) ---------- */
+  .hero h1 .h1-name  { animation: rise var(--dur-3) var(--ease-out) both; }
+  .hero h1 .h1-title { animation: rise var(--dur-3) var(--ease-out) 90ms both; }
+  .hero .lead        { animation: rise var(--dur-3) var(--ease-out) 170ms both; }
+  .hero .actions     { animation: rise var(--dur-3) var(--ease-out) 250ms both; }
+  .hero .record, .hero .portrait { animation: rise-soft 800ms var(--ease-out) 200ms both; }
+  .hero .record::before { animation: grow-bar 700ms var(--ease-out) 520ms both; transform-origin: top; }
+  .page-head h1 { animation: rise 520ms var(--ease-out) both; }
+  .page-head .lead, .page-head .byline, .page-head .page-dates { animation: rise 520ms var(--ease-out) 80ms both; }
+
+  @keyframes rise { from { opacity: 0.001; transform: translateY(14px); } }
+  @keyframes rise-soft { from { opacity: 0.001; transform: translateY(18px) scale(0.985); } }
+  @keyframes grow-bar { from { transform: scaleY(0); } }
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(18px); }
+  .reveal.in {
+    opacity: 1; transform: none;
+    transition: opacity var(--dur-3) var(--ease-out), transform var(--dur-3) var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+
+  /* ---------- Hover and press feedback ---------- */
+  a, .btn, .site-nav a, .sub-toggle, .lang-switch, .nav-toggle, .card, .video-cta, .video-cta .play {
+    transition:
+      color var(--dur-1) var(--ease-std),
+      background-color var(--dur-1) var(--ease-std),
+      border-color var(--dur-1) var(--ease-std),
+      box-shadow var(--dur-2) var(--ease-std),
+      transform var(--dur-2) var(--ease-out),
+      text-decoration-color var(--dur-1) var(--ease-std);
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(11, 110, 105, 0.18); }
+  .btn:active { transform: translateY(0) scale(0.98); box-shadow: none; transition-duration: 80ms; }
+
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(18, 48, 46, 0.10); }
+  .video-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(18, 48, 46, 0.22); }
+  .video-cta:hover .play { transform: scale(1.08); }
+
+  /* Topic list: a soft accent line grows under the heading link */
+  .topic-list h3 a { text-decoration: none; background: linear-gradient(currentColor, currentColor) no-repeat; background-size: 0% 2px; background-position: 0 100%; transition: background-size var(--dur-2) var(--ease-out), color var(--dur-1); padding-bottom: 2px; }
+  html[dir='rtl'] .topic-list h3 a { background-position: 100% 100%; }
+  .topic-list h3 a:hover, .topic-list h3 a:focus-visible { background-size: 100% 2px; }
+  .topic-list li { transition: background-color var(--dur-2) var(--ease-std); }
+
+  /* ---------- Menus ---------- */
+  .js .site-nav .sub.open { animation: drop var(--dur-2) var(--ease-out) both; }
+  @media (max-width: 52rem) { .js .site-nav.open { animation: drop var(--dur-2) var(--ease-out) both; } }
+  @keyframes drop { from { opacity: 0; transform: translateY(-6px); } }
+  .sub-toggle svg { transition: transform var(--dur-2) var(--ease-out); }
+
+  /* ---------- Small panels ---------- */
+  .consent:not([hidden]) { animation: rise 420ms var(--ease-out) both; }
+  .form-status:not(:empty) { animation: rise 320ms var(--ease-out) both; }
+  .error:not(:empty) { animation: nudge 260ms var(--ease-std); }
+  @keyframes nudge { 30% { transform: translateX(-3px); } 70% { transform: translateX(3px); } }
+
+  /* ---------- Illustrations: parts settle in one after another ---------- */
+  .ill.in svg > g { animation: ill-in 560ms var(--ease-out) both; }
+  .ill.in svg > g:nth-of-type(2) { animation-delay: 90ms; }
+  .ill.in svg > g:nth-of-type(3) { animation-delay: 180ms; }
+  .ill.in svg > g:nth-of-type(4) { animation-delay: 270ms; }
+  .ill.in svg > g:nth-of-type(5) { animation-delay: 360ms; }
+  .ill.in svg > g:nth-of-type(6) { animation-delay: 450ms; }
+  .ill.in svg > g:nth-of-type(n+7) { animation-delay: 540ms; }
+  .ill.in .ill-link { stroke-dasharray: 260; animation: draw 900ms var(--ease-out) 150ms both; }
+  .ill.in .ill-tube { stroke-dasharray: 260; animation: draw 1100ms var(--ease-out) 200ms both; }
+  .ill.in .ill-hot { transform-box: fill-box; transform-origin: center; animation: pop 520ms var(--ease-out) 450ms both; }
+  @keyframes ill-in { from { opacity: 0; transform: translateY(6px); } }
+  @keyframes draw { from { stroke-dashoffset: 260; } }
+  @keyframes pop { from { transform: scale(0); } 70% { transform: scale(1.15); } }
+}
+
+@media print {
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
