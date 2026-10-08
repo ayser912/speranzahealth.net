@@ -24,7 +24,11 @@ export interface LangCopy {
   sections: Section[];
   /** short label used in cards and related-link lists */
   card?: string;
+  /** Plain, answer-first questions people (and AI assistants) ask. Rendered visibly and as FAQPage schema. `a` may contain simple links. */
+  faq?: FaqItem[];
 }
+
+export interface FaqItem { q: string; a: string }
 
 export interface Ref { text: string; url: string }
 

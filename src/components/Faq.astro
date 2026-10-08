@@ -1,0 +1,17 @@
+---
+/** Visible question-and-answer block. The same items are emitted as FAQPage schema by the page (faqNode). */
+import type { Lang } from '../config/site';
+import type { FaqItem } from '../lib/content-types';
+interface Props { lang: Lang; items: FaqItem[]; heading?: string; id?: string }
+const { lang, items, heading, id = 'faq' } = Astro.props;
+const h = heading ?? (lang === 'ar' ? 'أسئلة شائعة' : 'Frequently asked questions');
+---
+<section class="prose faq" id={id} aria-labelledby={`${id}-h`}>
+  <h2 id={`${id}-h`}>{h}</h2>
+  {items.map((it) => (
+    <div class="faq-item">
+      <h3>{it.q}</h3>
+      <p set:html={it.a} />
+    </div>
+  ))}
+</section>

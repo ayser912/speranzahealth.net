@@ -6,9 +6,10 @@ import ContactActions from '../../components/ContactActions.astro';
 import TeamSection from '../../components/TeamSection.astro';
 import VideoSection from '../../components/VideoSection.astro';
 import Portrait from '../../components/Portrait.astro';
+import Faq from '../../components/Faq.astro';
 import { person, credentials, nursingLicence, yearsExperience, type Lang } from '../../config/site';
 import { path, langs, careNav, pages } from '../../lib/routes';
-import { pageGraph } from '../../lib/schema';
+import { pageGraph, faqNode } from '../../lib/schema';
 import { formatDate } from '../../lib/i18n';
 
 export function getStaticPaths() {
@@ -36,6 +37,15 @@ const copy = {
     licenceNote: 'لا يُنشر رقم الترخيص على الموقع، ويمكن تزويد الجهات المهنية به عند الطلب.',
     contactH: 'التواصل',
     updated: 'آخر تحديث',
+    faqH: 'أسئلة شائعة عن أيسر شواقفه',
+    faq: [
+      { q: 'من هو أيسر شواقفه؟', a: person.bio.ar },
+      { q: 'ماذا يعني اعتماد CWS®؟', a: 'CWS® اختصار Certified Wound Specialist، وهو اعتماد تمنحه American Board of Wound Management (ABWM) للممارسين الصحيين المرخصين بعد ثلاث سنوات على الأقل من الخبرة السريرية في العناية بالجروح واجتياز اختبار مستقل. البرنامج معتمد من NCCA، ويمكن التحقق منه في دليل ABWM الرسمي.' },
+      { q: 'هل يعمل أيسر شواقفه في العناية بجروح القدم السكري؟', a: 'نعم، العناية بجروح القدم السكري من مجالات خبرته الأساسية، بالتنسيق مع الطبيب المعالج وجرّاح الأوعية الدموية وجرّاح العظام وأخصائي القدم وأخصائي الأمراض المعدية وأخصائي التغذية. أي جرح جديد في قدم مريض السكري يحتاج إلى مراجعة طبية في اليوم نفسه. اقرأ المزيد عن <a href="/ar/diabetic-foot-wounds/">العناية بجروح القدم السكري</a>.' },
+      { q: 'هل أيسر شواقفه طبيب؟', a: 'لا. أيسر ممرض قانوني وأخصائي معتمد في العناية بالجروح. التشخيص ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات.' },
+      { q: 'كيف أتواصل مع أيسر شواقفه، ومن أي مناطق؟', a: 'تُستقبل الاستفسارات المهنية وطلبات التدريب والتعاون من جميع أنحاء الأردن عبر واتساب أو البريد الإلكتروني من <a href="/ar/contact/">صفحة التواصل</a>. لا تُدار الحالات الطارئة عبر الموقع أو واتساب.' },
+      { q: 'كيف يُكتب اسم أيسر شواقفه؟', a: 'بالعربية: أيسر شواقفه، وبالإنجليزية: Aissar Shawaqfeh كما في شهادة CWS®. قد يظهر الاسم أيضًا بتهجئات مثل آيسر شواقفة أو Ayser Shawaqfeh أو Aysar Shawagfeh، وجميعها للشخص نفسه.' },
+    ],
   },
   en: {
     title: 'Aissar Shawaqfeh, RN, CWS® | Wound Care Specialist in Jordan',
@@ -53,10 +63,20 @@ const copy = {
     licenceNote: 'The licence number is not published on this website and can be shared with professional bodies on request.',
     contactH: 'Contact',
     updated: 'Last updated',
+    faqH: 'Questions about Aissar Shawaqfeh',
+    faq: [
+      { q: 'Who is Aissar Shawaqfeh?', a: person.bio.en },
+      { q: 'What does CWS® mean?', a: 'CWS® stands for Certified Wound Specialist, a credential awarded by the American Board of Wound Management (ABWM) to licensed clinicians with at least three years of clinical wound-care experience who pass an independent exam. The programme is NCCA-accredited, and holders can be checked in the official ABWM directory.' },
+      { q: 'Does Aissar Shawaqfeh work with diabetic foot wounds?', a: 'Yes. Diabetic foot wound care is one of his main areas, coordinated with the treating physician, vascular and orthopaedic surgeons, podiatry, infectious diseases and clinical nutrition. Any new wound on the foot of a person with diabetes needs a medical review the same day. Read more about <a href="/en/diabetic-foot-wounds/">diabetic foot wound care</a>.' },
+      { q: 'Is Aissar Shawaqfeh a doctor?', a: 'No. Aissar is a Registered Nurse and Certified Wound Specialist. Diagnosis, prescribing and surgical decisions are the physician’s responsibility within the multidisciplinary team.' },
+      { q: 'How can I contact Aissar Shawaqfeh, and from where?', a: 'Professional enquiries, training requests and collaboration are welcome from anywhere in Jordan, by WhatsApp or email via the <a href="/en/contact/">contact page</a>. Emergencies are not handled through the website or WhatsApp.' },
+      { q: 'How is the name written?', a: 'In Arabic: أيسر شواقفه. In English: Aissar Shawaqfeh, as on the CWS® certificate. The name may also appear as آيسر شواقفة, Ayser Shawaqfeh or Aysar Shawagfeh; all refer to the same person.' },
+    ],
   },
 }[lang];
 const focusKeys = [...careNav, 'education'] as const;
 const schema = pageGraph({ lang, key: 'about', type: 'ProfilePage', title: copy.title, description: copy.description, dateModified: updated, mainEntityPerson: true });
+(schema['@graph'] as unknown[]).push(faqNode(lang, path(lang, 'about'), copy.faq));
 ---
 <BaseLayout lang={lang} pageKey="about" title={copy.title} description={copy.description} schema={schema} ogType="profile">
   <div class="wrap">
@@ -100,6 +120,8 @@ const schema = pageGraph({ lang, key: 'about', type: 'ProfilePage', title: copy.
         <p>{copy.licenceNote}</p>
       </div>
     </section>
+
+    <Faq lang={lang} items={copy.faq} heading={copy.faqH} />
 
     <VideoSection lang={lang} page="about" />
 

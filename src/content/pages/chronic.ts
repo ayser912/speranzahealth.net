@@ -112,6 +112,11 @@ const page: ClinicalPageData = {
         after: ['اقرأ أيضًا: <a href="/ar/articles/home-wound-care-mistakes/">أخطاء شائعة في العناية المنزلية بالجروح</a>.'],
       },
     ],
+    faq: [
+      { q: 'متى أحتاج إلى أخصائي في العناية بالجروح؟', a: 'إذا لم يُظهر الجرح تحسنًا واضحًا بعد نحو أربعة أسابيع من العناية المناسبة، أو إذا كان الجرح في قدم مريض سكري، أو تكرّر ظهوره، أو ظهرت علامات عدوى. التفاصيل في مقال <a href="/ar/articles/when-to-see-a-wound-care-specialist/">متى تراجع أخصائي العناية بالجروح</a>.' },
+      { q: 'هل يوجد أخصائي جروح معتمد CWS® في الأردن؟', a: 'نعم. أيسر شواقفه ممرض قانوني حاصل على اعتماد Certified Wound Specialist (CWS®) من American Board of Wound Management، ويعمل في الأردن. يمكن التحقق من حاملي هذا الاعتماد عبر دليل ABWM الرسمي، والتفاصيل في <a href="/ar/about-aissar-shawaqfeh/#credentials">صفحة المؤهلات</a>.' },
+      { q: 'ما الفرق بين أخصائي العناية بالجروح والطبيب؟', a: 'أخصائي العناية بالجروح المعتمد يقيّم الجرح ويختار الضمادات ويتابع التقدّم ويثقّف المريض والأسرة. الطبيب يشخّص الحالة ويصف الأدوية ويقرّر التدخلات الجراحية. أفضل النتائج تأتي من عملهما معًا ضمن فريق متعدد التخصصات.' },
+    ],
   },
   en: {
     title: 'Chronic Wound Care in Jordan | Aissar Shawaqfeh, CWS®',
@@ -217,6 +222,11 @@ const page: ClinicalPageData = {
         },
         after: ['Read also: <a href="/en/articles/home-wound-care-mistakes/">Common mistakes in home wound care</a>.'],
       },
+    ],
+    faq: [
+      { q: 'When do I need a wound care specialist?', a: 'When a wound has not clearly improved after about four weeks of appropriate care, when the wound is on the foot of a person with diabetes, when it keeps coming back, or when there are signs of infection. See <a href="/en/articles/when-to-see-a-wound-care-specialist/">When to see a wound care specialist</a> for details.' },
+      { q: 'Is there a Certified Wound Specialist (CWS®) in Jordan?', a: 'Yes. Aissar Shawaqfeh is a Registered Nurse who holds the Certified Wound Specialist (CWS®) credential from the American Board of Wound Management and works in Jordan. Credential holders can be checked in the official ABWM directory; see the <a href="/en/about-aissar-shawaqfeh/#credentials">credentials section</a>.' },
+      { q: 'How is a wound care specialist different from a doctor?', a: 'A certified wound specialist assesses the wound, selects dressings, tracks progress and educates patients and families. The doctor diagnoses the condition, prescribes medicines and decides on surgical treatment. The best results come from both working together in a multidisciplinary team.' },
     ],
   },
 };

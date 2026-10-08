@@ -9,7 +9,7 @@ const page: ClinicalPageData = {
   related: ['chronic', 'surgical', 'npwt'],
   ar: {
     title: 'العناية بجروح القدم السكري في الأردن | أيسر شواقفه CWS®',
-    description: 'لماذا يحتاج جرح القدم لدى مريض السكري إلى اهتمام سريع؟ علامات الخطر، والوقاية اليومية، ودور الفريق متعدد التخصصات في العناية بجروح القدم السكري.',
+    description: 'العناية بجروح القدم السكري في الأردن من أخصائي جروح معتمد CWS®: علامات الخطر، والوقاية اليومية، ومن يعالج جرح القدم السكري ضمن الفريق متعدد التخصصات.',
     h1: 'جروح القدم السكري: الوقاية والعناية',
     lead: 'جرح صغير في قدم مريض السكري قد يتطور بسرعة إذا لم يُكتشف ويُعالج مبكرًا. هذه الصفحة تشرح لماذا يحدث ذلك، وما علامات الخطر، وكيف تحمي قدميك يوميًا.',
     card: 'القدم السكري',
@@ -88,10 +88,16 @@ const page: ClinicalPageData = {
         },
       },
     ],
+    faq: [
+      { q: 'من يعالج جرح القدم السكري في الأردن؟', a: 'يُعالج جرح القدم السكري عادة ضمن فريق متعدد التخصصات: الطبيب المعالج أو أخصائي الغدد الصماء والسكري لضبط السكر، وجرّاح الأوعية الدموية لتقييم الدورة الدموية، وجرّاح العظام أو أخصائي القدم (Podiatry) لتشوهات القدم وتخفيف الضغط، وأخصائي الأمراض المعدية عند وجود عدوى، وأخصائي التغذية، وممرض أو أخصائي جروح معتمد للعناية المنتظمة بالجرح وتثقيف المريض والأسرة.' },
+      { q: 'ما دور أخصائي العناية بالجروح المعتمد CWS® في القدم السكري؟', a: 'يقيّم الجرح ويقيسه ويوثّق تقدّمه، ويختار الضمادات المناسبة لحالة الجرح، ويتابع الالتزام بتخفيف الضغط، ويعلّم المريض والأسرة فحص القدم اليومي، وينبّه الطبيب مبكرًا عند ظهور علامات العدوى أو ضعف الدورة الدموية. أما التشخيص ووصف الأدوية والقرارات الجراحية فتبقى من مسؤولية الطبيب.' },
+      { q: 'متى يحتاج جرح القدم السكري إلى مراجعة عاجلة؟', a: 'في اليوم نفسه عند ظهور أي جرح جديد في القدم، وإلى الطوارئ فورًا عند وجود احمرار ينتشر أو تورم أو صديد أو رائحة كريهة أو حرارة، أو إذا تغيّر لون الأصابع إلى الأزرق أو الأسود.' },
+      { q: 'هل يمكن العناية بجرح القدم السكري في المنزل؟', a: 'العناية اليومية مثل تغيير الضمادة وفحص القدم تتم غالبًا في المنزل، لكن وفق خطة يضعها الفريق المعالج بعد تقييم طبي، ومع متابعة منتظمة. لا يُترك جرح القدم السكري للعلاج المنزلي وحده.' },
+    ],
   },
   en: {
     title: 'Diabetic Foot Wound Care in Jordan | Aissar Shawaqfeh, CWS®',
-    description: 'Why a foot wound in a person with diabetes needs prompt attention: the warning signs, daily foot protection and the role of a multidisciplinary team.',
+    description: 'Diabetic foot wound care in Jordan from a Certified Wound Specialist (CWS®): warning signs, daily foot protection and who treats diabetic foot wounds.',
     h1: 'Diabetic foot wounds: prevention and care',
     lead: 'A small wound on the foot of a person with diabetes can deteriorate quickly if it is not found and treated early. This page explains why, the warning signs to act on, and how to protect your feet every day.',
     card: 'Diabetic foot',
@@ -169,6 +175,12 @@ const page: ClinicalPageData = {
           ],
         },
       },
+    ],
+    faq: [
+      { q: 'Who treats a diabetic foot wound in Jordan?', a: 'A diabetic foot wound is usually managed by a multidisciplinary team: the treating physician or an endocrinologist for blood glucose control, a vascular surgeon to assess blood flow, an orthopaedic surgeon or podiatrist for foot deformity and offloading, an infectious diseases specialist when there is infection, a clinical nutritionist, and a nurse or certified wound specialist for regular wound care and patient and family education.' },
+      { q: 'What does a Certified Wound Specialist (CWS®) do for a diabetic foot wound?', a: 'A certified wound specialist assesses and measures the wound, documents progress, chooses dressings to suit the wound, supports the offloading plan, teaches patients and families daily foot checks, and alerts the physician early to signs of infection or poor blood flow. Diagnosis, prescribing and surgical decisions remain with the physician.' },
+      { q: 'When does a diabetic foot wound need urgent review?', a: 'Any new wound on the foot of a person with diabetes should be seen by a doctor the same day. Go to the emergency department straight away if there is spreading redness, swelling, pus, a bad smell, fever, or toes turning blue or black.' },
+      { q: 'Can a diabetic foot wound be cared for at home?', a: 'Daily care such as dressing changes and foot checks often happens at home, but only under a plan set by the treating team after a medical assessment, with regular follow-up. A diabetic foot wound should never be left to home treatment alone.' },
     ],
   },
 };

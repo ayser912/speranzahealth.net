@@ -26,7 +26,7 @@ export function personNode(lang: Lang) {
       .filter((v, i, a) => a.indexOf(v) === i),
     honorificSuffix: 'RN, CWS',
     jobTitle: person.jobTitleSchema,
-    description: person.title[lang],
+    description: person.bio[lang],
     url: abs(path(lang, 'about')),
     email: `mailto:${contact.email}`,
     knowsLanguage: ['ar', 'en'],
@@ -42,16 +42,30 @@ export function personNode(lang: Lang) {
         dateCreated: String(c.year),
         recognizedBy: { '@type': c.category === 'degree' ? 'CollegeOrUniversity' : 'Organization', name: c.issuer?.en, ...(c.issuerUrl ? { url: c.issuerUrl } : {}) },
       })),
-    hasOccupation: {
-      '@type': 'Occupation',
-      name: 'Registered Nurse',
-      occupationLocation: { '@type': 'Country', name: 'Jordan' },
-    },
-    knowsAbout: person.knowsAbout,
+    hasOccupation: [
+      { '@type': 'Occupation', name: lang === 'ar' ? 'ممرض قانوني' : 'Registered Nurse', occupationLocation: { '@type': 'Country', name: 'Jordan' } },
+      { '@type': 'Occupation', name: lang === 'ar' ? 'أخصائي معتمد في العناية بالجروح (CWS®)' : 'Certified Wound Specialist (wound care nurse)', occupationLocation: { '@type': 'Country', name: 'Jordan' }, skills: person.knowsAbout.en.join(', ') },
+    ],
+    knowsAbout: [...person.knowsAbout[lang], ...(lang === 'ar' ? person.knowsAbout.en : [])],
     sameAs: profiles.filter((p) => p.verified).map((p) => p.url),
   };
   if (person.photo) node.image = abs(person.photo);
   return node;
+}
+
+/** FAQPage node for a page's visible question-and-answer block (answers stripped to plain text). */
+export function faqNode(lang: Lang, pagePath: string, items: Array<{ q: string; a: string }>) {
+  const url = abs(pagePath);
+  const plain = (h: string) => h.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  return {
+    '@type': 'FAQPage',
+    '@id': `${url}#faq`,
+    url: `${url}#faq`,
+    inLanguage: lang === 'ar' ? 'ar-JO' : 'en-JO',
+    isPartOf: { '@id': `${url}#webpage` },
+    author: { '@id': ids.person() },
+    mainEntity: items.map((it) => ({ '@type': 'Question', name: it.q, acceptedAnswer: { '@type': 'Answer', text: plain(it.a) } })),
+  };
 }
 
 export function websiteNode(lang: Lang) {

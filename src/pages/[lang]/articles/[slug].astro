@@ -4,7 +4,7 @@ import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import ClinicalBody from '../../../components/ClinicalBody.astro';
 import { articles, articleBySlug, articlePath } from '../../../content/articles/index';
 import { langs, pages, path } from '../../../lib/routes';
-import { docGraph, articleNode, videoNode, abs } from '../../../lib/schema';
+import { docGraph, articleNode, videoNode, faqNode, abs } from '../../../lib/schema';
 import type { Lang } from '../../../config/site';
 
 export function getStaticPaths() {
@@ -23,6 +23,7 @@ const extra: Array<Record<string, unknown>> = [
   articleNode({ lang, url: abs(p), headline: c.h1, description: c.description, datePublished: a.published, dateModified: a.reviewed, image: abs(`/og/${lang}.png`) }),
 ];
 if (a.video) extra.push(videoNode(lang, p, a.video));
+if (c.faq?.length) extra.push(faqNode(lang, p, c.faq));
 const schema = docGraph({
   lang, path: p, type: 'MedicalWebPage', title: c.title, description: c.description,
   datePublished: a.published, dateModified: a.reviewed, lastReviewed: a.reviewed,

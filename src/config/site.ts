@@ -47,15 +47,33 @@ export const person = {
   careerStartYear: 2017,
   /** Professional photo — TODO: supply an approved photo, save it in public/images/ and set e.g. '/images/aissar-shawaqfeh-certified-wound-specialist-jordan.jpg' */
   photo: null as string | null,
-  knowsAbout: [
-    'Chronic wound care',
-    'Pressure injuries',
-    'Diabetic foot ulcers',
-    'Surgical wound care',
-    'Negative pressure wound therapy (NPWT)',
-    'Wound dressing selection',
-    'Wound care education',
-  ],
+  /** One-paragraph factual summary, reused by schema description and llms.txt. Keep it free of superlatives. */
+  bio: {
+    ar: `أيسر شواقفه (Aissar Shawaqfeh) ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في الأردن، بخبرة تمتد لنحو ${new Date().getFullYear() - 2017} سنوات في القطاع الصحي. يعمل في العناية بالجروح المزمنة وقرح الضغط وجروح القدم السكري والجروح الجراحية والعلاج بالضغط السلبي (VAC)، بالتنسيق مع فريق متعدد التخصصات، ويقدّم التثقيف والتدريب للمرضى والأسر والكوادر الصحية في جميع أنحاء الأردن.`,
+    en: `Aissar Shawaqfeh (أيسر شواقفه) is a Registered Nurse and Certified Wound Specialist (CWS®) in Jordan with about ${new Date().getFullYear() - 2017} years in healthcare. He works in chronic wound care, pressure injuries, diabetic foot wounds, surgical wounds and negative pressure wound therapy (VAC), coordinated with a multidisciplinary team, and provides education and training for patients, families and healthcare teams across Jordan.`,
+  },
+  knowsAbout: {
+    en: [
+      'Chronic wound care',
+      'Pressure injuries (pressure ulcers, bedsores)',
+      'Diabetic foot ulcers and diabetic foot wound care',
+      'Surgical wound care',
+      'Negative pressure wound therapy (NPWT / VAC)',
+      'Wound assessment and dressing selection',
+      'Wound infection recognition',
+      'Wound care education and training',
+    ],
+    ar: [
+      'العناية بالجروح المزمنة',
+      'قرح الضغط (قرح الفراش)',
+      'جروح القدم السكري',
+      'العناية بالجروح الجراحية',
+      'العلاج بالضغط السلبي (VAC)',
+      'تقييم الجروح واختيار الضمادات',
+      'التعرف على علامات التهاب الجروح',
+      'التعليم والتدريب في العناية بالجروح',
+    ],
+  },
 };
 
 /** Clinical qualifications — rendered on the About page and in schema. */

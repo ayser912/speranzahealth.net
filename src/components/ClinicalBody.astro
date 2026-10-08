@@ -1,4 +1,5 @@
 ---
+import Faq from './Faq.astro';
 /**
  * Shared body for every clinical page and article: title block, author/dates, educational note,
  * table of contents, sections, optional video, CTA, related pages/articles, references, disclosure.
@@ -102,6 +103,8 @@ const L = lang === 'ar'
       </Fragment>
     )}
   </section>
+
+  {c.faq && c.faq.length > 0 && <Faq lang={lang} items={c.faq} />}
 
   {relatedArticles.length > 0 && (
     <section aria-labelledby="relart-h">
