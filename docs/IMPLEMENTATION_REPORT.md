@@ -2,7 +2,7 @@
 
 **Project:** Official website of Aissar Shawaqfeh (أيسر شواقفه), RN, CWS®, at speranzahealth.net
 **Date:** 6 October 2026
-**Status:** All three phases are built, tested and committed. A private review copy is published for Aissar to browse. The site is not live yet: that needs hosting and DNS access.
+**Status:** All three phases are built and tested. **Live since 8 October 2026 at https://speranzahealth.net** (GitHub Pages, HTTPS enforced, `www` redirects to the main domain).
 
 ## 1. What exists now (simplified 6 October 2026)
 
@@ -82,14 +82,25 @@ Arabic Performance is 99 rather than 100 because Arabic pages preload three Arab
 | 6 | Publishable nursing-licence wording | `nursingLicence` |
 | 7 | Video links (Instagram reels or YouTube) for each topic | `videos` in `src/config/site.ts` |
 | 8 | GA4 measurement ID and Search Console token | host environment variables |
-| 9 | Hosting account (Cloudflare Pages recommended) and DNS access | deployment |
 | 10 | Written consent and material for article 12, if wanted | new article file |
 | 11 | A physician willing to be named as medical reviewer (optional) | `medicalReviewer` on relevant pages |
 
 ## 6. Next steps
 
-1. Aissar reviews the published review copy and sends corrections.
-2. Deploy to Cloudflare Pages, connect speranzahealth.net, add the GA4 and Search Console values, and submit the sitemap.
+1. Aissar reviews the live site and sends corrections.
+2. Add the GA4 and Search Console values (GitHub → Settings → Secrets and variables → Actions → Variables), verify the domain in Search Console and submit the sitemap.
 3. Re-run Lighthouse and the Rich Results Test on the live domain.
 4. Update the LinkedIn and Instagram display names to the new spelling, and link both to the site.
 5. Afterwards, publish new articles every two weeks (see the README).
+
+## 7. Deployment record (8 October 2026)
+
+- **Hosting:** GitHub Pages, repository `ayser912/speranzahealth.net`, source = GitHub Actions (`.github/workflows/deploy.yml`). Each push to `main` builds, runs the link and schema checks, then deploys.
+- **Domain:** bought through Replit (registrar Name.com via Replit). DNS is edited in Replit: project *Speranza Oncology* → Domains → speranzahealth.net → DNS Records.
+- **DNS changes made by Aissar:**
+  - Removed `A @ 34.111.179.208` (the Speranza Oncology Replit app).
+  - Added `A @` 185.199.108.153 / .109.153 / .110.153 / .111.153 and `CNAME www → ayser912.github.io`.
+- **Email fix (Google Workspace):** added SPF `v=spf1 include:_spf.google.com ~all`, moved the Google DKIM key to host `google._domainkey`, and removed the two misplaced root TXT records. DMARC (`p=reject`), MX `smtp.google.com`, Google site verification, Replit verification and the five Clerk CNAMEs were left unchanged.
+- **Verified live:** HTTPS certificate issued and enforced; `/` redirects to `/ar/`; Arabic RTL and English pages, sitemap, robots.txt, old About URL redirect and custom 404 all respond correctly; `www` redirects to the main domain.
+- **Side effect:** the Speranza Oncology app is no longer on speranzahealth.net and stays reachable at `speranza-oncology.replit.app`. Its Clerk sign-in may need a subdomain such as `app.speranzahealth.net` if it is still used.
+- **Recommended check:** in Google Workspace Admin → Apps → Gmail → Authenticate email, confirm DKIM shows "Authenticating email". Then send a test email to a Gmail address and confirm SPF, DKIM and DMARC all show PASS under "Show original".
