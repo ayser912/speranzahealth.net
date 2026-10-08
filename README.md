@@ -24,6 +24,7 @@ npm test             # build + internal link check + SEO/structured-data check
 | Structured data (JSON-LD) | `src/lib/schema.ts` (pages call `pageGraph()`; never write JSON-LD by hand in a page) |
 | Page text | `src/pages/[lang]/*.astro` (each file holds the Arabic and English copy side by side) |
 | Colours, fonts, spacing | `src/styles/global.css` (tokens at the top) |
+| Motion (page transitions, entrances, scroll reveals, hovers) | `src/styles/motion.css` + the small reveal script at the end of `src/layouts/BaseLayout.astro`. All motion switches off for visitors who choose reduced motion, and nothing is hidden without JavaScript. |
 | Social sharing images | `public/og/ar.png`, `public/og/en.png` (regenerate with `node scripts/make-og.mjs`) |
 
 ### Feature flags (`src/config/site.ts → flags`)
