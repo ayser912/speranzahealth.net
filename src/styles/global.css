@@ -98,7 +98,8 @@ strong { font-weight: 600; }
 .emergency strong { font-weight: 700; }
 
 /* ---------- Header ---------- */
-.site-header { background: var(--paper); border-bottom: 1px solid var(--line); }
+/* position + z-index keep the header (and its dropdown) above page content, including animated hero elements. */
+.site-header { background: var(--paper); border-bottom: 1px solid var(--line); position: relative; z-index: 30; }
 .site-header .wrap { display: flex; align-items: center; gap: 1rem; min-height: 4.25rem; flex-wrap: wrap; }
 .brand { display: flex; flex-direction: column; text-decoration: none; color: var(--ink); line-height: 1.25; margin-inline-end: auto; padding-block: 0.5rem; }
 .brand:hover { color: var(--ink); }
