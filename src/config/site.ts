@@ -108,7 +108,7 @@ export const contact = {
 
 /** Profiles: only `verified: true` entries are emitted in schema sameAs and shown publicly. */
 export const profiles = [
-  { id: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/in/ayser-shawaqfeh-023ba0197/', verified: true },
+  { id: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/in/aissar-shawaqfeh-cws/', verified: true },
   { id: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/aissar_shawaqfeh912/', verified: true },
   /** TODO: create channel and set verified: true */
   { id: 'youtube', label: 'YouTube', url: 'https://www.youtube.com/@TODO', verified: false },
