@@ -18,7 +18,7 @@ npm test             # build + internal link check + SEO/structured-data check
 
 | What you want to change | File |
 | --- | --- |
-| Name, titles, phone, WhatsApp, email, social links, credentials, career, feature flags | `src/config/site.ts` (the **only** place for these facts) |
+| Name, titles, phone, WhatsApp, email, social links, credentials, team, videos, feature flags | `src/config/site.ts` (the **only** place for these facts) |
 | Page URLs (slugs), navigation order, redirects | `src/lib/routes.ts` |
 | Shared interface text (buttons, emergency notice, disclosure) | `src/lib/i18n.ts` |
 | Structured data (JSON-LD) | `src/lib/schema.ts` (pages call `pageGraph()`; never write JSON-LD by hand in a page) |
@@ -33,7 +33,7 @@ npm test             # build + internal link check + SEO/structured-data check
 | `patientServicesConfirmed` | `false` | A licensed pathway for direct patient services is confirmed. Adds "Coordinate an assessment or referral" to the contact form. |
 | `homeVisitsPage` | `false` | Home visits are confirmed as legally provided through a licensed entity (page not built yet). |
 | `organizationConfirmed` | `false` | Speranza Health is a registered organisation. Emits `Organization` schema and makes it the publisher. |
-| `industryDisclosure` | `true` | Keep on while Ayser works for a wound-care product distributor. |
+| `brandNeutralNote` | `true` | Shows the short "educational, independent, brand-neutral" note on clinical pages. |
 
 ### Profiles
 
@@ -98,18 +98,20 @@ Copy `.env.example` to `.env` (never commit `.env`), or set these in your host's
 
 ## Contact form
 
-The form stores nothing and needs no server. After validation it opens WhatsApp (or the visitor's email app) with a short pre-filled message that the visitor reviews and sends. It asks only for first name, city, reason, preferred contact method and consent. It never requests photos, diagnoses or documents. Without JavaScript the form hides itself and the direct WhatsApp, phone and email links remain.
+The form stores nothing and needs no server. After validation it opens WhatsApp (or the visitor's email app) with a short pre-filled message that the visitor reviews and sends. It asks only for first name, preferred contact method and consent. It never requests photos, diagnoses or documents. Without JavaScript the form hides itself and the direct WhatsApp, phone and email links remain.
 
 ## Deployment
 
-The build output is the static folder `dist/`. Recommended host: **Cloudflare Pages** (free, fast in Jordan, supports the generated `_redirects`).
+**Live setup (October 2026): GitHub Pages** from the repository `ayser912/speranzahealth.net`.
 
-1. Push this folder to a GitHub repository.
-2. In Cloudflare Pages: *Create project → Connect to Git*. Build command: `npm run build`. Output directory: `dist`. Environment variables as above.
-3. Add the custom domain `speranzahealth.net` (and `www` redirecting to it).
-4. In Google Search Console, add the domain property, verify (DNS, or the `PUBLIC_GSC_VERIFICATION` tag), then submit `https://speranzahealth.net/sitemap.xml`.
+- Every push to `main` runs `.github/workflows/deploy.yml`: install, build, link and schema checks, then deploy. If a check fails, nothing is published.
+- *Settings → Pages*: Source = **GitHub Actions**, custom domain = `speranzahealth.net`, **Enforce HTTPS** on. `public/CNAME` keeps the domain set.
+- Analytics IDs go in *Settings → Secrets and variables → Actions → Variables* as `PUBLIC_GA4_ID` and `PUBLIC_GSC_VERIFICATION`. Then re-run the workflow.
+- DNS at Name.com: four `A` records on the root domain (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`) and `CNAME www → ayser912.github.io`. Leave the Google Workspace `MX`/`TXT` records unchanged.
+- GitHub Pages ignores `_redirects`, so the old About URLs use the generated HTML redirect pages (they carry a canonical tag to the new URL).
+- In Google Search Console, add the domain property, verify it (DNS, or the `PUBLIC_GSC_VERIFICATION` tag), then submit `https://speranzahealth.net/sitemap.xml`.
 
-Netlify works the same way (`_redirects` is also supported). On Vercel, the generated `dist/vercel.json` holds the redirects. On plain hosting (cPanel), upload the contents of `dist/`. Redirects then fall back to the generated HTML redirect pages.
+Cloudflare Pages or Netlify also work: build command `npm run build`, output `dist`. Both use the generated `_redirects`. On Vercel, the generated `dist/vercel.json` holds the redirects. On plain hosting (cPanel), upload the contents of `dist/`. Redirects then fall back to the generated HTML redirect pages.
 
 ## Quality checks included
 
