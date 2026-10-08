@@ -21,6 +21,7 @@ for await (const file of walk(dist)) {
   const rel = file.replace(dist, '/').replace(/index\.html$/, '');
   const html = await readFile(file, 'utf8');
   if (/http-equiv="refresh"/.test(html)) continue; // redirect stubs
+  if (/^google-site-verification:/.test(html)) continue; // Search Console verification file (must stay as Google wrote it)
   const noindex = /name="robots" content="noindex/.test(html);
 
   // html lang/dir
