@@ -115,7 +115,9 @@ html[lang^='ar'] .site-nav a { font-weight: 600; }
 .lang-switch { font-weight: 600; text-decoration: none; border: 1px solid var(--line); border-radius: var(--radius-s); padding: 0.45rem 0.8rem; min-height: 44px; display: inline-flex; align-items: center; }
 
 @media (max-width: 52rem) {
-  .site-header .wrap { gap: 0.5rem; }
+  .site-header .wrap { gap: 0.5rem; flex-wrap: wrap; }
+  /* brand shrinks (its title wraps) so Menu and the language button stay on the first row */
+  .brand { flex: 1 1 0; min-width: 0; }
   .brand-title { font-size: 0.75rem; }
   .lang-switch, .nav-toggle { padding: 0.4rem 0.65rem; }
   .js .nav-toggle { display: inline-block; }
