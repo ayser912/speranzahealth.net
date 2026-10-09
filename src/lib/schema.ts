@@ -49,7 +49,7 @@ export function personNode(lang: Lang) {
     knowsAbout: [...person.knowsAbout[lang], ...(lang === 'ar' ? person.knowsAbout.en : [])],
     sameAs: profiles.filter((p) => p.verified).map((p) => p.url),
   };
-  if (person.photo) node.image = abs(person.photo);
+  if (person.photo) node.image = { '@type': 'ImageObject', url: abs(`${person.photo}-864.jpg`), width: 864, height: 864, caption: person.name[lang] };
   return node;
 }
 

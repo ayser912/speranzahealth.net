@@ -358,9 +358,11 @@ html[lang^='ar'] .sub-toggle { font-weight: 600; }
 .video-cta span { color: #cfe0dc; font-size: 0.95rem; }
 
 /* ---------- Portrait ---------- */
-.portrait { position: relative; margin: 0; }
-.portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radius-l); }
-.portrait .badge { position: absolute; inset-inline-start: 1rem; bottom: 1rem; background: var(--paper); color: var(--teal); font-family: 'Inter', sans-serif; font-weight: 800; padding: 0.4rem 0.8rem; border-radius: 999px; direction: ltr; }
+.portrait { position: relative; margin: 0; max-width: 22rem; justify-self: center; width: 100%; }
+.portrait img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--radius-l); background: var(--mint); box-shadow: 0 18px 40px rgba(18, 48, 46, 0.14); }
+.portrait .badge { position: absolute; inset-inline-start: 1rem; top: 1rem; background: var(--paper); color: var(--teal); font-family: 'Inter', sans-serif; font-weight: 800; padding: 0.35rem 0.8rem; border-radius: 999px; direction: ltr; box-shadow: 0 2px 8px rgba(18, 48, 46, 0.12); }
+.portrait-cap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 1rem; margin-top: 0.75rem; font-size: var(--step--1); color: var(--ink-soft); }
+.portrait-cap a { font-weight: 600; }
 .about-head { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr) minmax(0, 18rem); align-items: start; }
 .about-head:not(:has(.portrait)) { grid-template-columns: 1fr; }
 @media (max-width: 48rem) { .about-head { grid-template-columns: 1fr; } }

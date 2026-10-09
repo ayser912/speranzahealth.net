@@ -77,8 +77,6 @@ Arabic Performance is 99 rather than 100 because Arabic pages preload three Arab
 | 1 | Are direct patient services provided now, and through which licensed entity or licence? | `flags.patientServicesConfirmed`, `flags.homeVisitsPage` |
 | 2 | Is Speranza Health a registered organisation? | `flags.organizationConfirmed` |
 | 3 | Response hours | `contact.hours` |
-| 4 | Approved professional photo (portrait) | `person.photo` → hero + About |
-| 5 | Your direct ABWM directory listing link | `credentials → cws.verifyUrl` |
 | 6 | Publishable nursing-licence wording | `nursingLicence` |
 | 7 | Video links (Instagram reels or YouTube) for each topic | `videos` in `src/config/site.ts` |
 | 8 | GA4 measurement ID and Search Console token | host environment variables |
@@ -104,3 +102,9 @@ Arabic Performance is 99 rather than 100 because Arabic pages preload three Arab
 - **Verified live:** HTTPS certificate issued and enforced; `/` redirects to `/ar/`; Arabic RTL and English pages, sitemap, robots.txt, old About URL redirect and custom 404 all respond correctly; `www` redirects to the main domain.
 - **Side effect:** the Speranza Oncology app is no longer on speranzahealth.net and stays reachable at `speranza-oncology.replit.app`. Its Clerk sign-in may need a subdomain such as `app.speranzahealth.net` if it is still used.
 - **Recommended check:** in Google Workspace Admin → Apps → Gmail → Authenticate email, confirm DKIM shows "Authenticating email". Then send a test email to a Gmail address and confirm SPF, DKIM and DMARC all show PASS under "Show original".
+
+## 8. Update — 9 October 2026
+- **Professional photo** (supplied by Aissar) now shows in the homepage hero and on the About page, in Arabic and English. It is served as WebP with a JPEG fallback (480 and 864 px, 9–44 KB) and included in the Person schema as `image`.
+- **ABWM verification link:** `https://abwmcertified.org/find-a-specialist/?last_name=SHAWAQFEH`, confirmed to list Aissar Shawaqfeh, CWS, RN. It is used everywhere the site says "Verify the credential".
+- **Search engines:** Google Search Console is verified (HTML file `public/google4645688bd33bc0da.html`, which must stay), the sitemap is submitted and 4 key pages are queued for indexing. Bing Webmaster Tools was imported from Search Console; the sitemap was read with 32 URLs.
+- Checks: 0 broken links, 0 schema errors, 0 axe violations, Lighthouse mobile 98–100.

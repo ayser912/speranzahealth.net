@@ -1,16 +1,34 @@
 ---
 /**
- * Professional photo. Renders only when an approved photo is configured (person.photo).
+ * Professional photo. Renders only when an approved photo is configured (person.photo = base path
+ * without size/extension; files are <base>-864|480.webp|jpg in public/images/).
  * Never use stock photos presented as Aissar, or any patient image.
+ * `verify` adds a small caption with the CWS® credential and its public verification link.
  */
-import { person, type Lang } from '../config/site';
-interface Props { lang: Lang; eager?: boolean }
-const { lang, eager = false } = Astro.props;
-const alt = lang === 'ar' ? `${person.name.ar}، ممرض قانوني وأخصائي جروح معتمد CWS® في الأردن` : `${person.name.en}, Registered Nurse and Certified Wound Specialist in Jordan`;
+import { person, credentials, type Lang } from '../config/site';
+interface Props { lang: Lang; eager?: boolean; verify?: boolean }
+const { lang, eager = false, verify = false } = Astro.props;
+const cws = credentials.find((c) => c.id === 'cws')!;
+const alt = lang === 'ar'
+  ? `صورة ${person.name.ar}، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في الأردن`
+  : `Photo of ${person.name.en}, Registered Nurse and Certified Wound Specialist (CWS®) in Jordan`;
+const b = person.photo;
+const sizes = '(max-width: 56rem) min(92vw, 22rem), 22rem';
 ---
-{person.photo && (
+{b && (
   <figure class="portrait">
-    <img src={person.photo} alt={alt} width="800" height="1000" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+    <picture>
+      <source type="image/webp" srcset={`${b}-480.webp 480w, ${b}-864.webp 864w`} sizes={sizes} />
+      <img src={`${b}-864.jpg`} srcset={`${b}-480.jpg 480w, ${b}-864.jpg 864w`} sizes={sizes}
+        alt={alt} width="864" height="864" loading={eager ? 'eager' : 'lazy'}
+        fetchpriority={eager ? 'high' : undefined} decoding="async" />
+    </picture>
     <span class="badge">CWS®</span>
+    {verify && (
+      <figcaption class="portrait-cap">
+        <span>{lang === 'ar' ? 'أخصائي معتمد في العناية بالجروح · ABWM' : 'Certified Wound Specialist · ABWM'}</span>
+        <a href={cws.verifyUrl} rel="noopener">{lang === 'ar' ? 'تحقق من الاعتماد' : 'Verify the credential'}</a>
+      </figcaption>
+    )}
   </figure>
 )}

@@ -45,8 +45,12 @@ export const person = {
   countryCode: 'JO',
   /** Approx. years in healthcare (since 2017). Update yearly or compute. */
   careerStartYear: 2017,
-  /** Professional photo — TODO: supply an approved photo, save it in public/images/ and set e.g. '/images/aissar-shawaqfeh-certified-wound-specialist-jordan.jpg' */
-  photo: null as string | null,
+  /**
+   * Professional photo supplied by Aissar (9 Oct 2026). Files in public/images/ as
+   * <photo>-864|480.webp|jpg; the 864 JPEG is the canonical image used in schema.
+   * Set to null to hide the photo everywhere.
+   */
+  photo: '/images/aissar-shawaqfeh-certified-wound-specialist-jordan' as string | null,
   /** One-paragraph factual summary, reused by schema description and llms.txt. Keep it free of superlatives. */
   bio: {
     ar: `أيسر شواقفه (Aissar Shawaqfeh) ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في الأردن، بخبرة تمتد لنحو ${new Date().getFullYear() - 2017} سنوات في القطاع الصحي. يعمل في العناية بالجروح المزمنة وقرح الضغط وجروح القدم السكري والجروح الجراحية والعلاج بالضغط السلبي (VAC)، بالتنسيق مع فريق متعدد التخصصات، ويقدّم التثقيف والتدريب للمرضى والأسر والكوادر الصحية في جميع أنحاء الأردن.`,
@@ -86,8 +90,8 @@ export const credentials = [
     issuerUrl: 'https://abwmcertified.org/',
     year: 2026,
     category: 'certification',
-    /** Public directory where the credential can be checked. TODO: replace with Aissar's direct listing URL once confirmed. */
-    verifyUrl: 'https://abwmcertified.org/find-a-specialist/',
+    /** Aissar's listing in the public ABWM directory (confirmed 9 Oct 2026). */
+    verifyUrl: 'https://abwmcertified.org/find-a-specialist/?last_name=SHAWAQFEH',
     clinical: true,
   },
   {
@@ -130,7 +134,8 @@ export const profiles = [
   { id: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/aissar_shawaqfeh912/', verified: true },
   /** TODO: create channel and set verified: true */
   { id: 'youtube', label: 'YouTube', url: 'https://www.youtube.com/@TODO', verified: false },
-  { id: 'abwm', label: 'ABWM Directory', url: 'https://abwmcertified.org/find-a-specialist/', verified: false },
+  /** A directory search, not a profile page, so it stays out of schema sameAs; it is used as the credential's verify link. */
+  { id: 'abwm', label: 'ABWM Directory', url: 'https://abwmcertified.org/find-a-specialist/?last_name=SHAWAQFEH', verified: false },
 ] as const;
 
 /**
