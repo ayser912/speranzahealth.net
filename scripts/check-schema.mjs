@@ -54,6 +54,10 @@ for await (const file of walk(dist)) {
   if (!blocks.length) { err(rel, 'no JSON-LD'); continue; }
   for (const [, raw] of blocks) {
     let data; try { data = JSON.parse(raw); } catch (e) { err(rel, `invalid JSON-LD: ${e.message}`); continue; }
+    // Google requires full ISO 8601 date-times (with time zone) for these properties.
+    for (const m of raw.matchAll(/"(datePublished|dateModified|uploadDate)":"([^"]*)"/g)) {
+      if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?([+-]\d{2}:\d{2}|Z)$/.test(m[2])) err(rel, `${m[1]} "${m[2]}" is not a full ISO 8601 date-time`);
+    }
     const nodes = data['@graph'] || [data];
     const idset = new Set(nodes.map((n) => n['@id']).filter(Boolean));
     const walkObj = (o, cb) => { if (o && typeof o === 'object') { cb(o); Object.values(o).forEach((v) => walkObj(v, cb)); } };

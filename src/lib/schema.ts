@@ -11,6 +11,10 @@ import type { Video } from './content-types';
 const base = () => (import.meta.env.SITE as string | undefined)?.replace(/\/$/, '') || `https://${site.domain}`;
 export const abs = (p: string) => `${base()}${p}`;
 
+/** Google wants full ISO 8601 date-times (with time zone) for datePublished/dateModified/uploadDate.
+ *  Content files keep plain dates (YYYY-MM-DD); this adds a fixed time in Jordan's time zone. */
+export const dt = (d: string) => (/^\d{4}-\d{2}-\d{2}$/.test(d) ? `${d}T09:00:00+03:00` : d);
+
 export const ids = {
   person: () => `${base()}/#person`,
   website: () => `${base()}/#website`,
@@ -140,8 +144,8 @@ export function docGraph(o: DocGraphOpts) {
     isPartOf: { '@id': ids.website() },
     author: { '@id': ids.person() },
   };
-  if (o.datePublished) page.datePublished = o.datePublished;
-  if (o.dateModified) page.dateModified = o.dateModified;
+  if (o.datePublished) page.datePublished = dt(o.datePublished);
+  if (o.dateModified) page.dateModified = dt(o.dateModified);
   if (o.mainEntityPerson) page.mainEntity = { '@id': ids.person() };
   else page.about = o.aboutTopic ? { '@type': 'Thing', name: o.aboutTopic } : { '@id': ids.person() };
   if (o.type === 'MedicalWebPage') {
@@ -175,8 +179,8 @@ export function articleNode(o: {
     headline: o.headline,
     description: o.description,
     inLanguage: o.lang === 'ar' ? 'ar-JO' : 'en-JO',
-    datePublished: o.datePublished,
-    dateModified: o.dateModified,
+    datePublished: dt(o.datePublished),
+    dateModified: dt(o.dateModified),
     author: { '@id': ids.person() },
     publisher: { '@id': flags.organizationConfirmed ? ids.org() : ids.person() },
     mainEntityOfPage: o.url,
@@ -192,7 +196,7 @@ export function videoNode(lang: Lang, pagePath: string, v: Video) {
     name: v.title[lang],
     description: v.description[lang],
     thumbnailUrl: `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`,
-    uploadDate: v.uploadDate,
+    uploadDate: dt(v.uploadDate),
     duration: v.duration,
     embedUrl: `https://www.youtube-nocookie.com/embed/${v.youtubeId}`,
     contentUrl: `https://www.youtube.com/watch?v=${v.youtubeId}`,
