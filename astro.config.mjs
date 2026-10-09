@@ -15,6 +15,6 @@ export default defineConfig({
   compressHTML: true,
   prefetch: false,
   // Static fallback pages (meta refresh + canonical) for hosts without redirect rules.
-  redirects: Object.fromEntries(redirectList.map(([from, to]) => [from.replace(/\/$/, '') || '/', to])),
+  redirects: Object.fromEntries(redirectList.filter(([from]) => from !== '/').map(([from, to]) => [from.replace(/\/$/, '') || '/', to])),
   integrations: [bidiFix(), hostRedirects(redirectList)],
 });

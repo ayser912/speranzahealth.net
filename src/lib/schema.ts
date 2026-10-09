@@ -69,12 +69,13 @@ export function faqNode(lang: Lang, pagePath: string, items: Array<{ q: string; 
 }
 
 export function websiteNode(lang: Lang) {
+  // One site name for the whole domain (Google shows a single name per domain).
   return {
     '@type': 'WebSite',
     '@id': ids.website(),
     url: abs('/'),
-    name: site.siteName[lang],
-    alternateName: site.brandName,
+    name: site.siteName.en,
+    alternateName: [site.siteName.ar, site.brandName],
     inLanguage: ['ar-JO', 'en-JO'],
     publisher: { '@id': flags.organizationConfirmed ? ids.org() : ids.person() },
   };

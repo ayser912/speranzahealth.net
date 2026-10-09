@@ -1,0 +1,47 @@
+---
+/**
+ * Domain root (https://speranzahealth.net/). Sends visitors to the Arabic homepage, but — unlike a
+ * bare redirect stub — carries the site's real name, description and WebSite schema, so search
+ * engines show "Aissar Shawaqfeh" for the domain (not a name left over from a previous site).
+ */
+import { site, person } from '../config/site';
+import { abs, ids } from '../lib/schema';
+const target = '/ar/';
+const title = `${person.name.en} | ${person.name.ar} — Certified Wound Specialist (CWS®) in Jordan`;
+const description = person.bio.en;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': ids.website(),
+  url: abs('/'),
+  name: site.siteName.en,
+  alternateName: [site.siteName.ar, site.brandName],
+  inLanguage: ['ar-JO', 'en-JO'],
+  publisher: { '@id': ids.person() },
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <link rel="canonical" href={abs(target)} />
+    <link rel="alternate" hreflang="ar-JO" href={abs('/ar/')} />
+    <link rel="alternate" hreflang="en-JO" href={abs('/en/')} />
+    <link rel="alternate" hreflang="x-default" href={abs('/ar/')} />
+    <meta property="og:site_name" content={site.siteName.en} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={abs('/')} />
+    <meta property="og:image" content={abs('/og/ar.png')} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <script is:inline>location.replace('/ar/');</script>
+  </head>
+  <body>
+    <p><a href="/ar/">أيسر شواقفه — العربية</a> · <a href="/en/">Aissar Shawaqfeh — English</a></p>
+  </body>
+</html>
