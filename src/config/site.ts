@@ -132,6 +132,7 @@ export const contact = {
 export const profiles = [
   { id: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/in/aissar-shawaqfeh-cws/', verified: true },
   { id: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/aissar_shawaqfeh912/', verified: true },
+  { id: 'facebook', label: 'Facebook', url: 'https://www.facebook.com/ayser.alshawaqfeh', verified: true },
   /** TODO: create channel and set verified: true */
   { id: 'youtube', label: 'YouTube', url: 'https://www.youtube.com/@TODO', verified: false },
   /** A directory search, not a profile page, so it stays out of schema sameAs; it is used as the credential's verify link. */
@@ -186,6 +187,108 @@ export const videos: Array<{
   uploadDate?: string;
   duration?: string;
 }> = [];
+
+/**
+ * Featured video on the homepage: Radio Al-Balad 92.5 interview (file supplied by Aissar, 10 Oct 2026;
+ * recorded 13 Jul 2026 per file metadata and press coverage). Self-hosted in public/media/.
+ */
+export const featuredVideo = {
+  src: '/media/radio-al-balad-interview-aissar-shawaqfeh.mp4',
+  /** base path; -poster.jpg / .webp beside it */
+  poster: '/media/radio-al-balad-interview-poster',
+  width: 640,
+  height: 360,
+  uploadDate: '2026-07-13',
+  duration: 'PT6M39S',
+  inLanguage: 'ar',
+  outlet: { ar: 'راديو البلد 92.5 · برنامج «طلة صبح»', en: 'Radio Al-Balad 92.5 · “Tallet Sobeh” morning show' },
+  title: {
+    ar: 'أيسر شواقفه على راديو البلد: العناية بالجروح في الأردن',
+    en: 'Aissar Shawaqfeh on Radio Al-Balad: wound care in Jordan',
+  },
+  description: {
+    ar: 'حوار عن اعتماد أخصائي الجروح CWS®، وحاجة الأردن إلى تخصصات دقيقة وتوثيق للخبرة في رعاية الجروح، ومخاطر الخلطات الشعبية على الجروح.',
+    en: 'A conversation about the CWS® credential, why Jordan needs specialised, documented wound-care expertise, and the risks of folk remedies on wounds. The interview is in Arabic.',
+  },
+};
+
+/**
+ * Experience figures shown under the homepage video. Supplied by Aissar (10 Oct 2026) from his own
+ * records; shown with a note saying so. Never put them in structured data or in "best/first" claims.
+ * Wording keeps a nurse's scope: "cared for", "supported", "worked with".
+ */
+export const stats: Array<{ value: number; suffix: string; percent?: boolean; ar: string; en: string }> = [
+  { value: 1700, suffix: '+', ar: 'حالة جروح تمت رعايتها', en: 'Wound cases cared for' },
+  { value: 5000, suffix: '+', ar: 'عملية جراحية شارك فيها', en: 'Surgical procedures supported' },
+  { value: 11, suffix: '+', ar: 'مستشفى عمل معها', en: 'Hospitals worked with' },
+  { value: 50, suffix: '+', ar: 'طبيبًا عمل معهم', en: 'Physicians worked with' },
+  { value: 97, suffix: '%+', percent: true, ar: 'رضا المرضى', en: 'Patient satisfaction' },
+  { value: 99, suffix: '%+', percent: true, ar: 'رضا الأطباء', en: 'Physician satisfaction' },
+];
+export const statsNote = {
+  ar: 'أرقام تقريبية من سجلات أيسر الشخصية خلال سنوات عمله في القطاع الصحي.',
+  en: 'Approximate figures from Aissar’s own records over his years in healthcare.',
+};
+
+/**
+ * Press coverage and professional activity, shown on the About page ("In the media").
+ * News items are also emitted as Person.subjectOf. Headlines are quoted as published.
+ */
+export const media: Array<{
+  kind: 'news' | 'post';
+  url: string;
+  outlet: { ar: string; en: string };
+  date?: string;
+  headline: { ar: string; en: string };
+}> = [
+  {
+    kind: 'news',
+    url: 'https://ammannet.net/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D9%85%D9%85%D8%B1%D8%B6-%D8%A3%D8%B1%D8%AF%D9%86%D9%8A-%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86-%D8%A8%D8%AD%D8%A7%D8%AC%D8%A9-%D8%A5%D9%84%D9%89-%D8%AA%D8%AE%D8%B5%D8%B5%D8%A7%D8%AA-%D8%AF%D9%82%D9%8A%D9%82%D8%A9-%D9%81%D9%8A-%D8%B1%D8%B9%D8%A7%D9%8A%D8%A9-%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD-%D9%84%D9%85%D9%88%D8%A7%D9%83%D8%A8%D8%A9-%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%8A%D8%B1-%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85%D9%8A%D8%A9',
+    outlet: { ar: 'عمّان نت', en: 'Ammannet' },
+    headline: {
+      ar: 'ممرض أردني: الأردن بحاجة إلى تخصصات دقيقة في رعاية الجروح لمواكبة المعايير العالمية',
+      en: 'Jordanian nurse: Jordan needs specialised wound-care disciplines to keep pace with global standards',
+    },
+  },
+  {
+    kind: 'news',
+    url: 'https://www.altaj.news/article/569879',
+    outlet: { ar: 'التاج الإخباري', en: 'Altaj News' },
+    date: '2026-07-13',
+    headline: {
+      ar: 'الشواقفة: الأردن بحاجة إلى تخصصات دقيقة في رعاية الجروح لمواكبة المعايير العالمية',
+      en: 'Shawaqfeh: Jordan needs specialised wound-care disciplines to keep pace with global standards',
+    },
+  },
+  {
+    kind: 'news',
+    url: 'https://alwakaai.com/article/724399',
+    outlet: { ar: 'الوقائع الإخبارية', en: 'Al-Waqai News' },
+    date: '2026-06-23',
+    headline: {
+      ar: 'إنجاز أردني نوعي.. أيسر شواقفة يحصد أول شهادة «أخصائي جروح معتمد» من البورد الأمريكي في المملكة',
+      en: 'A distinctive Jordanian achievement: Ayser Shawaqfeh earns the Kingdom’s first “Certified Wound Specialist” credential from the American board',
+    },
+  },
+  {
+    kind: 'post',
+    url: 'https://www.facebook.com/alsaudihospital/posts/pfbid0xUoWE9ywkVZTLVjtRMD85wZx3stMtLZfNq9q7L6KYqpGf4fcFH3CJ9UFs4xVXwbyl',
+    outlet: { ar: 'المستشفى السعودي (فيسبوك)', en: 'Saudi Hospital (Facebook)' },
+    headline: { ar: 'لقطات من محاضرة قدّمها أيسر في المستشفى', en: 'Photos from a lecture Aissar gave at the hospital' },
+  },
+  {
+    kind: 'post',
+    url: 'https://www.facebook.com/ayser.alshawaqfeh/posts/pfbid02KDCtuXcb6q8zF38bv85iPgnnrn3FypKog3qNmnqH6ujfwjxyLfyLqfP7dXXRVcsSl',
+    outlet: { ar: 'فيسبوك أيسر', en: 'Aissar on Facebook' },
+    headline: { ar: 'إعلان الحصول على شهادة أخصائي الجروح المعتمد CWS®', en: 'Announcing the Certified Wound Specialist (CWS®) credential' },
+  },
+  {
+    kind: 'post',
+    url: 'https://www.facebook.com/ayser.alshawaqfeh/posts/pfbid02kYdM7Bw6UX3ymGaAKWwDtZ9cNHQBDt3LxMmDSd3Xywyua6gFMBWr4QYnwGfT4Zqcl',
+    outlet: { ar: 'فيسبوك أيسر', en: 'Aissar on Facebook' },
+    headline: { ar: 'منشور تثقيفي عن حلول العلاج بالضغط السلبي (NPWT) المتقدمة', en: 'Educational post on advanced negative pressure wound therapy (NPWT)' },
+  },
+];
 
 export const analytics = {
   ga4Id: (import.meta.env?.PUBLIC_GA4_ID as string | undefined) || '',

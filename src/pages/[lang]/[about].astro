@@ -7,7 +7,7 @@ import TeamSection from '../../components/TeamSection.astro';
 import VideoSection from '../../components/VideoSection.astro';
 import Portrait from '../../components/Portrait.astro';
 import Faq from '../../components/Faq.astro';
-import { person, credentials, nursingLicence, yearsExperience, type Lang } from '../../config/site';
+import { person, credentials, nursingLicence, yearsExperience, media, type Lang } from '../../config/site';
 import { path, langs, careNav, pages } from '../../lib/routes';
 import { pageGraph, faqNode } from '../../lib/schema';
 import { formatDate } from '../../lib/i18n';
@@ -17,7 +17,7 @@ export function getStaticPaths() {
 }
 const lang = Astro.params.lang as Lang;
 const yrs = yearsExperience();
-const updated = '2026-10-09';
+const updated = '2026-10-10';
 const cws = credentials.find((c) => c.id === 'cws')!;
 
 const copy = {
@@ -37,6 +37,9 @@ const copy = {
     licenceNote: 'لا يُنشر رقم الترخيص على الموقع، ويمكن تزويد الجهات المهنية به عند الطلب.',
     contactH: 'التواصل',
     updated: 'آخر تحديث',
+    mediaH: 'في الإعلام والنشاط المهني',
+    mediaP: 'تغطيات صحفية ومقابلات ومحاضرات عن أيسر شواقفه وعمله في العناية بالجروح.',
+    kind: { news: 'خبر صحفي', post: 'منشور' },
     faqH: 'أسئلة شائعة عن أيسر شواقفه',
     faq: [
       { q: 'من هو أيسر شواقفه؟', a: person.bio.ar },
@@ -63,6 +66,9 @@ const copy = {
     licenceNote: 'The licence number is not published on this website and can be shared with professional bodies on request.',
     contactH: 'Contact',
     updated: 'Last updated',
+    mediaH: 'In the media and professional activity',
+    mediaP: 'Press coverage, interviews and lectures about Aissar Shawaqfeh and his wound-care work. Most items are in Arabic.',
+    kind: { news: 'News', post: 'Post' },
     faqH: 'Questions about Aissar Shawaqfeh',
     faq: [
       { q: 'Who is Aissar Shawaqfeh?', a: person.bio.en },
@@ -119,6 +125,21 @@ const schema = pageGraph({ lang, key: 'about', type: 'ProfilePage', title: copy.
         <p>{copy.verify} <a href={cws.verifyUrl} rel="noopener">{copy.verifyLink}</a></p>
         <p>{copy.licenceNote}</p>
       </div>
+    </section>
+
+    <section id="media" aria-labelledby="media-h">
+      <h2 id="media-h">{copy.mediaH}</h2>
+      <p class="prose">{copy.mediaP}</p>
+      <ul class="media-list" role="list">
+        {media.map((m) => (
+          <li>
+            <article class="media-card">
+              <p class="media-meta"><span class="media-kind">{copy.kind[m.kind]}</span><span>{m.outlet[lang]}</span>{m.date && <time datetime={m.date}>{formatDate(m.date, lang)}</time>}</p>
+              <a href={m.url} rel="noopener" lang={lang === 'en' && m.kind === 'news' ? 'en' : undefined}>{m.headline[lang]}</a>
+            </article>
+          </li>
+        ))}
+      </ul>
     </section>
 
     <Faq lang={lang} items={copy.faq} heading={copy.faqH} />

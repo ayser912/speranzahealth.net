@@ -108,3 +108,9 @@ Arabic Performance is 99 rather than 100 because Arabic pages preload three Arab
 - **ABWM verification link:** `https://abwmcertified.org/find-a-specialist/?last_name=SHAWAQFEH`, confirmed to list Aissar Shawaqfeh, CWS, RN. It is used everywhere the site says "Verify the credential".
 - **Search engines:** Google Search Console is verified (HTML file `public/google4645688bd33bc0da.html`, which must stay), the sitemap is submitted and 4 key pages are queued for indexing. Bing Webmaster Tools was imported from Search Console; the sitemap was read with 32 URLs.
 - Checks: 0 broken links, 0 schema errors, 0 axe violations, Lighthouse mobile 98–100.
+
+## 9. Update — 10 October 2026
+- **Homepage feature** between the hero and "Wound care": the Radio Al-Balad 92.5 interview ("Tallet Sobeh", 13 July 2026, 6:39). The 15 MB video is self-hosted in `public/media/` and loads nothing until play; it has a custom play button and VideoObject schema.
+- **Experience figures** under the video (supplied by Aissar, labelled as approximate figures from his own records): 1,700+ wound cases, 5,000+ surgical procedures supported, 11+ hospitals, 50+ physicians, 97%+ patient satisfaction, 99%+ physician satisfaction. Wording keeps a nurse's scope. The figures are not in structured data.
+- **About → In the media:** Ammannet, Altaj News (13 Jul 2026), Al-Waqai (23 Jun 2026), a Saudi Hospital lecture post and two of Aissar's Facebook posts. The news items are also in Person.subjectOf. The Facebook profile has been added to sameAs.
+- Checks: 0 broken links, 0 schema errors, 0 axe violations, Lighthouse mobile 97–100.

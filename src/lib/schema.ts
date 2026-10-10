@@ -4,7 +4,7 @@
  * Rules enforced here: no Physician / MedicalBusiness / LocalBusiness types; Organization only
  * when flags.organizationConfirmed; sameAs only from verified profiles.
  */
-import { site, person, credentials, profiles, flags, contact, type Lang } from '../config/site';
+import { site, person, credentials, profiles, flags, contact, featuredVideo, media, type Lang } from '../config/site';
 import { pages, path, type PageKey } from './routes';
 import type { Video } from './content-types';
 
@@ -52,6 +52,14 @@ export function personNode(lang: Lang) {
     ],
     knowsAbout: [...person.knowsAbout[lang], ...(lang === 'ar' ? person.knowsAbout.en : [])],
     sameAs: profiles.filter((p) => p.verified).map((p) => p.url),
+    subjectOf: media.filter((m) => m.kind === 'news').map((m) => ({
+      '@type': 'NewsArticle',
+      url: m.url,
+      headline: m.headline.ar,
+      inLanguage: 'ar',
+      ...(m.date ? { datePublished: dt(m.date) } : {}),
+      publisher: { '@type': 'Organization', name: m.outlet.ar },
+    })),
   };
   if (person.photo) node.image = { '@type': 'ImageObject', url: abs(`${person.photo}-864.jpg`), width: 864, height: 864, caption: person.name[lang] };
   return node;
@@ -202,5 +210,25 @@ export function videoNode(lang: Lang, pagePath: string, v: Video) {
     contentUrl: `https://www.youtube.com/watch?v=${v.youtubeId}`,
     inLanguage: lang === 'ar' ? 'ar-JO' : 'en-JO',
     author: { '@id': ids.person() },
+  };
+}
+
+/** The self-hosted Radio Al-Balad interview on the homepage. */
+export function featuredVideoNode(lang: Lang, pagePath: string) {
+  const v = featuredVideo;
+  return {
+    '@type': 'VideoObject',
+    '@id': `${abs(pagePath)}#interview`,
+    name: v.title[lang],
+    description: v.description[lang],
+    thumbnailUrl: abs(`${v.poster}.jpg`),
+    uploadDate: dt(v.uploadDate),
+    duration: v.duration,
+    contentUrl: abs(v.src),
+    inLanguage: v.inLanguage,
+    width: v.width,
+    height: v.height,
+    publisher: { '@type': 'Organization', name: 'Radio Al-Balad 92.5' },
+    about: { '@id': ids.person() },
   };
 }

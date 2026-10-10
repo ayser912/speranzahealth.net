@@ -1,0 +1,90 @@
+---
+/**
+ * Homepage feature: the Radio Al-Balad interview (self-hosted video, loads nothing until play)
+ * followed by Aissar's experience figures. Figures count up once when scrolled into view
+ * (skipped for reduced motion); the real numbers are in the HTML for no-JS and search engines.
+ */
+import { featuredVideo as v, stats, statsNote, type Lang } from '../config/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fmt = (n: number) => n.toLocaleString('en-US');
+const L = {
+  ar: { eyebrow: 'في الإعلام', play: 'تشغيل المقابلة', mins: '6:39 دقيقة', statsH: 'الخبرة بالأرقام' },
+  en: { eyebrow: 'In the media', play: 'Play the interview', mins: '6 min 39 s', statsH: 'Experience in numbers' },
+}[lang];
+---
+<section class="feature" aria-labelledby="feature-h">
+  <div class="wrap">
+    <div class="feature-head">
+      <p class="eyebrow"><span class="onair" aria-hidden="true"></span>{L.eyebrow} · <span>{v.outlet[lang]}</span></p>
+      <h2 id="feature-h">{v.title[lang]}</h2>
+      <p class="feature-desc">{v.description[lang]}</p>
+    </div>
+
+    <figure class="feature-video" data-video>
+      <video controls preload="none" playsinline width={v.width} height={v.height}
+        poster={`${v.poster}.jpg`} aria-label={v.title[lang]}>
+        <source src={v.src} type="video/mp4" />
+      </video>
+      <button type="button" class="feature-play js-only" aria-label={`${L.play} (${L.mins})`}>
+        <span class="feature-play-btn" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg>
+        </span>
+        <span class="feature-play-text">{L.play} <small>{L.mins}</small></span>
+      </button>
+    </figure>
+
+    <h3 class="visually-hidden">{L.statsH}</h3>
+    <ul class="stats" role="list">
+      {stats.map((st) => (
+        <li class="stat">
+          <span class="stat-num" data-count={st.value} data-suffix={st.suffix} dir="ltr">{fmt(st.value)}{st.suffix}</span>
+          <span class="stat-label">{st[lang]}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="stats-note">* {statsNote[lang]}</p>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    // Video: show the custom play button over the poster; hand over to native controls on play.
+    document.querySelectorAll('[data-video]').forEach(function (fig) {
+      var video = fig.querySelector('video'), btn = fig.querySelector('.feature-play');
+      if (!video || !btn) return;
+      video.removeAttribute('controls');
+      fig.classList.add('has-overlay');
+      btn.addEventListener('click', function () {
+        fig.classList.remove('has-overlay');
+        video.setAttribute('controls', '');
+        video.play();
+        video.focus();
+      });
+      video.addEventListener('play', function once() {
+        video.removeEventListener('play', once);
+        if (window.siteTrack) window.siteTrack('video_play', { video_id: 'radio-al-balad-interview' });
+      });
+    });
+    // Numbers: count up once when they come into view.
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var nums = [].slice.call(document.querySelectorAll('.stat-num[data-count]'));
+    var fold = window.innerHeight;
+    nums = nums.filter(function (el) { return el.getBoundingClientRect().top > fold * 0.9; });
+    var fmt = function (n) { return Math.round(n).toLocaleString('en-US'); };
+    nums.forEach(function (el) { el.textContent = '0' + el.dataset.suffix; });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        var el = e.target, to = +el.dataset.count, t0 = performance.now(), dur = 1400;
+        (function step(t) {
+          var p = Math.min(1, (t - t0) / dur), eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = fmt(to * eased) + el.dataset.suffix;
+          if (p < 1) requestAnimationFrame(step);
+        })(t0);
+      });
+    }, { threshold: 0.6 });
+    nums.forEach(function (el) { io.observe(el); });
+  })();
+</script>
