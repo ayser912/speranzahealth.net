@@ -51,7 +51,7 @@ export function personNode(lang: Lang) {
       { '@type': 'Occupation', name: lang === 'ar' ? 'أخصائي معتمد في العناية بالجروح (CWS®)' : 'Certified Wound Specialist (wound care nurse)', occupationLocation: { '@type': 'Country', name: 'Jordan' }, skills: person.knowsAbout.en.join(', ') },
     ],
     knowsAbout: [...person.knowsAbout[lang], ...(lang === 'ar' ? person.knowsAbout.en : [])],
-    sameAs: profiles.filter((p) => p.verified).map((p) => p.url),
+    sameAs: profiles.filter((p) => p.verified && p.owner === 'person').map((p) => p.url),
     subjectOf: media.filter((m) => m.kind === 'news').map((m) => ({
       '@type': 'NewsArticle',
       url: m.url,
@@ -89,6 +89,7 @@ export function websiteNode(lang: Lang) {
     name: site.siteName.en,
     alternateName: [site.siteName.ar, 'Speranza', 'سبيرانزا'],
     description: brand.description[lang],
+    sameAs: profiles.filter((p) => p.verified && p.owner === 'brand').map((p) => p.url),
     inLanguage: ['ar-JO', 'en-JO'],
     publisher: { '@id': flags.organizationConfirmed ? ids.org() : ids.person() },
   };

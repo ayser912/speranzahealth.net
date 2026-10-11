@@ -49,7 +49,7 @@ export const GET: APIRoute = () => {
   L.push(`- Serves: all of Jordan. Languages: Arabic, English.`);
   L.push(`- Scope: Registered Nurse and wound specialist, not a physician. Diagnosis, prescribing and surgical decisions stay with the physician. The site gives education, not individual medical advice; emergencies are not handled online.`);
   L.push(`- Contact: ${abs(path('en', 'contact'))} · WhatsApp ${contact.phoneDisplay} · ${contact.email}`);
-  if (verified.length) L.push(`- Profiles: ${verified.map((p) => `${p.label} ${p.url}`).join(' · ')}`);
+  if (verified.length) L.push(`- Profiles: ${verified.map((p) => `${p.label}${p.owner === 'brand' ? ' (Speranza Health)' : ''} ${p.url}`).join(' · ')}`);
   L.push('');
   L.push('## In the media');
   L.push(`- [${featuredVideo.title.en}](${abs(path('en', 'about'))}): ${featuredVideo.outlet.en}, ${featuredVideo.uploadDate}. ${featuredVideo.description.en}`);

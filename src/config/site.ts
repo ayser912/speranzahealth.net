@@ -154,15 +154,19 @@ export const contact = {
   serviceArea: { ar: 'جميع أنحاء الأردن', en: 'All of Jordan' },
 };
 
-/** Profiles: only `verified: true` entries are emitted in schema sameAs and shown publicly. */
+/**
+ * Profiles: only `verified: true` entries are shown publicly. `owner` decides the schema: 'person' profiles go in
+ * Person.sameAs, 'brand' profiles (Speranza Health accounts) in WebSite.sameAs.
+ */
 export const profiles = [
-  { id: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/in/aissar-shawaqfeh-cws/', verified: true },
-  { id: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/aissar_shawaqfeh912/', verified: true },
-  { id: 'facebook', label: 'Facebook', url: 'https://www.facebook.com/ayser.alshawaqfeh', verified: true },
+  { id: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/in/aissar-shawaqfeh-cws/', verified: true, owner: 'person' },
+  /** Speranza Health's Instagram (supplied by Aissar 11 Oct 2026; the old @aissar_shawaqfeh912 no longer exists). */
+  { id: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/speranza_health/', verified: true, owner: 'brand' },
+  { id: 'facebook', label: 'Facebook', url: 'https://www.facebook.com/ayser.alshawaqfeh', verified: true, owner: 'person' },
   /** TODO: create channel and set verified: true */
-  { id: 'youtube', label: 'YouTube', url: 'https://www.youtube.com/@TODO', verified: false },
+  { id: 'youtube', label: 'YouTube', url: 'https://www.youtube.com/@TODO', verified: false, owner: 'brand' },
   /** A directory search, not a profile page, so it stays out of schema sameAs; it is used as the credential's verify link. */
-  { id: 'abwm', label: 'ABWM Directory', url: 'https://abwmcertified.org/find-a-specialist/?last_name=SHAWAQFEH', verified: false },
+  { id: 'abwm', label: 'ABWM Directory', url: 'https://abwmcertified.org/find-a-specialist/?last_name=SHAWAQFEH', verified: false, owner: 'person' },
 ] as const;
 
 /**

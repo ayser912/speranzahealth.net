@@ -4,7 +4,7 @@
  * bare redirect stub — carries the site's real name, description and WebSite schema, so search
  * engines show "Speranza Health" for the domain (not a name left over from a previous site).
  */
-import { site, brand } from '../config/site';
+import { site, brand, profiles } from '../config/site';
 import { abs, ids } from '../lib/schema';
 const target = '/ar/';
 const title = `${site.siteName.en} | ${site.siteName.ar} — Wound care in Jordan, founded by Aissar Shawaqfeh, CWS®`;
@@ -17,6 +17,7 @@ const schema = {
   name: site.siteName.en,
   alternateName: [site.siteName.ar, 'Speranza', 'سبيرانزا'],
   description,
+  sameAs: profiles.filter((p) => p.verified && p.owner === 'brand').map((p) => p.url),
   inLanguage: ['ar-JO', 'en-JO'],
   publisher: { '@id': ids.person() },
 };
