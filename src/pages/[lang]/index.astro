@@ -151,7 +151,7 @@ const specialties = team.filter((m) => m.id !== 'other');
     <div class="wrap">
       <div>
         <p class="brand-eyebrow"><span lang="it">Speranza</span> · {lang === 'ar' ? 'الأمل' : 'Hope'}</p>
-        <h1><span class="h1-name">{copy.h1}</span><span class="h1-title">{copy.h1Sub}</span></h1>
+        <h1><span class="h1-name">{copy.h1}</span><span class="visually-hidden">{lang === 'ar' ? '، ' : ': '}</span><span class="h1-title">{copy.h1Sub}</span></h1>
         <p class="lead">{copy.lead}</p>
         <div class="actions">
           <a class="btn btn-primary" href={remoteHref} {...track('cta_click', { ...ref, placement: 'hero-remote' })}><Icon name="video" />{copy.ctaRemote}</a>
