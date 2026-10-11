@@ -4,7 +4,7 @@
  * Rules enforced here: no Physician / MedicalBusiness / LocalBusiness types; Organization only
  * when flags.organizationConfirmed; sameAs only from verified profiles.
  */
-import { site, person, credentials, profiles, flags, contact, featuredVideo, media, type Lang } from '../config/site';
+import { site, brand, person, credentials, profiles, flags, contact, featuredVideo, media, type Lang } from '../config/site';
 import { pages, path, type PageKey } from './routes';
 import type { Video } from './content-types';
 
@@ -87,14 +87,15 @@ export function websiteNode(lang: Lang) {
     '@id': ids.website(),
     url: abs('/'),
     name: site.siteName.en,
-    alternateName: [site.siteName.ar, site.brandName],
+    alternateName: [site.siteName.ar, 'Speranza', 'سبيرانزا'],
+    description: brand.description[lang],
     inLanguage: ['ar-JO', 'en-JO'],
     publisher: { '@id': flags.organizationConfirmed ? ids.org() : ids.person() },
   };
 }
 
 export function orgNode() {
-  return { '@type': 'Organization', '@id': ids.org(), name: site.brandName, url: abs('/'), founder: { '@id': ids.person() } };
+  return { '@type': 'Organization', '@id': ids.org(), name: site.brandName, alternateName: site.siteName.ar, url: abs('/'), logo: abs(site.logo.png512), description: brand.description.en, founder: { '@id': ids.person() } };
 }
 
 export function breadcrumbNode(lang: Lang, trail: Array<{ name: string; path: string }>) {

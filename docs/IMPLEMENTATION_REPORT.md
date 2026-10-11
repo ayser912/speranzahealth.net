@@ -114,3 +114,19 @@ Arabic Performance is 99 rather than 100 because Arabic pages preload three Arab
 - **Experience figures** under the video (supplied by Aissar, labelled as approximate figures from his own records): 1,700+ wound cases, 5,000+ surgical procedures supported, 11+ hospitals, 50+ physicians, 97%+ patient satisfaction, 99%+ physician satisfaction. Wording keeps a nurse's scope. The figures are not in structured data.
 - **About → In the media:** Ammannet, Altaj News (13 Jul 2026), Al-Waqai (23 Jun 2026), a Saudi Hospital lecture post and two of Aissar's Facebook posts. The news items are also in Person.subjectOf. The Facebook profile has been added to sameAs.
 - Checks: 0 broken links, 0 schema errors, 0 axe violations, Lighthouse mobile 97–100.
+
+## 10. Speranza Health front page and logo (11 October 2026)
+
+- **Logo:** Aissar's star-and-bird logo (green #064f3d and gold #c9a35f) traced into clean SVGs in `public/brand/`. It is used for the header lockup, the large homepage logo, the footer symbol, favicons (SVG + 32 px), the Apple touch icon, the manifest icons and new Open Graph images. The site palette moved from teal to the logo's green and gold. All contrast checks still pass.
+- **Homepage = Speranza Health:**
+  - Hero.
+  - What “Speranza” means (Italian for “hope”).
+  - Why we created Speranza.
+  - Services: **remote consultation with the multidisciplinary medical team** (new; wording keeps diagnosis and prescribing with the physician, plus “not for emergencies” and “no photos until a secure method is agreed”), guidance by wound type, education and training, and articles.
+  - Multidisciplinary team, approach, articles, contact.
+  - The site name is now “Speranza Health / سبيرانزا هيلث” in titles, Open Graph, WebSite schema, the domain root and llms.txt.
+- **About the founder:** the photo, the Radio Al-Balad interview with the experience figures (VideoObject schema moved with it), credentials, press and FAQ all live on `/…/about-aissar-shawaqfeh/`. A new FAQ answer links Aissar to Speranza Health. The URL is unchanged, so its existing Google ranking is kept.
+- **Contact:** `?reason=remote` pre-fills the topic “remote consultation with the multidisciplinary team”.
+- **Open questions for Aissar:**
+  1. The licensed pathway and the responsible physicians for remote consultations (`flags.patientServicesConfirmed` stays `false`).
+  2. Whether Speranza Health is a registered entity. If yes, turn on `flags.organizationConfirmed` to emit Organization schema with the logo.

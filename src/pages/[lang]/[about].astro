@@ -1,5 +1,8 @@
 ---
-/** About + credentials (merged 6 Oct 2026). Slug comes from config (person.aboutSlug). */
+/**
+ * About the founder (Aissar Shawaqfeh) + credentials. Since 11 Oct 2026 the homepage is the Speranza Health
+ * front page, so everything about Aissar (photo, interview, figures, press) lives here. Slug from person.aboutSlug.
+ */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ContactActions from '../../components/ContactActions.astro';
@@ -7,25 +10,31 @@ import TeamSection from '../../components/TeamSection.astro';
 import VideoSection from '../../components/VideoSection.astro';
 import Portrait from '../../components/Portrait.astro';
 import Faq from '../../components/Faq.astro';
+import FeaturedInterview from '../../components/FeaturedInterview.astro';
 import { person, credentials, nursingLicence, yearsExperience, media, type Lang } from '../../config/site';
-import { path, langs, careNav, pages } from '../../lib/routes';
-import { pageGraph, faqNode } from '../../lib/schema';
-import { formatDate } from '../../lib/i18n';
+import { path, langs, careNav, pages, credentialsHref } from '../../lib/routes';
+import { pageGraph, faqNode, featuredVideoNode } from '../../lib/schema';
+import { formatDate, t } from '../../lib/i18n';
+import { track } from '../../lib/links';
 
 export function getStaticPaths() {
   return langs.map((lang) => ({ params: { lang, about: person.aboutSlug } }));
 }
 const lang = Astro.params.lang as Lang;
 const yrs = yearsExperience();
-const updated = '2026-10-10';
+const updated = '2026-10-11';
+const s = t(lang);
 const cws = credentials.find((c) => c.id === 'cws')!;
 
 const copy = {
   ar: {
-    title: 'أيسر شواقفه | ممرض وأخصائي جروح معتمد CWS® في الأردن',
-    description: 'أيسر شواقفه، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في الأردن: مجالات الخبرة، والعمل ضمن فريق متعدد التخصصات، والمؤهلات وطرق التحقق.',
-    h1: 'أيسر شواقفه، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®',
-    intro: `ممرض قانوني وأخصائي معتمد في العناية بالجروح في الأردن، بخبرة تمتد لنحو ${yrs} سنوات في القطاع الصحي تشمل العناية الحثيثة والعناية المتقدمة بالجروح والعلاج بالضغط السلبي. يركّز على الجروح التي لا تلتئم كما يُتوقع، وعلى تثقيف المرضى والأسر والكوادر الصحية بوضوح ووفق الدليل العلمي.`,
+    title: 'أيسر شواقفه | مؤسس سبيرانزا هيلث وأخصائي جروح معتمد CWS®',
+    description: 'أيسر شواقفه، مؤسس سبيرانزا هيلث، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في الأردن: الخبرة، والمقابلات، والمؤهلات وطرق التحقق.',
+    eyebrow: 'المؤسس',
+    h1Name: 'أيسر شواقفه',
+    h1Title: 'ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®',
+    founderOf: 'مؤسس سبيرانزا هيلث',
+    intro: `أسّس أيسر سبيرانزا هيلث، وهو ممرض قانوني وأخصائي معتمد في العناية بالجروح في الأردن، بخبرة تمتد لنحو ${yrs} سنوات في القطاع الصحي تشمل العناية الحثيثة والعناية المتقدمة بالجروح والعلاج بالضغط السلبي. يركّز على الجروح التي لا تلتئم كما يُتوقع، وعلى تثقيف المرضى والأسر والكوادر الصحية بوضوح ووفق الدليل العلمي.`,
     focusH: 'مجالات الخبرة',
     scopeH: 'نطاق الممارسة',
     scope: 'أيسر ممرض قانوني وأخصائي جروح معتمد، وليس طبيبًا. يقدّم التقييم التمريضي والعناية بالجرح والتثقيف، بينما يبقى التشخيص ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات.',
@@ -43,6 +52,7 @@ const copy = {
     faqH: 'أسئلة شائعة عن أيسر شواقفه',
     faq: [
       { q: 'من هو أيسر شواقفه؟', a: person.bio.ar },
+      { q: 'ما علاقة أيسر شواقفه بسبيرانزا هيلث؟', a: 'أيسر شواقفه هو مؤسس سبيرانزا هيلث (Speranza Health)، وهي منصة أردنية للعناية بالجروح تقدّم تثقيفًا موثوقًا للمرضى والأسر، واستشارات عن بعد بالتنسيق مع فريق طبي متعدد التخصصات، وتدريبًا للكوادر الصحية. «سبيرانزا» كلمة إيطالية تعني «الأمل». <a href="/ar/">تعرّف على سبيرانزا هيلث</a>.' },
       { q: 'ماذا يعني اعتماد CWS®؟', a: 'CWS® اختصار Certified Wound Specialist، وهو اعتماد تمنحه American Board of Wound Management (ABWM) للممارسين الصحيين المرخصين بعد ثلاث سنوات على الأقل من الخبرة السريرية في العناية بالجروح واجتياز اختبار مستقل. البرنامج معتمد من NCCA، ويمكن التحقق منه في دليل ABWM الرسمي.' },
       { q: 'هل يعمل أيسر شواقفه في العناية بجروح القدم السكري؟', a: 'نعم، العناية بجروح القدم السكري من مجالات خبرته الأساسية، بالتنسيق مع الطبيب المعالج وجرّاح الأوعية الدموية وجرّاح العظام وأخصائي القدم وأخصائي الأمراض المعدية وأخصائي التغذية. أي جرح جديد في قدم مريض السكري يحتاج إلى مراجعة طبية في اليوم نفسه. اقرأ المزيد عن <a href="/ar/diabetic-foot-wounds/">العناية بجروح القدم السكري</a>.' },
       { q: 'هل أيسر شواقفه طبيب؟', a: 'لا. أيسر ممرض قانوني وأخصائي معتمد في العناية بالجروح. التشخيص ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات.' },
@@ -51,10 +61,13 @@ const copy = {
     ],
   },
   en: {
-    title: 'Aissar Shawaqfeh, RN, CWS® | Wound Care Specialist in Jordan',
-    description: 'Aissar Shawaqfeh, Registered Nurse and Certified Wound Specialist (CWS®) in Jordan: areas of experience, multidisciplinary teamwork, credentials and how to verify them.',
-    h1: 'Aissar Shawaqfeh, Registered Nurse and Certified Wound Specialist, CWS®',
-    intro: `A Registered Nurse and Certified Wound Specialist in Jordan, with about ${yrs} years in healthcare spanning intensive care, advanced wound care and negative pressure wound therapy. His focus is wounds that are not healing as expected, and clear, evidence-based education for patients, families and healthcare teams.`,
+    title: 'Aissar Shawaqfeh, RN, CWS® | Founder of Speranza Health, Jordan',
+    description: 'Aissar Shawaqfeh, founder of Speranza Health, Registered Nurse and Certified Wound Specialist (CWS®) in Jordan: experience, interviews, credentials and verification.',
+    eyebrow: 'Founder',
+    h1Name: 'Aissar Shawaqfeh',
+    h1Title: 'Registered Nurse and Certified Wound Specialist, CWS®',
+    founderOf: 'Founder of Speranza Health',
+    intro: `Aissar founded Speranza Health. He is a Registered Nurse and Certified Wound Specialist in Jordan, with about ${yrs} years in healthcare spanning intensive care, advanced wound care and negative pressure wound therapy. His focus is wounds that are not healing as expected, and clear, evidence-based education for patients, families and healthcare teams.`,
     focusH: 'Areas of experience',
     scopeH: 'Scope of practice',
     scope: 'Aissar is a Registered Nurse and certified wound specialist, not a physician. He provides nursing assessment, wound care and education, while diagnosis, prescribing and surgical decisions remain the physician’s responsibility within the multidisciplinary team.',
@@ -72,6 +85,7 @@ const copy = {
     faqH: 'Questions about Aissar Shawaqfeh',
     faq: [
       { q: 'Who is Aissar Shawaqfeh?', a: person.bio.en },
+      { q: 'How is Aissar Shawaqfeh connected to Speranza Health?', a: 'Aissar Shawaqfeh is the founder of Speranza Health, a Jordanian wound-care platform offering reliable education for patients and families, remote consultations coordinated with a multidisciplinary medical team, and training for healthcare teams. “Speranza” is Italian for “hope”. <a href="/en/">About Speranza Health</a>.' },
       { q: 'What does CWS® mean?', a: 'CWS® stands for Certified Wound Specialist, a credential awarded by the American Board of Wound Management (ABWM) to licensed clinicians with at least three years of clinical wound-care experience who pass an independent exam. The programme is NCCA-accredited, and holders can be checked in the official ABWM directory.' },
       { q: 'Does Aissar Shawaqfeh work with diabetic foot wounds?', a: 'Yes. Diabetic foot wound care is one of his main areas, coordinated with the treating physician, vascular and orthopaedic surgeons, podiatry, infectious diseases and clinical nutrition. Any new wound on the foot of a person with diabetes needs a medical review the same day. Read more about <a href="/en/diabetic-foot-wounds/">diabetic foot wound care</a>.' },
       { q: 'Is Aissar Shawaqfeh a doctor?', a: 'No. Aissar is a Registered Nurse and Certified Wound Specialist. Diagnosis, prescribing and surgical decisions are the physician’s responsibility within the multidisciplinary team.' },
@@ -82,20 +96,30 @@ const copy = {
 }[lang];
 const focusKeys = [...careNav, 'education'] as const;
 const schema = pageGraph({ lang, key: 'about', type: 'ProfilePage', title: copy.title, description: copy.description, dateModified: updated, mainEntityPerson: true });
-(schema['@graph'] as unknown[]).push(faqNode(lang, path(lang, 'about'), copy.faq));
+(schema['@graph'] as unknown[]).push(faqNode(lang, path(lang, 'about'), copy.faq), featuredVideoNode(lang, path(lang, 'about')));
+const ref = { lang, page: 'about', placement: 'hero' };
 ---
 <BaseLayout lang={lang} pageKey="about" title={copy.title} description={copy.description} schema={schema} ogType="profile">
-  <div class="wrap">
-    <Breadcrumbs lang={lang} pageKey="about" />
-    <header class="page-head about-head">
-      <div class="prose">
-        <h1>{copy.h1}</h1>
+  <section class="hero founder-hero">
+    <div class="wrap">
+      <div>
+        <Breadcrumbs lang={lang} pageKey="about" />
+        <p class="brand-eyebrow">{copy.eyebrow} · <a href={path(lang, 'home')}>{lang === 'ar' ? 'سبيرانزا هيلث' : 'Speranza Health'}</a></p>
+        <h1><span class="h1-name">{copy.h1Name}</span><span class="visually-hidden">{lang === 'ar' ? '، ' : ', '}</span><span class="h1-title">{copy.h1Title}</span></h1>
         <p class="page-dates">{copy.updated}: <time datetime={updated}>{formatDate(updated, lang)}</time></p>
         <p class="lead">{copy.intro}</p>
+        <div class="actions">
+          <a class="btn btn-primary" href={path(lang, 'contact')} {...track('cta_click', { ...ref, placement: 'hero-contact' })}>{s.contactCta}</a>
+          <a class="btn btn-secondary" href={credentialsHref(lang)} {...track('cta_click', { ...ref, placement: 'hero-credentials' })}>{s.credentialsCta}</a>
+        </div>
       </div>
-      <Portrait lang={lang} />
-    </header>
+      <Portrait lang={lang} eager verify />
+    </div>
+  </section>
 
+  <FeaturedInterview lang={lang} />
+
+  <div class="wrap section-gap">
     <div class="grid-2">
       <section class="prose" aria-labelledby="focus-h">
         <h2 id="focus-h" class="flush">{copy.focusH}</h2>

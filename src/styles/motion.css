@@ -59,7 +59,7 @@
       transform var(--dur-2) var(--ease-out),
       text-decoration-color var(--dur-1) var(--ease-std);
   }
-  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(11, 110, 105, 0.18); }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(6, 79, 61, 0.18); }
   .btn:active { transform: translateY(0) scale(0.98); box-shadow: none; transition-duration: 80ms; }
 
   .card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(18, 48, 46, 0.10); }

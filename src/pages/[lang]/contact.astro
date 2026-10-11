@@ -35,7 +35,7 @@ const copy = {
       summary: 'يرجى تصحيح الحقول المشار إليها.',
     },
     ok: 'تم تجهيز رسالتك. راجعها في التطبيق الذي فُتح ثم اضغط إرسال.',
-    msg: { hello: 'مرحبًا، أتواصل معك من الموقع.', name: 'الاسم', method: 'طريقة التواصل المفضلة', topic: 'الموضوع: التدريب والتعليم' },
+    msg: { hello: 'مرحبًا، أتواصل معك من الموقع.', name: 'الاسم', method: 'طريقة التواصل المفضلة', topic: 'الموضوع: التدريب والتعليم', remote: 'الموضوع: الاستشارة عن بعد مع الفريق متعدد التخصصات' },
     hours: 'ساعات الرد',
     emergencyH: 'الحالات الطارئة',
   },
@@ -60,7 +60,7 @@ const copy = {
       summary: 'Please correct the highlighted fields.',
     },
     ok: 'Your message is ready. Review it in the app that opened, then press send.',
-    msg: { hello: 'Hello, I am contacting you from the website.', name: 'Name', method: 'Preferred contact', topic: 'Topic: education and training' },
+    msg: { hello: 'Hello, I am contacting you from the website.', name: 'Name', method: 'Preferred contact', topic: 'Topic: education and training', remote: 'Topic: remote consultation with the multidisciplinary team' },
     hours: 'Response hours',
     emergencyH: 'Emergencies',
   },
@@ -132,7 +132,8 @@ const formConfig = { lang, wa: contact.whatsappE164, email: contact.email, error
   (function () {
     var form = document.getElementById('enquiry');
     if (!form) return;
-    var topic = new URLSearchParams(location.search).get('reason') === 'education' ? cfg.msg.topic : '';
+    var reason = new URLSearchParams(location.search).get('reason');
+    var topic = reason === 'education' ? cfg.msg.topic : reason === 'remote' ? cfg.msg.remote : '';
     var nameRe = /^[\p{L}][\p{L}\p{M}' \-]{1,39}$/u;
     function setErr(id, field, msg) {
       document.getElementById(id).textContent = msg || '';

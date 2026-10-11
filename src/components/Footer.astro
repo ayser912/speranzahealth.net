@@ -13,8 +13,8 @@ const year = new Date().getFullYear();
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <h2>{person.name[lang]}{lang === 'ar' ? '، ' : ', '}<span class="ltr">{person.postNominals}</span></h2>
-        <p>{person.title[lang]}</p>
+        <h2 class="footer-brand"><img src={site.logo.mark} width="40" height="40" alt="" loading="lazy" decoding="async" />{site.siteName[lang]}</h2>
+        <p>{lang === 'ar' ? 'المؤسس: ' : 'Founder: '}<a href={path(lang, 'about')}>{person.name[lang]}</a>{lang === 'ar' ? '، ' : ', '}<span class="ltr">{person.postNominals}</span></p>
         <p>{s.footerAbout}</p>
         <p><strong>{s.emergencyShort}</strong></p>
       </div>
@@ -43,7 +43,7 @@ const year = new Date().getFullYear();
       </div>
     </div>
     <div class="footer-legal">
-      <p>© {year} {person.name[lang]} · {site.domain}. {s.rights}.</p>
+      <p>© {year} {site.siteName[lang]} · {site.domain}. {s.rights}.</p>
     </div>
   </div>
 </footer>

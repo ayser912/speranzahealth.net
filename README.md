@@ -1,6 +1,6 @@
-# Aissar Shawaqfeh — official website (speranzahealth.net)
+# Speranza Health — speranzahealth.net
 
-Bilingual (Arabic-first, RTL / English, LTR) static website for **Aissar Shawaqfeh (أيسر شواقفه), RN, CWS®**, built with [Astro](https://astro.build). It outputs plain HTML/CSS with almost no JavaScript, so it is fast, cheap to host and easy for Google to read.
+Bilingual (Arabic-first, RTL / English, LTR) static website for **Speranza Health (سبيرانزا هيلث)**, the wound-care platform founded by **Aissar Shawaqfeh (أيسر شواقفه), RN, CWS®**, built with [Astro](https://astro.build). It outputs plain HTML/CSS with almost no JavaScript, so it is fast, cheap to host and easy for Google to read.
 
 ## Quick start
 
@@ -26,6 +26,9 @@ npm test             # build + internal link check + SEO/structured-data check
 | Colours, fonts, spacing | `src/styles/global.css` (tokens at the top) |
 | Motion (page transitions, entrances, scroll reveals, hovers) | `src/styles/motion.css` + the small reveal script at the end of `src/layouts/BaseLayout.astro`. All motion switches off for visitors who choose reduced motion, and nothing is hidden without JavaScript. |
 | Social sharing images | `public/og/ar.png`, `public/og/en.png` (regenerate with `node scripts/make-og.mjs`) |
+| Logo and icons | `public/brand/` (`speranza-logo-horizontal.svg` header, `speranza-logo.svg` stacked, `speranza-mark.svg` symbol), `public/favicon.svg`, `favicon-32.png`, `apple-touch-icon.png`, `icon-192/512.png`. Traced from the logo Aissar supplied on 11 Oct 2026. Paths are set in `site.logo` in `src/config/site.ts`. |
+| Homepage (Speranza: meaning, purpose, services incl. remote consultation) | `src/pages/[lang]/index.astro` |
+| Founder page (photo, interview, figures, credentials, press, FAQ) | `src/pages/[lang]/[about].astro` (URL stays `/…/about-aissar-shawaqfeh/`, menu label “About the founder”) |
 
 ### Feature flags (`src/config/site.ts → flags`)
 
@@ -69,7 +72,7 @@ Clinical pages and articles are **data files**: Arabic and English copy sit side
 ### Pictures, team and videos
 
 - **Illustrations:** original diagrams in `src/components/Illustration.astro` (team, TIME, pressure points, foot check, NPWT parts, surgical wound). Each topic page picks one with `illustration:` in its data file. No wound or patient photos are used.
-- **Professional photo:** save it in `public/images/` and set `person.photo` in `src/config/site.ts`. It appears in the homepage hero and on the About page.
+- **Professional photo:** save it in `public/images/` and set `person.photo` in `src/config/site.ts`. It appears at the top of the founder page.
 - **Team:** the multidisciplinary specialties are listed in `team` in `src/config/site.ts`.
 - **Videos:** add entries to `videos` in `src/config/site.ts` (YouTube id or Instagram reel URL, the page it belongs to and titles in both languages). Until there are entries, every video section links to the Instagram profile.
 

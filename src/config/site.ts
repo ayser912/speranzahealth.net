@@ -7,14 +7,36 @@
  */
 
 export const site = {
-  /** Brand / site name shown in titles and Open Graph. */
-  siteName: { ar: 'أيسر شواقفه', en: 'Aissar Shawaqfeh' },
-  /** Organisation the domain belongs to. Not emitted as Organization schema until confirmed (see flags). */
+  /**
+   * Brand / site name shown in the header, titles and Open Graph (front page restructured as
+   * Speranza Health on 11 Oct 2026; Aissar is presented as the founder).
+   */
+  siteName: { ar: 'سبيرانزا هيلث', en: 'Speranza Health' },
+  /** Brand name. Not emitted as Organization schema until registration is confirmed (see flags). */
   brandName: 'Speranza Health',
+  /** Logo supplied by Aissar (11 Oct 2026), traced to SVG in public/brand/. */
+  logo: {
+    horizontal: '/brand/speranza-logo-horizontal.svg',
+    stacked: '/brand/speranza-logo.svg',
+    mark: '/brand/speranza-mark.svg',
+    png512: '/icon-512.png',
+    /** intrinsic size of the horizontal lockup (for width/height attributes) */
+    horizontalSize: { w: 1199, h: 293 },
+    stackedSize: { w: 883, h: 854 },
+  },
   domain: 'speranzahealth.net',
   defaultLang: 'ar' as const,
   locales: { ar: 'ar-JO', en: 'en-JO' },
   ogLocale: { ar: 'ar_JO', en: 'en_JO' },
+};
+
+/** What Speranza Health is. Reused by the homepage, the domain root, schema and llms.txt. */
+export const brand = {
+  meaning: { ar: 'كلمة «سبيرانزا» (Speranza) إيطالية وتعني «الأمل»', en: '“Speranza” is the Italian word for “hope”' },
+  description: {
+    ar: 'سبيرانزا هيلث (Speranza Health) منصة أردنية للعناية بالجروح أسسها أيسر شواقفه، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®. تقدّم تثقيفًا موثوقًا للمرضى والأسر، واستشارات عن بعد بالتنسيق مع فريق طبي متعدد التخصصات، وتدريبًا للكوادر الصحية في جميع أنحاء الأردن.',
+    en: 'Speranza Health is a Jordanian wound-care platform founded by Aissar Shawaqfeh, a Registered Nurse and Certified Wound Specialist (CWS®). It offers reliable education for patients and families, remote consultations coordinated with a multidisciplinary medical team, and training for healthcare teams across Jordan.',
+  },
 };
 
 export const person = {
