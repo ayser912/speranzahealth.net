@@ -30,12 +30,16 @@ export const site = {
   ogLocale: { ar: 'ar_JO', en: 'en_JO' },
 };
 
-/** What Speranza Health is. Reused by the homepage, the domain root, schema and llms.txt. */
+/**
+ * What Speranza Health is: a digital platform, not a registered company yet (confirmed by Aissar 11 Oct 2026).
+ * Reused by the homepage, the domain root, schema and llms.txt.
+ * When remote consultation launches (flags.remoteConsultationLive), change "is preparing to launch / تعمل على إطلاق" here.
+ */
 export const brand = {
   meaning: { ar: 'كلمة «سبيرانزا» (Speranza) إيطالية وتعني «الأمل»', en: '“Speranza” is the Italian word for “hope”' },
   description: {
-    ar: 'سبيرانزا هيلث (Speranza Health) منصة أردنية للعناية بالجروح أسسها أيسر شواقفه، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®. تقدّم تثقيفًا موثوقًا للمرضى والأسر، واستشارات عن بعد بالتنسيق مع فريق طبي متعدد التخصصات، وتدريبًا للكوادر الصحية في جميع أنحاء الأردن.',
-    en: 'Speranza Health is a Jordanian wound-care platform founded by Aissar Shawaqfeh, a Registered Nurse and Certified Wound Specialist (CWS®). It offers reliable education for patients and families, remote consultations coordinated with a multidisciplinary medical team, and training for healthcare teams across Jordan.',
+    ar: 'سبيرانزا هيلث (Speranza Health) منصة رقمية أردنية للعناية بالجروح أسسها أيسر شواقفه، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®. تقدّم تثقيفًا موثوقًا للمرضى والأسر وتدريبًا للكوادر الصحية في جميع أنحاء الأردن، وتعمل على إطلاق خدمة استشارات عن بعد بالتنسيق مع فريق طبي متعدد التخصصات.',
+    en: 'Speranza Health is a Jordanian digital wound-care platform founded by Aissar Shawaqfeh, a Registered Nurse and Certified Wound Specialist (CWS®). It offers reliable education for patients and families and training for healthcare teams across Jordan, and is preparing to launch remote consultations coordinated with a multidisciplinary medical team.',
   },
 };
 
@@ -168,12 +172,15 @@ export const profiles = [
  * - homeVisitsPage: enables a home-visits page (not built).
  * - organizationConfirmed: Speranza Health is a real registered organisation → emit Organization schema.
  * - brandNeutralNote: show the short "educational and brand-neutral" note on clinical pages.
+ * - remoteConsultationLive: the remote-consultation physician team is in place and published (11 Oct 2026:
+ *   still being formed, so the homepage shows the service as "coming soon" with "register interest").
  */
 export const flags = {
   patientServicesConfirmed: false,
   homeVisitsPage: false,
   organizationConfirmed: false,
   brandNeutralNote: true,
+  remoteConsultationLive: false,
 };
 
 /**

@@ -127,6 +127,10 @@ Arabic Performance is 99 rather than 100 because Arabic pages preload three Arab
   - The site name is now “Speranza Health / سبيرانزا هيلث” in titles, Open Graph, WebSite schema, the domain root and llms.txt.
 - **About the founder:** the photo, the Radio Al-Balad interview with the experience figures (VideoObject schema moved with it), credentials, press and FAQ all live on `/…/about-aissar-shawaqfeh/`. A new FAQ answer links Aissar to Speranza Health. The URL is unchanged, so its existing Google ranking is kept.
 - **Contact:** `?reason=remote` pre-fills the topic “remote consultation with the multidisciplinary team”.
-- **Open questions for Aissar:**
-  1. The licensed pathway and the responsible physicians for remote consultations (`flags.patientServicesConfirmed` stays `false`).
-  2. Whether Speranza Health is a registered entity. If yes, turn on `flags.organizationConfirmed` to emit Organization schema with the logo.
+- **Answers from Aissar (11 Oct 2026):**
+  1. The remote-consultation physician team is still being formed, and details are coming soon. `flags.remoteConsultationLive = false`, so the service shows a "Coming soon / قريبًا" badge and a "Register interest" button, and the wording elsewhere says "coming soon".
+     - At launch:
+       - Publish the physicians' names and specialties (with their written agreement).
+       - Set the flag to `true`.
+       - Update `brand.description` in `src/config/site.ts` and the homepage title and description.
+  2. Speranza Health is not a registered entity yet; it is a digital platform. `flags.organizationConfirmed` stays `false`, so there is no Organization schema. Turn it on after registration to show the logo in Google.

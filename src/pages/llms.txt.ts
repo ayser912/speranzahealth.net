@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { site, brand, person, credentials, contact, profiles, team, media, featuredVideo } from '../config/site';
+import { site, brand, flags, person, credentials, contact, profiles, team, media, featuredVideo } from '../config/site';
 import { pages, path, type PageKey } from '../lib/routes';
 import { articles, articlePath } from '../content/articles/index';
 import { abs } from '../lib/schema';
@@ -28,7 +28,7 @@ export const GET: APIRoute = () => {
   L.push(`> ${brand.description.ar} ${brand.meaning.ar}.`);
   L.push('');
   L.push('## Services');
-  L.push(`- Remote consultation (video or voice) coordinated with the multidisciplinary medical team: ${team.filter((t) => t.id !== 'other').map((t) => t.en).join(', ')}. Diagnosis and prescribing stay with the responsible physician; not for emergencies; does not replace a clinical examination when one is needed.`);
+  L.push(`- Remote consultation (video or voice) coordinated with the multidisciplinary medical team${flags.remoteConsultationLive ? '' : ' — coming soon; the physician team is being finalised'}: ${team.filter((t) => t.id !== 'other').map((t) => t.en).join(', ')}. Diagnosis and prescribing stay with the responsible physician; not for emergencies; does not replace a clinical examination when one is needed.`);
   L.push('- Guidance by wound type: chronic wounds, pressure injuries, diabetic foot wounds, surgical wounds, negative pressure wound therapy (NPWT/VAC).');
   L.push('- Education and training for nurses and healthcare teams.');
   L.push('- Educational articles for patients and families (Arabic and English).');

@@ -9,7 +9,7 @@ import ContactActions from '../../components/ContactActions.astro';
 import TeamSection from '../../components/TeamSection.astro';
 import ArticleCards from '../../components/ArticleCards.astro';
 import Icon from '../../components/Icon.astro';
-import { site, person, team, type Lang } from '../../config/site';
+import { site, person, team, flags, type Lang } from '../../config/site';
 import { path, langs, careNav, pages } from '../../lib/routes';
 import { pageGraph } from '../../lib/schema';
 import { t } from '../../lib/i18n';
@@ -25,13 +25,17 @@ const updated = '2026-10-11';
 
 const copy = {
   ar: {
-    title: 'سبيرانزا هيلث | العناية بالجروح والاستشارة عن بعد في الأردن',
-    description: 'سبيرانزا هيلث: منصة أردنية للعناية بالجروح أسسها أيسر شواقفه، أخصائي معتمد CWS®. تثقيف موثوق، واستشارة عن بعد مع فريق طبي متعدد التخصصات، وتدريب للكوادر الصحية.',
+    title: 'سبيرانزا هيلث | منصة العناية بالجروح في الأردن',
+    description: 'سبيرانزا هيلث: منصة رقمية أردنية للعناية بالجروح أسسها أيسر شواقفه CWS®. تثقيف موثوق وتدريب للكوادر الصحية، وقريبًا استشارة عن بعد مع فريق متعدد التخصصات.',
     eyebrow: 'Speranza · الأمل',
     h1: 'سبيرانزا هيلث',
     h1Sub: 'العناية بالجروح بالعلم والأمل، وبفريق متعدد التخصصات',
-    lead: 'منصة أردنية متخصصة في العناية بالجروح: معلومة واضحة ومبنية على الدليل العلمي للمرضى والأسر، واستشارة عن بعد بالتنسيق مع فريق طبي متعدد التخصصات، وتدريب للكوادر الصحية في جميع أنحاء الأردن.',
-    ctaRemote: 'استفسر عن الاستشارة عن بعد',
+    lead: 'منصة رقمية أردنية متخصصة في العناية بالجروح: معلومة واضحة ومبنية على الدليل العلمي للمرضى والأسر، وتدريب للكوادر الصحية في جميع أنحاء الأردن، وقريبًا استشارة عن بعد بالتنسيق مع فريق طبي متعدد التخصصات.',
+    ctaRemote: 'سجّل اهتمامك بالاستشارة عن بعد',
+    ctaRemoteLive: 'استفسر عن الاستشارة عن بعد',
+    soon: 'قريبًا',
+    soonP: 'نعمل حاليًا على استكمال الفريق الطبي لهذه الخدمة، وستُنشر أسماء الأطباء وتخصصاتهم هنا عند إطلاقها. سجّل اهتمامك وسنتواصل معك عند الإطلاق.',
+    remoteTeamSoon: 'التخصصات المخطط أن يضمّها الفريق:',
     ctaServices: 'تعرّف على الخدمات',
     logoAlt: 'شعار سبيرانزا هيلث: نجمة يحلّق في داخلها طائر بجناحين مفتوحين',
     meaningH: 'ماذا تعني «سبيرانزا»؟',
@@ -78,16 +82,20 @@ const copy = {
     articlesH: 'من مقالاتنا التثقيفية',
     allArticles: 'كل المقالات',
     contactH: 'التواصل',
-    contactP: 'للاستفسار عن الاستشارة عن بعد أو التدريب أو التعاون، من جميع أنحاء الأردن.',
+    contactP: 'للاستفسار عن التدريب أو التعاون، أو لتسجيل اهتمامك بالاستشارة عن بعد، من جميع أنحاء الأردن.',
   },
   en: {
-    title: 'Speranza Health | Wound Care and Remote Consultation in Jordan',
-    description: 'Speranza Health is a Jordanian wound-care platform founded by Aissar Shawaqfeh, CWS®: reliable education, remote consultation with a multidisciplinary team, and training.',
+    title: 'Speranza Health | Wound Care Platform in Jordan',
+    description: 'Speranza Health is a Jordanian digital wound-care platform founded by Aissar Shawaqfeh, CWS®: reliable education, training, and remote consultation coming soon.',
     eyebrow: 'Speranza · Hope',
     h1: 'Speranza Health',
     h1Sub: 'Wound care built on evidence, hope and a multidisciplinary team',
-    lead: 'A Jordanian platform dedicated to wound care: clear, evidence-based information for patients and families, remote consultation coordinated with a multidisciplinary medical team, and training for healthcare teams across Jordan.',
-    ctaRemote: 'Ask about remote consultation',
+    lead: 'A Jordanian digital platform dedicated to wound care: clear, evidence-based information for patients and families and training for healthcare teams across Jordan, with remote consultation coordinated with a multidisciplinary medical team coming soon.',
+    ctaRemote: 'Register interest in remote consultation',
+    ctaRemoteLive: 'Ask about remote consultation',
+    soon: 'Coming soon',
+    soonP: 'We are completing the medical team for this service. The physicians’ names and specialties will be published here at launch. Register your interest and we will contact you when it opens.',
+    remoteTeamSoon: 'Specialties the team is planned to include:',
     ctaServices: 'See the services',
     logoAlt: 'Speranza Health logo: a star with a bird rising inside it, wings spread',
     meaningH: 'What does “Speranza” mean?',
@@ -134,13 +142,15 @@ const copy = {
     articlesH: 'From our educational articles',
     allArticles: 'All articles',
     contactH: 'Contact',
-    contactP: 'For questions about remote consultation, training or collaboration, from anywhere in Jordan.',
+    contactP: 'For training or collaboration, or to register interest in remote consultation, from anywhere in Jordan.',
   },
 }[lang];
 
 const schema = pageGraph({ lang, key: 'home', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated });
 const ref = { lang, page: 'home', placement: 'hero' };
 const remoteHref = `${path(lang, 'contact')}?reason=remote`;
+const live = flags.remoteConsultationLive;
+const ctaRemote = live ? copy.ctaRemoteLive : copy.ctaRemote;
 const featured = ['when-to-see-a-wound-care-specialist', 'wound-infection-warning-signs', 'home-wound-care-mistakes']
   .map((slug) => articles.find((a) => a.slug === slug)!)
   .filter(Boolean);
@@ -154,7 +164,7 @@ const specialties = team.filter((m) => m.id !== 'other');
         <h1><span class="h1-name">{copy.h1}</span><span class="visually-hidden">{lang === 'ar' ? '، ' : ': '}</span><span class="h1-title">{copy.h1Sub}</span></h1>
         <p class="lead">{copy.lead}</p>
         <div class="actions">
-          <a class="btn btn-primary" href={remoteHref} {...track('cta_click', { ...ref, placement: 'hero-remote' })}><Icon name="video" />{copy.ctaRemote}</a>
+          <a class="btn btn-primary" href={remoteHref} {...track('cta_click', { ...ref, placement: 'hero-remote' })}><Icon name="video" />{ctaRemote}</a>
           <a class="btn btn-secondary" href="#services" {...track('cta_click', { ...ref, placement: 'hero-services' })}>{copy.ctaServices}</a>
         </div>
       </div>
@@ -202,12 +212,14 @@ const specialties = team.filter((m) => m.id !== 'other');
       <article class="service-feature" aria-labelledby="remote-h">
         <div class="sf-main">
           <span class="sf-icon" aria-hidden="true"><Icon name="video" /></span>
+          {!live && <span class="soon-badge">{copy.soon}</span>}
           <h3 id="remote-h">{copy.remoteH}</h3>
           <p>{copy.remoteP}</p>
-          <p class="sf-team-h">{copy.remoteTeam}</p>
+          {!live && <p class="soon-note">{copy.soonP}</p>}
+          <p class="sf-team-h">{live ? copy.remoteTeam : copy.remoteTeamSoon}</p>
           <ul class="chips" role="list">{specialties.map((m) => <li>{m[lang]}</li>)}</ul>
           <div class="actions">
-            <a class="btn btn-primary" href={remoteHref} {...track('cta_click', { lang, page: 'home', placement: 'services-remote' })}>{copy.ctaRemote}</a>
+            <a class="btn btn-primary" href={remoteHref} {...track('cta_click', { lang, page: 'home', placement: 'services-remote' })}>{ctaRemote}</a>
           </div>
         </div>
         <ul class="sf-notes" role="list">
