@@ -14,6 +14,26 @@ export const T = {
     howH: 'كيف أحصل على الدخول؟',
     how: ['اطلب الدخول من فريق سبيرانزا عبر واتساب.', 'يصلك رابط شخصي ورمز من 5 أرقام، صالحان لمدة 7 أيام.', 'افتح الرابط، واقرأ الشروط ووافق عليها، ثم أدخل الرمز.'],
     request: 'اطلب رمز الدخول عبر واتساب',
+    requestBtn: 'اطلب رمز الدخول',
+    reqH: 'طلب رمز دخول المعرض',
+    reqP: 'املأ الطلب، وسيراجعه فريق سبيرانزا ويرسل لك رابطًا شخصيًا ورمزًا عبر واتساب. لا تكتب أي معلومات صحية.',
+    reqName: 'الاسم',
+    reqPhone: 'رقم الواتساب',
+    reqPhoneHint: 'مثال: 0791234567',
+    reqRole: 'صفتك',
+    roles: { patient: 'مريض', family: 'أحد أفراد أسرة مريض', professional: 'كادر صحي', other: 'أخرى' },
+    reqTerms: 'أوافق على شروط المشاهدة، وعلى استخدام اسمي ورقمي فقط لإرسال الرمز.',
+    reqSend: 'إرسال الطلب',
+    reqPrivacy: 'تُحذف بيانات الطلب بعد معالجته، أو خلال 30 يومًا كحد أقصى.',
+    reqErrName: 'اكتب اسمك (حرفان على الأقل).',
+    reqErrPhone: 'اكتب رقم واتساب صحيحًا.',
+    reqErrRole: 'اختر صفتك.',
+    reqErrTerms: 'يجب الموافقة على الشروط.',
+    reqErrBusy: 'وصلنا عدد كبير من الطلبات. حاول لاحقًا أو تواصل معنا عبر واتساب.',
+    doneH: 'وصلنا طلبك',
+    doneP: 'سيراجع فريق سبيرانزا طلبك ويرسل لك الرابط والرمز عبر واتساب على الرقم الذي كتبته. إذا كان المعرض قيد الإنشاء، فسنرسله لك عند الافتتاح.',
+    doneNotify: 'أبلغ الفريق عبر واتساب (اختياري)',
+    doneNotifyMsg: (name) => `مرحبًا، أرسلت طلب رمز دخول لمعرض رحلات الالتئام باسم ${name}.\n(عبر الموقع · طلب دخول المعرض)`,
     requestMsg: 'مرحبًا، أرغب بطلب رمز دخول لمعرض رحلات الالتئام في سبيرانزا هيلث.\n(عبر الموقع · معرض رحلات الالتئام)',
     back: 'العودة إلى الموقع',
     termsH: 'شروط الدخول',
@@ -68,6 +88,26 @@ export const T = {
     howH: 'How do I get access?',
     how: ['Ask the Speranza team on WhatsApp.', 'You receive a personal link and a 5-digit code, valid for 7 days.', 'Open the link, read and accept the terms, then enter the code.'],
     request: 'Request an access code on WhatsApp',
+    requestBtn: 'Request an access code',
+    reqH: 'Request gallery access',
+    reqP: 'Fill in the request and the Speranza team will review it and send you a personal link and code on WhatsApp. Please don’t include any health information.',
+    reqName: 'Name',
+    reqPhone: 'WhatsApp number',
+    reqPhoneHint: 'e.g. 0791234567 or +962791234567',
+    reqRole: 'You are',
+    roles: { patient: 'A patient', family: 'A family member of a patient', professional: 'A healthcare professional', other: 'Other' },
+    reqTerms: 'I accept the terms of viewing, and that my name and number are used only to send the code.',
+    reqSend: 'Send request',
+    reqPrivacy: 'Request details are deleted once handled, or within 30 days at the latest.',
+    reqErrName: 'Enter your name (at least 2 letters).',
+    reqErrPhone: 'Enter a valid WhatsApp number.',
+    reqErrRole: 'Choose an option.',
+    reqErrTerms: 'Please accept the terms.',
+    reqErrBusy: 'We have received many requests. Please try later or message us on WhatsApp.',
+    doneH: 'Request received',
+    doneP: 'The Speranza team will review your request and send the link and code on WhatsApp to the number you entered. If the gallery is still being prepared, we will send it when it opens.',
+    doneNotify: 'Let the team know on WhatsApp (optional)',
+    doneNotifyMsg: (name) => `Hello, I have sent a request for access to the healing journeys gallery under the name ${name}.\n(Via the website · Gallery access request)`,
     requestMsg: 'Hello, I would like to request an access code for the Speranza Health healing journeys gallery.\n(Via the website · Healing journeys gallery)',
     back: 'Back to the website',
     termsH: 'Terms of access',
@@ -151,7 +191,43 @@ export function landing(lang) {
     <p class="lead">${esc(t.landingP)}</p>
     <h2>${esc(t.howH)}</h2>
     <ol class="steps">${t.how.map((s) => `<li>${esc(s)}</li>`).join('')}</ol>
-    <p class="actions"><a class="btn" href="${esc(waLink(t.requestMsg))}" rel="noopener">${esc(t.request)}</a>
+    <p class="actions"><a class="btn" href="/request?lang=${lang}">${esc(t.requestBtn)}</a>
+    <a class="btn ghost" href="${esc(waLink(t.requestMsg))}" rel="noopener">${esc(t.request)}</a></p>
+  </section>` });
+}
+
+export function requestForm(lang, { errors = {}, v = {}, status = 200 } = {}) {
+  const t = T[lang];
+  const err = (k) => (errors[k] ? `<p class="error" id="e-${k}">${esc(errors[k])}</p>` : '');
+  const inv = (k) => (errors[k] ? ` aria-invalid="true" aria-describedby="e-${k}"` : '');
+  return layout(lang, { title: t.reqH, path: '/request', body: `
+  <section class="card narrow">
+    <h1>${esc(t.reqH)}</h1>
+    <p>${esc(t.reqP)}</p>
+    ${errors.busy ? `<p class="error" role="alert">${esc(errors.busy)}</p>` : ''}
+    <form method="post" action="/request?lang=${lang}" novalidate>
+      <label class="field"><span>${esc(t.reqName)}</span><input name="name" value="${esc(v.name || '')}" maxlength="60" autocomplete="given-name" required${inv('name')}></label>${err('name')}
+      <label class="field"><span>${esc(t.reqPhone)}</span><input name="phone" value="${esc(v.phone || '')}" inputmode="tel" autocomplete="tel" dir="ltr" maxlength="20" placeholder="${esc(t.reqPhoneHint)}" required${inv('phone')}></label>${err('phone')}
+      <fieldset class="field roles"><legend>${esc(t.reqRole)}</legend>
+        ${Object.entries(t.roles).map(([k, l]) => `<label class="check"><input type="radio" name="role" value="${k}"${v.role === k ? ' checked' : ''}> <span>${esc(l)}</span></label>`).join('')}
+      </fieldset>${err('role')}
+      <h2>${esc(t.termsH)}</h2>
+      <ol class="terms">${t.terms.map((s) => `<li>${esc(s)}</li>`).join('')}</ol>
+      <label class="check"><input type="checkbox" name="accept" value="1"${inv('accept')}> <span>${esc(t.reqTerms)}</span></label>${err('accept')}
+      <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+      <button class="btn" type="submit">${esc(t.reqSend)}</button>
+      <p class="muted">${esc(t.reqPrivacy)}</p>
+    </form>
+  </section>` });
+}
+
+export function requestDone(lang, name) {
+  const t = T[lang];
+  return layout(lang, { title: t.doneH, body: `
+  <section class="card narrow hero">
+    <h1>✓ ${esc(t.doneH)}</h1>
+    <p>${esc(t.doneP)}</p>
+    <p class="actions"><a class="btn ghost" href="${esc(waLink(t.doneNotifyMsg(name)))}" rel="noopener">${esc(t.doneNotify)}</a>
     <a class="btn ghost" href="${MAIN}/${lang}/">${esc(t.back)}</a></p>
   </section>` });
 }

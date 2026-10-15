@@ -18,7 +18,7 @@ export function adminLayout({ title, body, nav = true }) {
 <header class="top"><div class="wrap">
   <a class="brand" href="/admin/home"><img src="https://speranzahealth.net/brand/speranza-logo-horizontal.svg" alt="سبيرانزا هيلث" width="164" height="40"></a>
   <span class="pill">إدارة المعرض</span>
-  ${nav ? `<nav class="anav"><a href="/admin/codes">رموز الدخول</a><a href="/admin/cases">الحالات</a><a href="/admin/log">سجل الدخول</a>
+  ${nav ? `<nav class="anav"><a href="/admin/requests">الطلبات</a><a href="/admin/codes">رموز الدخول</a><a href="/admin/cases">الحالات</a><a href="/admin/log">سجل الدخول</a>
   <form method="post" action="/admin/logout"><button class="linkbtn" type="submit">خروج</button></form></nav>` : ''}
 </div></header>
 <main class="wrap">${body}</main></body></html>`;
@@ -34,12 +34,13 @@ export function adminLogin({ error = '', notConfigured = false } = {}) {
   </section>` });
 }
 
-export function adminHome({ grants, cases, log }) {
+export function adminHome({ grants, cases, log, requests = [] }) {
   const active = grants.filter((g) => grantStatus(g) === 'active').length;
   const pub = cases.filter((c) => c.status === 'published').length;
   return adminLayout({ title: 'لوحة التحكم', body: `
   <h1>لوحة التحكم</h1>
-  <ul class="kpis"><li><strong>${active}</strong><span>رمز فعّال</span></li><li><strong>${pub}</strong><span>حالة منشورة</span></li>
+  ${requests.length ? `<p class="notice">لديك ${requests.length} طلب دخول جديد. <a href="/admin/requests">راجع الطلبات</a></p>` : ''}
+  <ul class="kpis"><li><strong>${requests.length}</strong><span>طلب بانتظار المراجعة</span></li><li><strong>${active}</strong><span>رمز فعّال</span></li><li><strong>${pub}</strong><span>حالة منشورة</span></li>
   <li><strong>${cases.length - pub}</strong><span>مسودة</span></li><li><strong>${log.filter((l) => l.type === 'enter').length}</strong><span>دخول خلال 30 يومًا</span></li></ul>
   <p class="actions"><a class="btn" href="/admin/codes">إنشاء رمز دخول</a><a class="btn ghost" href="/admin/cases">إضافة حالة</a></p>
   <section class="card"><h2>تذكير</h2><ul>
@@ -153,9 +154,21 @@ export function caseEdit({ c, msg = '' }) {
   <form method="post" action="/admin/cases/${esc(c.id)}/delete" data-confirm="حذف الحالة وكل صورها نهائيًا؟"><button class="btn danger" type="submit">حذف الحالة نهائيًا</button></form></section>` });
 }
 
+const roleAr = { patient: 'مريض', family: 'أسرة مريض', professional: 'كادر صحي', other: 'أخرى' };
+export function requestsPage({ requests }) {
+  return adminLayout({ title: 'طلبات الدخول', body: `
+  <h1>طلبات الدخول</h1>
+  <p class="muted">طلبات وصلت من نموذج «طلب رمز الدخول» على الموقع. عند القبول يُنشأ رابط ورمز صالحان 7 أيام، وتظهر رسالة واتساب جاهزة للإرسال. تُحذف بيانات الطلب بعد القبول أو الرفض، أو تلقائيًا بعد 30 يومًا.</p>
+  <section class="card">${requests.length ? `<div class="tablewrap"><table><thead><tr><th>الاسم</th><th>واتساب</th><th>الصفة</th><th>التاريخ</th><th></th></tr></thead><tbody>
+  ${requests.map((r) => `<tr><td><strong>${esc(r.name)}</strong></td><td dir="ltr">+${esc(r.phone)}</td><td>${roleAr[r.role] || ''}</td><td>${fmt(r.createdAt)}</td>
+    <td class="rowactions"><form method="post" action="/admin/requests/${esc(r.id)}/approve"><button class="btn small" type="submit">قبول وإنشاء رمز</button></form>
+    <form method="post" action="/admin/requests/${esc(r.id)}/reject" data-confirm="رفض الطلب وحذفه؟"><button class="linkbtn danger" type="submit">رفض</button></form></td></tr>`).join('')}
+  </tbody></table></div>` : '<p class="muted">لا توجد طلبات جديدة.</p>'}</section>` });
+}
+
 export function logPage({ log, grants }) {
   const byId = Object.fromEntries(grants.map((g) => [g.id, g]));
-  const typeAr = { enter: 'دخول', fail: 'رمز خاطئ', locked: 'إقفال', view: 'عرض حالة', logout: 'خروج', admin: 'دخول الإدارة', 'admin-fail': 'محاولة إدارة خاطئة' };
+  const typeAr = { request: 'طلب دخول من الموقع', enter: 'دخول', fail: 'رمز خاطئ', locked: 'إقفال', view: 'عرض حالة', logout: 'خروج', admin: 'دخول الإدارة', 'admin-fail': 'محاولة إدارة خاطئة' };
   return adminLayout({ title: 'سجل الدخول', body: `
   <h1>سجل الدخول</h1><p class="muted">آخر 30 يومًا، الأحدث أولًا.</p>
   <section class="card">${log.length ? `<div class="tablewrap"><table><thead><tr><th>الوقت</th><th>الحدث</th><th>الشخص</th><th>المرجع</th><th>تفاصيل</th></tr></thead><tbody>

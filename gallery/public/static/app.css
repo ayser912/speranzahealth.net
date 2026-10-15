@@ -141,3 +141,11 @@ th { color: var(--ink-soft); font-weight: 600; }
 .addstage { margin-top: .5rem; }
 
 @media (max-width: 30rem) { .top .wrap { gap: .5rem; } .brand img { height: 2rem; } .pill { font-size: .75rem; padding: .1rem .5rem; } }
+
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.roles { border: 0; padding: 0; margin: 0 0 .5rem; }
+.roles legend { font-weight: 600; margin-bottom: .2rem; }
+.roles .check { margin: .35rem 0; font-weight: 400; }
+.rowactions { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; }
+.rowactions form { margin: 0; }
+[aria-invalid=true] { border-color: var(--danger) !important; }

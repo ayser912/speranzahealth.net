@@ -1,0 +1,18 @@
+import { chromium } from 'playwright';
+const B = 'http://localhost:4600';
+const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+p.on('dialog', (d) => d.accept());
+await p.goto(B + '/admin'); await p.fill('input[name=password]', 'local-admin-test-123'); await p.click('button[type=submit]');
+console.log('home notice:', (await p.textContent('.notice')).trim());
+await p.goto(B + '/admin/requests');
+await p.screenshot({ path: process.env.SHOTS + '/admin-requests.png', fullPage: true });
+await p.click('form[action$="/approve"] button');
+await p.waitForLoadState('load');
+console.log('wa link:', (await p.getAttribute('.created a.btn', 'href')).slice(0, 40));
+await p.goto(B + '/admin/requests');
+console.log('after:', (await p.textContent('main')).includes('لا توجد طلبات جديدة'));
+const v = await b.newPage({ viewport: { width: 390, height: 844 } });
+await v.goto(B + '/request?lang=ar');
+await v.screenshot({ path: process.env.SHOTS + '/request-form.png', fullPage: true });
+await b.close();

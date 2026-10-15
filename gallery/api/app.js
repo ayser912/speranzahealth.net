@@ -29,6 +29,14 @@ function redirect(location, cookies = []) {
 }
 
 const ID = /^[A-Za-z0-9_-]{6,40}$/;
+/** Normalises a WhatsApp number to international digits (Jordanian 07… → 9627…). Returns '' if invalid. */
+function normalizePhone(raw) {
+  let d = String(raw || '').replace(/[\s()-]/g, '').replace(/^\+/, '').replace(/^00/, '');
+  if (!/^\d+$/.test(d)) return '';
+  if (/^07\d{8}$/.test(d)) d = '962' + d.slice(1);
+  else if (/^7\d{8}$/.test(d)) d = '962' + d;
+  return d.length >= 9 && d.length <= 15 ? d : '';
+}
 const now = () => new Date().toISOString();
 const refChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const newRef = () => 'SH-' + Array.from({ length: 5 }, () => refChars[Math.floor(Math.random() * refChars.length)]).join('');
@@ -70,7 +78,9 @@ async function handle(request) {
   const seg = path.split('/').filter(Boolean);
   const T = V.T[lang];
 
-  if (method === 'POST' && !A.sameOrigin(request)) return res('Forbidden', 403);
+  // The public access-request form also lives on speranzahealth.net and posts here.
+  const fromMainSite = /^https:\/\/(www\.)?speranzahealth\.net$/.test(request.headers.get('origin') || '');
+  if (method === 'POST' && !A.sameOrigin(request) && !(path === '/request' && fromMainSite)) return res('Forbidden', 403);
   try { A.assertConfigured(); } catch { return html(V.simple(lang, 'Not configured', 'SESSION_SECRET missing').html, 500); }
 
   /* ---------------- viewer ---------------- */
@@ -106,6 +116,34 @@ async function handle(request) {
       await writeJson(`data/grants/${grant.id}.json`, grant);
       await log('enter', grant.id);
       return redirect(`/gallery?lang=${lang}`, [A.viewerCookie(grant.id)]);
+    }
+  }
+
+  if (path === '/request') {
+    if (method === 'GET') return html(V.requestForm(lang));
+    if (method === 'POST') {
+      const f = await request.formData();
+      const v = { name: String(f.get('name') || '').trim().slice(0, 60), phone: String(f.get('phone') || '').trim(), role: String(f.get('role') || '') };
+      if (String(f.get('website') || '')) return html(V.requestDone(lang, v.name)); // honeypot: pretend success
+      const errors = {};
+      if (!/^[\p{L}][\p{L}\p{M}' .-]{1,59}$/u.test(v.name)) errors.name = T.reqErrName;
+      const phone = normalizePhone(v.phone);
+      if (!phone) errors.phone = T.reqErrPhone;
+      if (!['patient', 'family', 'professional', 'other'].includes(v.role)) errors.role = T.reqErrRole;
+      if (f.get('accept') !== '1') errors.accept = T.reqErrTerms;
+      if (Object.keys(errors).length) return html(V.requestForm(lang, { errors, v }), 400);
+      const all = await readAll('data/requests/');
+      const ipHash = A.hashCode('ip', (request.headers.get('x-forwarded-for') || '').split(',')[0].trim() || 'unknown').slice(0, 16);
+      const hourAgo = Date.now() - 3600000;
+      if (all.filter((r) => r.ipHash === ipHash && Date.parse(r.createdAt) > hourAgo).length >= 5 || all.length >= 200) {
+        return html(V.requestForm(lang, { errors: { busy: T.reqErrBusy }, v }), 429);
+      }
+      if (!all.some((r) => r.phone === phone)) {
+        const id = A.randomId(10);
+        await writeJson(`data/requests/${id}.json`, { id, name: v.name, phone, role: v.role, lang, createdAt: now(), ipHash, source: fromMainSite ? 'site' : 'gallery' });
+        await log('request', '-', '-', v.role);
+      }
+      return html(V.requestDone(lang, v.name));
     }
   }
 
@@ -172,6 +210,13 @@ async function handle(request) {
   return html(V.simple(lang, T.notFound, '').html, 404);
 }
 
+async function pendingRequests() {
+  const all = await readAll('data/requests/');
+  const old = all.filter((r) => Date.parse(r.createdAt) < Date.now() - 30 * 86400000);
+  if (old.length) await remove(old.map((r) => `data/requests/${r.id}.json`));
+  return all.filter((r) => !old.includes(r)).sort((x, y) => y.createdAt.localeCompare(x.createdAt));
+}
+
 async function handleAdmin(request, url, seg, method) {
   const base = `${url.protocol}//${url.host}`;
   if (seg.length === 1) {
@@ -192,8 +237,25 @@ async function handleAdmin(request, url, seg, method) {
   if (a === 'logout' && method === 'POST') return redirect('/admin', [A.clearCookie('sa')]);
 
   if (a === 'home') {
-    const [grants, cases, log] = await Promise.all([readAll('data/grants/'), readAll('data/cases/'), readLog()]);
-    return html(AV.adminHome({ grants, cases, log }));
+    const [grants, cases, log, requests] = await Promise.all([readAll('data/grants/'), readAll('data/cases/'), readLog(), pendingRequests()]);
+    return html(AV.adminHome({ grants, cases, log, requests }));
+  }
+
+  if (a === 'requests') {
+    if (b && ID.test(b) && method === 'POST') {
+      const r = await readJson(`data/requests/${b}.json`);
+      if (!r) return redirect('/admin/requests');
+      await remove(`data/requests/${b}.json`); // personal data is not kept once handled
+      if (c2 === 'approve') {
+        const id = A.randomId(18);
+        const code = A.newCode();
+        const grant = { id, ref: newRef(), label: r.name, phone: r.phone, note: `طلب من الموقع (${r.role})`, codeHash: A.hashCode(id, code), createdAt: now(), expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(), failed: 0, uses: 0, revoked: false };
+        await writeJson(`data/grants/${id}.json`, grant);
+        return html(AV.codesPage({ grants: await readAll('data/grants/'), created: { grant, code }, base }));
+      }
+      return redirect('/admin/requests');
+    }
+    return html(AV.requestsPage({ requests: await pendingRequests() }));
   }
 
   if (a === 'log') {
