@@ -11,12 +11,12 @@ export function adminLayout({ title, body, nav = true }) {
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow"><meta name="referrer" content="same-origin">
 <title>${esc(title)} | إدارة المعرض</title>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="https://speranzahealth.net/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/static/app.css">
 <script src="/static/admin.js" defer></script>
 </head><body class="admin">
 <header class="top"><div class="wrap">
-  <a class="brand" href="/admin/home"><img src="/static/speranza-logo-horizontal.svg" alt="سبيرانزا هيلث" width="164" height="40"></a>
+  <a class="brand" href="/admin/home"><img src="https://speranzahealth.net/brand/speranza-logo-horizontal.svg" alt="سبيرانزا هيلث" width="164" height="40"></a>
   <span class="pill">إدارة المعرض</span>
   ${nav ? `<nav class="anav"><a href="/admin/codes">رموز الدخول</a><a href="/admin/cases">الحالات</a><a href="/admin/log">سجل الدخول</a>
   <form method="post" action="/admin/logout"><button class="linkbtn" type="submit">خروج</button></form></nav>` : ''}

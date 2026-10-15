@@ -126,13 +126,13 @@ export function layout(lang, { title, body, path = '/', bodyClass = '' }) {
 <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
 <meta name="referrer" content="same-origin">
 <title>${esc(title)} | ${esc(t.brand)}</title>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="https://speranzahealth.net/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/static/app.css">
 <script src="/static/viewer.js" defer></script>
 </head>
 <body class="${bodyClass}">
 <header class="top"><div class="wrap">
-  <a class="brand" href="${MAIN}/${lang}/"><img src="/static/speranza-logo-horizontal.svg" alt="${esc(t.brand)}" width="164" height="40"></a>
+  <a class="brand" href="${MAIN}/${lang}/"><img src="https://speranzahealth.net/brand/speranza-logo-horizontal.svg" alt="${esc(t.brand)}" width="164" height="40"></a>
   <span class="pill">${esc(t.privateNote)}</span>
   <a class="lang" href="${esc(otherHref)}" lang="${t.other}">${esc(t.otherLabel)}</a>
 </div></header>

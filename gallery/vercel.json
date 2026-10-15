@@ -6,7 +6,7 @@
     "api/app.js": { "maxDuration": 60, "memory": 1024, "includeFiles": "fonts/**" }
   },
   "rewrites": [
-    { "source": "/((?!static/|favicon|robots\\.txt).*)", "destination": "/api/app?__path=/$1" }
+    { "source": "/((?!static/|robots\\.txt).*)", "destination": "/api/app?__path=/$1" }
   ],
   "headers": [
     { "source": "/(.*)", "headers": [

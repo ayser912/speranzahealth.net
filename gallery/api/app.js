@@ -11,7 +11,7 @@ import * as AV from '../lib/admin-views.js';
 import { ingest, watermarked, blurredCover } from '../lib/media.js';
 
 const SEC_HEADERS = {
-  'Content-Security-Policy': "default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob: https://*.blob.vercel-storage.com; connect-src 'self' https://vercel.com https://*.blob.vercel-storage.com https://blob.vercel-storage.com; style-src 'self'; script-src 'self'; font-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'; object-src 'none'",
+  'Content-Security-Policy': "default-src 'self'; img-src 'self' data: blob: https://speranzahealth.net; media-src 'self' blob: https://*.blob.vercel-storage.com; connect-src 'self' https://vercel.com https://*.blob.vercel-storage.com https://blob.vercel-storage.com; style-src 'self'; script-src 'self'; font-src 'self' https://speranzahealth.net; frame-ancestors 'none'; base-uri 'none'; form-action 'self'; object-src 'none'",
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'same-origin',
   'X-Robots-Tag': 'noindex, nofollow, noarchive, noimageindex',
