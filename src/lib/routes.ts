@@ -27,8 +27,8 @@ export const pages: Record<PageKey, PageDef> = {
   diabeticFoot: { slug: 'diabetic-foot-wounds', nav: { ar: 'القدم السكري', en: 'Diabetic foot' }, built: true, priority: 0.8 },
   surgical: { slug: 'surgical-wound-care', nav: { ar: 'الجروح الجراحية', en: 'Surgical wounds' }, built: true, priority: 0.8 },
   npwt: { slug: 'negative-pressure-wound-therapy', nav: { ar: 'العلاج بالضغط السلبي', en: 'NPWT / VAC' }, built: true, priority: 0.8 },
-  dressings: { slug: 'advanced-wound-dressings', nav: { ar: 'ضمادات الجروح الحديثة', en: 'Advanced dressings' }, built: true, priority: 0.8 },
-  journeys: { slug: 'healing-journeys', nav: { ar: 'معرض رحلات الالتئام', en: 'Healing journeys gallery' }, built: true, priority: 0.6 },
+  dressings: { slug: 'advanced-wound-dressings', nav: { ar: 'ضمادات الجروح الحديثة', en: 'Dressings' }, built: true, priority: 0.8 },
+  journeys: { slug: 'healing-journeys', nav: { ar: 'معرض الحالات', en: 'Case gallery' }, built: true, priority: 0.6 },
   education: { slug: 'wound-care-education', nav: { ar: 'التعليم والتدريب', en: 'Education' }, built: true, priority: 0.7 },
   articles: { slug: 'articles', nav: { ar: 'المقالات', en: 'Articles' }, built: true, priority: 0.7 },
   homeVisits: { slug: 'home-wound-care', nav: { ar: 'الزيارات المنزلية', en: 'Home visits' }, built: false && flags.homeVisitsPage, priority: 0.8 },
@@ -49,7 +49,7 @@ export const isBuilt = (key: PageKey) => pages[key].built;
 export const careNav: PageKey[] = ['chronic', 'pressure', 'diabeticFoot', 'surgical', 'npwt'];
 export const careLabel: Record<Lang, string> = { ar: 'العناية بالجروح', en: 'Wound care' };
 /** Main navigation, in display order. 'care' renders the careNav group as a submenu. */
-export const mainNav: Array<PageKey | 'care'> = ['about', 'care', 'dressings', 'education', 'articles', 'contact'];
+export const mainNav: Array<PageKey | 'care'> = ['about', 'care', 'dressings', 'journeys', 'education', 'articles', 'contact'];
 /** Footer "site" column. */
 export const footerNav: PageKey[] = ['about', 'dressings', 'journeys', 'education', 'articles', 'contact', 'legal'];
 

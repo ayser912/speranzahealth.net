@@ -18,6 +18,8 @@ export function getStaticPaths() {
 }
 const GALLERY_OPEN = false;
 const GALLERY_URL = 'https://cases.speranzahealth.net';
+/** Requests are handled by the gallery app (cases.speranzahealth.net) and appear in its admin under «الطلبات». */
+const REQUEST_URL = `${GALLERY_URL}/request?lang=${Astro.params.lang}`;
 const lang = Astro.params.lang as Lang;
 const s = t(lang);
 const ref = { lang, page: 'journeys', placement: 'request' };
@@ -33,7 +35,7 @@ const copy = {
     privateP: 'صور الجروح بيانات صحية حساسة. لذلك لا يُنشر المعرض للعامة ولا يظهر في محركات البحث، والدخول إليه برابط ورمز شخصيين فقط.',
     stepsH: 'كيف تحصل على الدخول؟',
     steps: [
-      ['اطلب الدخول', 'تواصل مع فريق سبيرانزا عبر واتساب واطلب رمز دخول المعرض.'],
+      ['اطلب الدخول', 'املأ نموذج الطلب في هذه الصفحة، أو تواصل مع فريق سبيرانزا عبر واتساب.'],
       ['استلم رابطك ورمزك', 'يصلك رابط شخصي ورمز من 5 أرقام، صالحان لمدة 7 أيام.'],
       ['وافق على الشروط وادخل', 'افتح الرابط، واقرأ شروط الدخول ووافق عليها، ثم أدخل الرمز.'],
     ],
@@ -53,8 +55,19 @@ const copy = {
       'النتائج تختلف من حالة لأخرى.',
     ],
     requestMsg: 'مرحبًا، أرغب بطلب رمز دخول لمعرض رحلات الالتئام في سبيرانزا هيلث.',
-    request: 'اطلب رمز الدخول عبر واتساب',
+    request: 'أو اطلب الرمز عبر واتساب',
     open: 'الدخول إلى المعرض',
+    requestCta: 'اطلب رمز الدخول',
+    formH: 'طلب رمز دخول المعرض',
+    formP: 'املأ الطلب، وسيراجعه فريق سبيرانزا ويرسل لك رابطًا شخصيًا ورمزًا عبر واتساب. لا تكتب أي معلومات صحية.',
+    fName: 'الاسم',
+    fPhone: 'رقم الواتساب',
+    fPhoneHint: 'مثال: 0791234567',
+    fRole: 'صفتك',
+    roles: [['patient', 'مريض'], ['family', 'أحد أفراد أسرة مريض'], ['professional', 'كادر صحي'], ['other', 'أخرى']],
+    fTerms: 'قرأت شروط المشاهدة وأوافق عليها، وأوافق على استخدام اسمي ورقمي فقط لإرسال الرمز.',
+    fSend: 'إرسال الطلب',
+    fPrivacy: 'تُحذف بيانات الطلب بعد معالجته، أو خلال 30 يومًا كحد أقصى.',
     soonNote: 'نعمل حاليًا على تجهيز الحالات الأولى وتوثيقها. يمكنك طلب الرمز الآن، وسنرسله لك عند افتتاح المعرض.',
   },
   en: {
@@ -67,7 +80,7 @@ const copy = {
     privateP: 'Wound photos are sensitive health data. The gallery is therefore not public and is hidden from search engines; access is by a personal link and code only.',
     stepsH: 'How do I get access?',
     steps: [
-      ['Request access', 'Message the Speranza team on WhatsApp and ask for a gallery access code.'],
+      ['Request access', 'Fill in the request form on this page, or message the Speranza team on WhatsApp.'],
       ['Receive your link and code', 'You get a personal link and a 5-digit code, valid for 7 days.'],
       ['Accept the terms and enter', 'Open the link, read and accept the terms of access, then enter the code.'],
     ],
@@ -87,8 +100,19 @@ const copy = {
       'Results vary from case to case.',
     ],
     requestMsg: 'Hello, I would like to request an access code for the Speranza Health healing journeys gallery.',
-    request: 'Request an access code on WhatsApp',
+    request: 'Or request the code on WhatsApp',
     open: 'Go to the gallery',
+    requestCta: 'Request an access code',
+    formH: 'Request gallery access',
+    formP: 'Fill in the request and the Speranza team will review it and send you a personal link and code on WhatsApp. Please don’t include any health information.',
+    fName: 'Name',
+    fPhone: 'WhatsApp number',
+    fPhoneHint: 'e.g. 0791234567 or +962791234567',
+    fRole: 'You are',
+    roles: [['patient', 'A patient'], ['family', 'A family member of a patient'], ['professional', 'A healthcare professional'], ['other', 'Other']],
+    fTerms: 'I have read and accept the terms of viewing, and agree that my name and number are used only to send the code.',
+    fSend: 'Send request',
+    fPrivacy: 'Request details are deleted once handled, or within 30 days at the latest.',
     soonNote: 'We are preparing and documenting the first cases. You can request a code now and we will send it when the gallery opens.',
   },
 }[lang];
@@ -104,7 +128,7 @@ const schema = pageGraph({ lang, key: 'journeys', type: 'WebPage', title: copy.t
       <p class="lead">{copy.lead}</p>
       {!GALLERY_OPEN && <p class="soon-note">{copy.soonNote}</p>}
       <div class="actions">
-        <a class="btn btn-primary" href={whatsappUrl(ref, copy.requestMsg)} rel="noopener" {...track('whatsapp_click', ref)}><Icon name="whatsapp" />{copy.request}</a>
+        <a class="btn btn-primary" href="#request" {...track('cta_click', { ...ref, placement: 'hero-request' })}>{copy.requestCta}</a>
         {GALLERY_OPEN && <a class="btn btn-secondary" href={GALLERY_URL} rel="noopener">{copy.open}</a>}
       </div>
     </header>
@@ -116,6 +140,41 @@ const schema = pageGraph({ lang, key: 'journeys', type: 'WebPage', title: copy.t
           <li><span class="pl-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><h3>{h}</h3><p>{p}</p></li>
         ))}
       </ol>
+    </section>
+
+    <section id="request" class="hj-request" aria-labelledby="form-h">
+      <div class="prose">
+        <h2 id="form-h" class="flush">{copy.formH}</h2>
+        <p>{copy.formP}</p>
+      </div>
+      <form class="form" method="post" action={REQUEST_URL}>
+        <div class="field">
+          <label for="r-name">{copy.fName}</label>
+          <input type="text" id="r-name" name="name" autocomplete="given-name" maxlength="60" required />
+        </div>
+        <div class="field">
+          <label for="r-phone">{copy.fPhone}</label>
+          <input type="tel" id="r-phone" name="phone" autocomplete="tel" inputmode="tel" dir="ltr" maxlength="20" placeholder={copy.fPhoneHint} required />
+        </div>
+        <div class="field">
+          <fieldset>
+            <legend>{copy.fRole}</legend>
+            {copy.roles.map(([v, l]) => (
+              <div class="choice"><input type="radio" id={`r-role-${v}`} name="role" value={v} required /><label for={`r-role-${v}`}>{l}</label></div>
+            ))}
+          </fieldset>
+        </div>
+        <div class="field">
+          <div class="choice" style="align-items:flex-start">
+            <input type="checkbox" id="r-accept" name="accept" value="1" required style="margin-top:0.3rem" />
+            <label for="r-accept">{copy.fTerms} <a href="#terms-h">{copy.termsH}</a></label>
+          </div>
+        </div>
+        <div class="hj-hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
+        <button type="submit" class="btn btn-primary">{copy.fSend}</button>
+        <p class="hint">{copy.fPrivacy}</p>
+        <p class="hint"><a href={whatsappUrl(ref, copy.requestMsg)} rel="noopener" {...track('whatsapp_click', ref)}>{copy.request}</a></p>
+      </form>
     </section>
 
     <div class="grid-2 section-gap">

@@ -142,7 +142,7 @@ th { color: var(--ink-soft); font-weight: 600; }
 
 @media (max-width: 30rem) { .top .wrap { gap: .5rem; } .brand img { height: 2rem; } .pill { font-size: .75rem; padding: .1rem .5rem; } }
 
-.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 .roles { border: 0; padding: 0; margin: 0 0 .5rem; }
 .roles legend { font-weight: 600; margin-bottom: .2rem; }
 .roles .check { margin: .35rem 0; font-weight: 400; }

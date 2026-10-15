@@ -9,7 +9,7 @@ import { pageGraph } from '../../lib/schema';
 
 export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
 const lang = Astro.params.lang as Lang;
-const updated = '2026-10-06';
+const updated = '2026-10-15';
 const mail = `<a href="mailto:${contact.email}"><span class="ltr">${contact.email}</span></a>`;
 const cred = `<a href="${credentialsHref(lang)}">${lang === 'ar' ? 'المؤهلات' : 'credentials'}</a>`;
 
@@ -25,6 +25,7 @@ const copy = {
       { h: 'نطاق الممارسة', p: [`${person.name.ar} ممرض قانوني وأخصائي معتمد في العناية بالجروح، وليس طبيبًا. التشخيص الطبي ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات. اطّلع على ${cred}.`] },
       { h: 'المراجع والتحديث', p: ['يستند المحتوى السريري إلى إرشادات علمية موثوقة مذكورة في كل صفحة، ويظهر تاريخ آخر مراجعة. قد تتغير التوصيات بعد هذا التاريخ.'] },
       { h: 'نموذج التواصل', p: ['لا يرسل النموذج بياناتك إلى خادم ولا يخزنها. عند الضغط على زر الإرسال تُفتح رسالة في WhatsApp أو البريد الإلكتروني، ولا تُرسل إلا عندما تضغط أنت على إرسال. يطلب النموذج الاسم الأول وطريقة التواصل المفضلة فقط.'] },
+      { h: 'طلب دخول معرض رحلات الالتئام', p: ['عند طلب رمز دخول المعرض نجمع اسمك ورقم الواتساب وصفتك فقط، لإرسال الرابط والرمز إليك. تُحذف بيانات الطلب بعد معالجته، أو تلقائيًا خلال 30 يومًا. يُسجَّل كل دخول إلى المعرض (المرجع والوقت) لحماية خصوصية المرضى، وتحمل الصور علامة مائية مرتبطة برمز المشاهد. صور المرضى منشورة بموافقة خطية منهم، ومحفوظة في تخزين خاص غير متاح للعامة لدى مزوّد خدمة سحابية (Vercel، في الاتحاد الأوروبي).'] },
       { h: 'المعلومات الصحية', p: ['لا نطلب معلومات صحية عبر الموقع. لا ترسل صور الجروح أو التقارير الطبية عبر النموذج أو الرسائل قبل الاتفاق على طريقة آمنة.'] },
       { h: 'التحليلات وملفات تعريف الارتباط', p: ['قد يستخدم الموقع Google Analytics 4 لفهم عدد الزيارات. لا تُحمّل أدوات التحليل ولا ملفات تعريف الارتباط الخاصة بها إلا بعد موافقتك، ويُحفظ اختيارك في متصفحك فقط.'] },
       { h: 'حقوقك', p: [`يمكنك طلب معرفة البيانات التي لدينا عنك أو تصحيحها أو حذفها، أو سحب موافقتك في أي وقت، بمراسلة ${mail}. نتعامل مع البيانات وفق التشريعات الأردنية المعمول بها، بما فيها قانون حماية البيانات الشخصية رقم 24 لسنة 2023.`] },
@@ -42,6 +43,7 @@ const copy = {
       { h: 'Scope of practice', p: [`${person.name.en} is a Registered Nurse and Certified Wound Specialist, not a physician. Diagnosis, prescribing and surgical decisions are the physician’s responsibility within the multidisciplinary team. See the ${cred}.`] },
       { h: 'References and updates', p: ['Clinical content is based on reliable guidelines cited on each page, with the last review date shown. Recommendations may change after that date.'] },
       { h: 'Contact form', p: ['The form does not send your details to a server or store them. When you press send, a message opens in WhatsApp or your email app, and it is only sent when you press send yourself. The form asks only for your first name and preferred contact method.'] },
+      { h: 'Healing journeys gallery access', p: ['When you request access to the gallery we collect only your name, WhatsApp number and role, to send you the link and code. Request details are deleted once handled, or automatically within 30 days. Every entry to the gallery is logged (reference and time) to protect patient privacy, and images carry a watermark linked to the viewer’s code. Patient images are published with their written consent and kept in private, non-public storage with a cloud provider (Vercel, in the European Union).'] },
       { h: 'Health information', p: ['We do not ask for health information through this website. Please don’t send wound photos or medical reports through the form or by message until a secure method has been agreed.'] },
       { h: 'Analytics and cookies', p: ['The website may use Google Analytics 4 to understand visit numbers. Analytics tools and their cookies load only after you consent, and your choice is stored only in your browser.'] },
       { h: 'Your rights', p: [`You can ask what data we hold about you, ask us to correct or delete it, or withdraw your consent at any time by emailing ${mail}. We handle data in line with applicable Jordanian law, including Personal Data Protection Law No. 24 of 2023.`] },
