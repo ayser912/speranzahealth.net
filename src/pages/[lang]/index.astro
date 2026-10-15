@@ -69,6 +69,7 @@ const copy = {
     ],
     services: [
       { icon: 'care', h: 'إرشاد متخصص حسب نوع الجرح', p: 'معلومات وإرشاد عملي لكل نوع من الجروح، ومتى يحتاج الجرح إلى مراجعة عاجلة.', links: careNav },
+      { icon: 'layers', h: 'دليل ضمادات الجروح الحديثة', p: 'الأنواع الرئيسية للضمادات الحديثة، ومكوّنات كل نوع، وما يُستخدم له عادةً، مع أداة بحث حسب حالة الجرح.', href: 'dressings', cta: 'ضمادات الجروح الحديثة' },
       { icon: 'teach', h: 'التعليم والتدريب للكوادر الصحية', p: 'محاضرات وورش عملية للممرضين ومقدّمي الرعاية حول تقييم الجروح واختيار الضمادات والعلاج بالضغط السلبي.', href: 'education', cta: 'التعليم والتدريب' },
       { icon: 'book', h: 'تثقيف المرضى والأسر', p: 'مقالات واضحة تُراجَع بانتظام ومدعومة بمراجع علمية، تساعد الأسرة على المشاركة في العناية بثقة.', href: 'articles', cta: 'كل المقالات' },
     ],
@@ -129,6 +130,7 @@ const copy = {
     ],
     services: [
       { icon: 'care', h: 'Guidance by wound type', p: 'Practical information and guidance for each type of wound, and when a wound needs urgent review.', links: careNav },
+      { icon: 'layers', h: 'Advanced wound dressings guide', p: 'The main types of modern dressing, what each is made of and what it is typically used for, with a finder by wound situation.', href: 'dressings', cta: 'Advanced wound dressings' },
       { icon: 'teach', h: 'Education and training for healthcare teams', p: 'Lectures and hands-on workshops for nurses and caregivers on wound assessment, dressing selection and negative pressure wound therapy.', href: 'education', cta: 'Education and training' },
       { icon: 'book', h: 'Education for patients and families', p: 'Clear, regularly reviewed articles with scientific references, so families can take part in care with confidence.', href: 'articles', cta: 'All articles' },
     ],
@@ -230,12 +232,12 @@ const specialties = team.filter((m) => m.id !== 'other');
       <ul class="service-list" role="list">
         {copy.services.map((sv) => (
           <li class="service-card">
-            <span class="sf-icon" aria-hidden="true"><Icon name={sv.icon as 'care' | 'teach' | 'book'} /></span>
+            <span class="sf-icon" aria-hidden="true"><Icon name={sv.icon as 'care' | 'teach' | 'book' | 'layers'} /></span>
             <h3>{sv.h}</h3>
             <p>{sv.p}</p>
             {sv.links
               ? <ul class="service-links">{sv.links.map((k) => <li><a href={path(lang, k)}>{pages[k].nav[lang]}</a></li>)}</ul>
-              : <p class="service-more"><a href={path(lang, sv.href as 'education' | 'articles')}>{sv.cta} <span aria-hidden="true">{lang === 'ar' ? '←' : '→'}</span></a></p>}
+              : <p class="service-more"><a href={path(lang, sv.href as 'education' | 'articles' | 'dressings')}>{sv.cta} <span aria-hidden="true">{lang === 'ar' ? '←' : '→'}</span></a></p>}
           </li>
         ))}
       </ul>

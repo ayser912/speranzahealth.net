@@ -6,7 +6,7 @@ const page: ClinicalPageData = {
   reviewed: '2026-10-06',
   illustration: 'time',
   refs: [R.frykberg, R.schultz, R.timers, R.iwii, R.piGuideline, R.iwgdfSite, R.jnc],
-  related: ['pressure', 'diabeticFoot', 'surgical', 'npwt', 'education'],
+  related: ['pressure', 'diabeticFoot', 'surgical', 'npwt', 'dressings', 'education'],
   ar: {
     title: 'العناية بالجروح المزمنة في الأردن | أيسر شواقفه CWS®',
     description: 'متى يُعد الجرح مزمنًا، ولماذا يتأخر التئامه، وما علامات الخطر التي تستدعي مراجعة طبية عاجلة؟ دليل تثقيفي من أخصائي جروح معتمد CWS® في الأردن.',

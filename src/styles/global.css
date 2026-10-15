@@ -502,3 +502,57 @@ html[dir='rtl'] .founder-line { border-radius: var(--radius-s) 0 0 var(--radius-
 .service-more { margin: auto 0 0; font-weight: 600; }
 .soon-badge { display: inline-block; margin-inline-start: 0.75rem; vertical-align: middle; padding: 0.2rem 0.7rem; border-radius: 999px; background: rgba(201, 163, 95, 0.16); border: 1px solid rgba(201, 163, 95, 0.6); color: var(--gold-ink); font-size: var(--step--1); font-weight: 700; }
 .soon-note { padding: 0.75rem 1rem; border-radius: var(--radius-s); background: rgba(201, 163, 95, 0.09); border-inline-start: 3px solid var(--gold); color: var(--ink); }
+
+/* ---------- Advanced wound dressings ---------- */
+.dress-head + .callout { margin-top: 0; }
+.dress-head { padding-bottom: 1.25rem; display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem); gap: clamp(1.5rem, 4vw, 3rem); align-items: start; }
+@media (max-width: 52rem) { .dress-head { grid-template-columns: 1fr; } }
+.dress-toc { background: var(--paper); border: 1px solid var(--line); border-top: 4px solid var(--gold); border-radius: var(--radius-l); padding: 1.1rem 1.2rem; }
+.dress-stat { margin: 0 0 0.6rem; font-weight: 700; color: var(--teal-deep); }
+.dress-toc ol { list-style: none; margin: 0; padding: 0; }
+.dress-toc li { margin: 0; }
+.dress-toc a { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.2rem; text-decoration: none; color: var(--ink); font-weight: 600; border-top: 1px solid var(--line); }
+.dress-toc li:first-child a { border-top: 0; }
+.dress-toc a:hover { color: var(--teal); }
+.dress-toc small { color: var(--ink-soft); font-weight: 500; }
+.dt-num { display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--mint); color: var(--teal-deep); font-size: 0.85rem; flex: none; }
+
+.finder { margin-block: 2rem; padding: clamp(1.1rem, 3vw, 1.6rem); border-radius: var(--radius-l); background: linear-gradient(160deg, #064f3d, #0a6b52); color: #fff; }
+.finder h2 { color: #fff; font-size: var(--step-2); margin-top: 0; }
+.finder > p { color: #d3e6df; margin: 0.4rem 0 1rem; }
+.finder-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.fchip { font: inherit; font-size: var(--step--1); font-weight: 600; min-height: 40px; padding: 0.4rem 0.9rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(255, 255, 255, 0.08); color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+.fchip:hover { background: rgba(255, 255, 255, 0.18); }
+.fchip[aria-pressed='true'] { background: #fdfcf7; color: var(--teal-deep); border-color: #fdfcf7; }
+.fchip-n { display: inline-grid; place-items: center; min-width: 1.35rem; height: 1.35rem; padding: 0 0.3rem; border-radius: 999px; background: rgba(201, 163, 95, 0.9); color: #10302a; font-size: 0.75rem; }
+.finder-status { margin: 0.9rem 0 0; min-height: 1.4em; color: #e9cf98; font-weight: 600; }
+.finder-status:empty { display: none; }
+
+.dress-group { margin-top: clamp(2.5rem, 6vw, 3.75rem); scroll-margin-top: 1rem; transition: opacity 0.3s; }
+.dress-group.is-empty { opacity: 0.55; }
+.dg-head { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.25rem; }
+.dg-head h2 { margin: 0 0 0.3rem; }
+.dg-head p { margin: 0; color: var(--ink-soft); max-width: 60ch; }
+.dg-num { font-family: Georgia, serif; font-size: 2.2rem; line-height: 1; color: var(--gold); font-weight: 700; padding-top: 0.15rem; }
+.dress-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16.5rem), 1fr)); }
+.dress-card { margin: 0; position: relative; display: flex; flex-direction: column; padding: 1.25rem 1.25rem 1.1rem; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-l); scroll-margin-top: 1rem; transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s, border-color 0.3s, filter 0.3s; }
+.dress-card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 4px; border-radius: var(--radius-l) var(--radius-l) 0 0; background: var(--teal-deep); }
+#specific .dress-card::before { background: var(--gold); }
+#advanced .dress-card::before { background: linear-gradient(90deg, var(--teal-deep), var(--gold)); }
+.dress-card.is-dim { opacity: 0.32; filter: grayscale(0.6); }
+.dress-card.is-match { border-color: var(--gold); box-shadow: 0 12px 30px rgba(6, 79, 61, 0.14), 0 0 0 2px rgba(201, 163, 95, 0.55); transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) { .dress-card, .dress-group { transition: none; } .dress-card.is-match { transform: none; } }
+.dc-term { margin: 0.2rem 0 0; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-ink); font-weight: 700; font-family: 'Inter', sans-serif; text-align: start; }
+html[dir='rtl'] .dc-term { text-align: right; }
+.dress-card h3 { margin: 0.2rem 0 0.45rem; font-size: 1.15rem; color: var(--teal-deep); }
+.dc-what { margin: 0 0 0.85rem; color: var(--ink-soft); font-size: 0.97rem; }
+.dc-label { margin: 0 0 0.4rem; font-size: 0.8rem; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: 0.02em; }
+html[lang^='ar'] .dc-label { text-transform: none; letter-spacing: 0; font-size: 0.85rem; }
+.dc-parts { list-style: none; margin: 0 0 0.9rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.dc-parts li { margin: 0; padding: 0.25rem 0.65rem; border-radius: 8px; background: var(--mint); color: var(--teal-deep); font-size: 0.85rem; font-weight: 600; }
+.dc-uses { list-style: none; margin: 0 0 0.6rem; padding: 0; }
+.dc-uses li { display: flex; gap: 0.45rem; align-items: flex-start; margin: 0 0 0.3rem; font-size: 0.95rem; }
+.dc-uses svg { flex: none; width: 1rem; height: 1rem; margin-top: 0.35em; color: var(--teal); }
+.dc-note { margin: auto 0 0; padding-top: 0.6rem; border-top: 1px dashed var(--line); font-size: 0.85rem; color: var(--ink-soft); }
+.dc-more { margin: auto 0 0; padding-top: 0.6rem; font-weight: 600; }
+.dc-note + .dc-more { margin-top: 0; }

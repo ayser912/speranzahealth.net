@@ -16,5 +16,7 @@ export const R: Record<string, Ref> = {
   exudate: { text: 'World Union of Wound Healing Societies (WUWHS). Consensus Document: Wound exudate — effective assessment and management. Wounds International; 2019.', url: 'https://woundsinternational.com/world-union-resources/wuwhs-consensus-document-wound-exudate-effective-assessment-and-management/' },
   esvsVenous: { text: 'De Maeseneer MG, Kakkos SK, Aherne T, et al. European Society for Vascular Surgery (ESVS) 2022 Clinical Practice Guidelines on the Management of Chronic Venous Disease of the Lower Limbs. European Journal of Vascular and Endovascular Surgery. 2022;63(2):184–267.', url: 'https://esvs.org/wp-content/uploads/2023/03/ESVS-2022-CVD-Guidelines.pdf' },
   clti: { text: 'Conte MS, Bradbury AW, Kolh P, et al. Global vascular guidelines on the management of chronic limb-threatening ischemia. Journal of Vascular Surgery. 2019;69(6S):3S–125S.', url: 'https://doi.org/10.1016/j.jvs.2019.02.016' },
+  dhivya: { text: 'Dhivya S, Padma VV, Santhini E. Wound dressings – a review. BioMedicine (Taipei). 2015;5(4):22.', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4662938/' },
+  niceDressings: { text: 'National Institute for Health and Care Excellence (NICE). Chronic wounds: advanced wound dressings and antimicrobial dressings (ESMPB2). 2016.', url: 'https://www.nice.org.uk/advice/esmpb2' },
   jnc: { text: 'Jordanian Nursing Council. Standards and Guidelines.', url: 'https://jnc.gov.jo/EN/List/Standards_and_Guideline' },
 };

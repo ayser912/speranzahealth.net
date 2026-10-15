@@ -6,7 +6,7 @@ const page: ClinicalPageData = {
   reviewed: '2026-10-06',
   illustration: 'npwt',
   refs: [R.ewmaNpwt, R.timers, R.iwii, R.niceSsi],
-  related: ['chronic', 'surgical', 'diabeticFoot', 'pressure', 'education'],
+  related: ['chronic', 'surgical', 'diabeticFoot', 'pressure', 'dressings', 'education'],
   ar: {
     title: 'العلاج بالضغط السلبي للجروح NPWT وجهاز VAC في الأردن',
     description: 'ما هو العلاج بالضغط السلبي للجروح (NPWT / VAC)، وكيف يعمل، ولأي الجروح قد يُستخدم، وما الذي تتطلبه متابعته بأمان؟ دليل تثقيفي من أخصائي جروح معتمد CWS®.',

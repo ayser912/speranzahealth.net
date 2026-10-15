@@ -1,0 +1,227 @@
+---
+/**
+ * Advanced wound dressings / ضمادات الجروح الحديثة (added 15 Oct 2026 from Aissar's charts).
+ * Data: src/content/dressings.ts. A small "by wound situation" finder highlights matching cards;
+ * without JavaScript every card is simply shown.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import AuthorBox from '../../components/AuthorBox.astro';
+import References from '../../components/References.astro';
+import Disclosure from '../../components/Disclosure.astro';
+import ContactActions from '../../components/ContactActions.astro';
+import Icon from '../../components/Icon.astro';
+import { type Lang } from '../../config/site';
+import { path, langs } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+import { t } from '../../lib/i18n';
+import { articlePath } from '../../content/articles/index';
+import { groups, refs, published, reviewed, tagLabels, tagOrder, usesIn } from '../../content/dressings';
+
+export function getStaticPaths() {
+  return langs.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Lang;
+const s = t(lang);
+const total = groups.reduce((n, g) => n + g.items.length, 0);
+/** Keep Latin terms in brackets as one left-to-right unit inside Arabic text (stops brackets jumping when lines wrap). */
+const esc = (x: string) => x.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const bidi = (x: string) => (lang === 'ar' ? esc(x).replace(/\(([^()]*[A-Za-z][^()]*)\)/g, '<bdi dir="ltr">($1)</bdi>') : esc(x));
+
+const copy = {
+  ar: {
+    title: 'ضمادات الجروح الحديثة: الأنواع واستخداماتها | سبيرانزا هيلث',
+    description: 'دليل مبسّط لأنواع ضمادات الجروح الحديثة: الألجينات، الإسفنج، الهيدروجل، الهيدروكولويد، المضادة للميكروبات، الكولاجين، السيليكون، والعلاج بالضغط السلبي.',
+    eyebrow: 'دليل تثقيفي',
+    h1: 'ضمادات الجروح الحديثة',
+    lead: 'الضمادات الحديثة لا تكتفي بتغطية الجرح؛ فكل نوع منها صُمّم لوظيفة محددة: امتصاص الإفرازات، أو ترطيب الجرح الجاف، أو تقليل البكتيريا، أو حماية الجلد الهش. يعرض هذا الدليل الأنواع الرئيسية وما يُستخدم له كل نوع عادةً.',
+    stat: `${total} نوعًا في 3 مجموعات`,
+    finderH: 'ابحث حسب حالة الجرح',
+    finderP: 'اختر حالة لإبراز الضمادات التي تُستخدم لها عادةً. الاختيار النهائي يحدده الفريق المعالج بعد تقييم الجرح.',
+    all: 'عرض الكل',
+    showing: (n: number) => `يظهر ${n} من ${total}`,
+    tocH: 'المجموعات',
+    howH: 'كيف يُختار الضماد المناسب؟',
+    how: [
+      '<strong>نوع النسيج في قاع الجرح:</strong> نسيج حبيبي صحي، أو نسيج ميت، أو قشرة جافة.',
+      '<strong>كمية الإفرازات:</strong> جاف، أو قليل، أو متوسط، أو غزير.',
+      '<strong>علامات العدوى</strong> أو خطرها المرتفع.',
+      '<strong>عمق الجرح</strong> ووجود تجاويف تحتاج إلى حشو.',
+      '<strong>حالة الجلد المحيط:</strong> هش، أو متهيج، أو متشبع بالرطوبة.',
+    ],
+    howAfter: 'الضماد جزء من الخطة وليس الخطة كلها: معالجة سبب الجرح، مثل الضغط أو ضعف الدورة الدموية أو السكري أو العدوى، هي الأساس.',
+    articleLink: 'اقرأ: اختيار ضماد الجرح حسب الأنسجة والإفرازات',
+    warnH: 'قبل أن تستخدم أي ضماد',
+    warn: [
+      'لا تختر نوع الضماد أو تغيّره أو تغيّر عدد مرات تغييره دون استشارة الفريق المعالج، حتى لو نجح مع شخص آخر.',
+      'الأسماء هنا فئات علمية عامة، ولا يوصي هذا الدليل بأي علامة تجارية.',
+    ],
+    contactH: 'للتدريب والاستفسارات المهنية',
+    contactP: 'محاضرات وورش عملية للكوادر الصحية حول تقييم الجروح واختيار الضمادات والعلاج بالضغط السلبي.',
+  },
+  en: {
+    title: 'Advanced Wound Dressings: Types and Uses | Speranza Health',
+    description: 'A clear guide to advanced wound dressings: alginates, foams, hydrogels, hydrocolloids, antimicrobials, collagen, silicone and negative pressure wound therapy.',
+    eyebrow: 'Educational guide',
+    h1: 'Advanced wound dressings',
+    lead: 'Modern dressings do more than cover a wound. Each type is designed for a specific job: absorbing exudate, rehydrating a dry wound, reducing bacteria or protecting fragile skin. This guide sets out the main types and what each is typically used for.',
+    stat: `${total} types in 3 groups`,
+    finderH: 'Find by wound situation',
+    finderP: 'Choose a situation to highlight the dressings typically used for it. The final choice is made by the treating team after assessing the wound.',
+    all: 'Show all',
+    showing: (n: number) => `Showing ${n} of ${total}`,
+    tocH: 'Groups',
+    howH: 'How is the right dressing chosen?',
+    how: [
+      '<strong>The tissue in the wound bed:</strong> healthy granulation, dead tissue or dry eschar.',
+      '<strong>The amount of exudate:</strong> dry, low, moderate or high.',
+      '<strong>Signs of infection</strong>, or a high risk of it.',
+      '<strong>Wound depth</strong>, and any cavity that needs filling.',
+      '<strong>The surrounding skin:</strong> fragile, irritated or waterlogged.',
+    ],
+    howAfter: 'The dressing is part of the plan, not the whole plan: treating the cause of the wound, such as pressure, poor circulation, diabetes or infection, comes first.',
+    articleLink: 'Read: choosing wound dressings by tissue type and exudate',
+    warnH: 'Before using any dressing',
+    warn: [
+      'Don’t choose or change a dressing, or how often it is changed, without advice from the treating team, even if it worked for someone else.',
+      'The names here are generic categories. This guide does not recommend any brand.',
+    ],
+    contactH: 'Training and professional enquiries',
+    contactP: 'Lectures and hands-on workshops for healthcare teams on wound assessment, dressing selection and negative pressure wound therapy.',
+  },
+}[lang];
+
+const schema = pageGraph({
+  lang, key: 'dressings', type: 'MedicalWebPage', title: copy.title, description: copy.description,
+  datePublished: published, dateModified: reviewed, lastReviewed: reviewed,
+  aboutTopic: lang === 'ar' ? 'ضمادات الجروح الحديثة' : 'Advanced wound dressings',
+});
+const counts = Object.fromEntries(tagOrder.map((tg) => [tg, groups.flatMap((g) => g.items).filter((d) => d.tags.includes(tg)).length]));
+---
+<BaseLayout lang={lang} pageKey="dressings" title={copy.title} description={copy.description} schema={schema} ogType="article">
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="dressings" />
+    <header class="page-head dress-head">
+      <div class="prose">
+        <p class="brand-eyebrow">{copy.eyebrow} · <span lang="en" dir="ltr">Advanced wound dressings</span></p>
+        <h1>{copy.h1}</h1>
+        <AuthorBox lang={lang} published={published} reviewed={reviewed} />
+        <p class="lead">{copy.lead}</p>
+      </div>
+      <nav class="dress-toc" aria-label={copy.tocH}>
+        <p class="dress-stat">{copy.stat}</p>
+        <ol>
+          {groups.map((g, i) => (
+            <li><a href={`#${g.id}`}><span class="dt-num" aria-hidden="true">{i + 1}</span>{g.h[lang]} <small>({g.items.length})</small></a></li>
+          ))}
+        </ol>
+      </nav>
+    </header>
+
+    <div class="callout prose" role="note"><p>{s.educationalNote}</p></div>
+
+    <section class="finder js-only" aria-labelledby="finder-h" data-finder>
+      <h2 id="finder-h" class="flush">{copy.finderH}</h2>
+      <p>{copy.finderP}</p>
+      <div class="finder-chips" role="group" aria-labelledby="finder-h">
+        <button type="button" class="fchip" aria-pressed="true" data-tag="">{copy.all}</button>
+        {tagOrder.map((tg) => (
+          <button type="button" class="fchip" aria-pressed="false" data-tag={tg}>{tagLabels[tg][lang]} <span class="fchip-n" aria-hidden="true">{counts[tg]}</span></button>
+        ))}
+      </div>
+      <p class="finder-status" role="status" aria-live="polite" data-status data-template={copy.showing(999)}></p>
+    </section>
+
+    {groups.map((g, gi) => (
+      <section id={g.id} class="dress-group" aria-labelledby={`${g.id}-h`}>
+        <div class="dg-head">
+          <span class="dg-num" aria-hidden="true">{String(gi + 1).padStart(2, '0')}</span>
+          <div>
+            <h2 id={`${g.id}-h`}>{g.h[lang]}</h2>
+            <p>{g.p[lang]}</p>
+          </div>
+        </div>
+        <ul class="dress-grid" role="list">
+          {g.items.map((d) => (
+            <li class="dress-card" id={d.id} data-tags={d.tags.join(' ')}>
+              <p class="dc-term" lang="en" dir="ltr">{d.term}</p>
+              <h3>{d.name[lang]}</h3>
+              <p class="dc-what" set:html={bidi(d.what[lang])} />
+              <p class="dc-label">{d.partsH[lang]}</p>
+              <ul class="dc-parts" role="list">{d.parts[lang].map((p) => <li set:html={bidi(p)} />)}</ul>
+              {d.uses && (
+                <Fragment>
+                  <p class="dc-label">{usesIn[lang]}</p>
+                  <ul class="dc-uses" role="list">{d.uses[lang].map((u) => <li><Icon name="check" /><span set:html={bidi(u)} /></li>)}</ul>
+                </Fragment>
+              )}
+              {d.note && <p class="dc-note" set:html={bidi(d.note[lang])} />}
+              {d.more && <p class="dc-more"><a href={path(lang, d.more.key)}>{d.more.label[lang]} <span aria-hidden="true">{lang === 'ar' ? '←' : '→'}</span></a></p>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    <div class="grid-2 section-gap">
+      <section class="prose" aria-labelledby="how-h">
+        <h2 id="how-h" class="flush">{copy.howH}</h2>
+        <ul>{copy.how.map((h) => <li set:html={h} />)}</ul>
+        <p>{copy.howAfter}</p>
+        <p><a href={articlePath(lang, 'choosing-wound-dressings')}>{copy.articleLink}</a></p>
+      </section>
+      <section class="callout callout-warn prose" aria-labelledby="warn-h">
+        <h2 id="warn-h" class="flush">{copy.warnH}</h2>
+        {copy.warn.map((w) => <p>{w}</p>)}
+        <p><strong>{s.emergencyShort}</strong></p>
+      </section>
+    </div>
+
+    <References lang={lang} items={refs} />
+    <Disclosure lang={lang} />
+
+    <section class="prose section-gap" aria-labelledby="contact-h">
+      <h2 id="contact-h">{copy.contactH}</h2>
+      <p>{copy.contactP}</p>
+      <p><a href={`${path(lang, 'contact')}?reason=education`}>{s.educationCta}</a></p>
+      <ContactActions lang={lang} page="dressings" placement="contact" />
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var root = document.querySelector('[data-finder]');
+    if (!root) return;
+    var chips = root.querySelectorAll('.fchip');
+    var cards = document.querySelectorAll('.dress-card');
+    var groupsEls = document.querySelectorAll('.dress-group');
+    var status = root.querySelector('[data-status]');
+    var tpl = status.getAttribute('data-template');
+    function apply(tag) {
+      var n = 0;
+      cards.forEach(function (c) {
+        var on = !tag || (' ' + c.getAttribute('data-tags') + ' ').indexOf(' ' + tag + ' ') > -1;
+        c.classList.toggle('is-dim', !on);
+        c.classList.toggle('is-match', !!tag && on);
+        if (on) n++;
+      });
+      groupsEls.forEach(function (g) {
+        g.classList.toggle('is-empty', !!tag && !g.querySelector('.dress-card:not(.is-dim)'));
+      });
+      status.textContent = tag ? tpl.replace('999', String(n)) : '';
+      if (tag) {
+        var first = document.querySelector('.dress-card.is-match');
+        if (first && first.getBoundingClientRect().top > window.innerHeight) {
+          first.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+        }
+      }
+    }
+    chips.forEach(function (b) {
+      b.addEventListener('click', function () {
+        chips.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        apply(b.getAttribute('data-tag'));
+      });
+    });
+  })();
+</script>

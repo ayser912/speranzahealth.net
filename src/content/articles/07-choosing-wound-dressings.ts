@@ -8,7 +8,7 @@ const a: Article = {
   published: '2026-10-06',
   reviewed: '2026-10-06',
   refs: [R.exudate, R.timers, R.schultz, R.iwii],
-  related: ['chronic', 'education', 'npwt'],
+  related: ['dressings', 'chronic', 'education', 'npwt'],
   relatedArticles: ['home-wound-care-mistakes', 'wound-infection-warning-signs', 'venous-vs-arterial-leg-ulcers'],
   ar: {
     title: 'اختيار ضماد الجرح حسب الأنسجة والإفرازات | أيسر شواقفه CWS®',

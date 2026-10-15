@@ -60,6 +60,7 @@ export const GET: APIRoute = () => {
     L.push(`- [${pages.home.nav[lang]}](${abs(path(lang, 'home'))}): ${lang === 'en' ? 'Speranza Health: meaning of the name, purpose, services' : 'سبيرانزا هيلث: معنى الاسم، الهدف، الخدمات'}`);
     L.push(`- [${pages.about.nav[lang]}](${abs(path(lang, 'about'))}): ${lang === 'en' ? 'the founder: profile, interview, credentials and verification, press, FAQ' : 'المؤسس: نبذة، مقابلة، المؤهلات والتحقق، الإعلام، أسئلة شائعة'}`);
     for (const [k, d] of topics) L.push(`- [${d[lang].title}](${abs(path(lang, k))}): ${d[lang].description}`);
+    L.push(`- [${pages.dressings.nav[lang]}](${abs(path(lang, 'dressings'))}): ${lang === 'en' ? 'advanced wound dressing types (antimicrobial, alginate, hydrocolloid, foam, hydrogel, collagen, superabsorbent, film, silicone, charcoal, skin substitutes, contact layers, NPWT) and their typical uses' : 'أنواع ضمادات الجروح الحديثة واستخداماتها'}`);
     L.push(`- [${pages.education.nav[lang]}](${abs(path(lang, 'education'))})`);
     L.push(`- [${pages.contact.nav[lang]}](${abs(path(lang, 'contact'))})`);
     L.push('');
