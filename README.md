@@ -98,7 +98,7 @@ Copy `.env.example` to `.env` (never commit `.env`), or set these in your host's
 | `PUBLIC_GA4_ID` | Google Analytics 4 measurement ID (`G-…`). Leave empty to disable analytics and hide the cookie banner. |
 | `PUBLIC_GSC_VERIFICATION` | Google Search Console HTML-tag token (the `content` value only). |
 
-**Analytics behaviour.** GA4 loads only after the visitor clicks *Accept*. Before that, no Google requests are made and no cookies are set. The tracked events are `whatsapp_click`, `phone_click`, `email_click`, `cta_click`, `outbound_profile` and `generate_lead` (contact form). Every WhatsApp and email link also carries a `ref` code (e.g. `ar-home-hero`), so you can see which page produced an enquiry even inside WhatsApp.
+**Analytics behaviour.** GA4 loads only after the visitor clicks *Accept*. Before that, no Google requests are made and no cookies are set. The tracked events are `whatsapp_click`, `phone_click`, `email_click`, `cta_click`, `outbound_profile` and `generate_lead` (contact form). Every WhatsApp and email link pre-fills the approved message “مرحبًا، أرغب بالتواصل مع فريق سبيرانزا هيلث بخصوص استفسار.” followed by a readable source line such as “(عبر الموقع · صفحة التواصل)”, so you can see which page produced an enquiry even inside WhatsApp. The wording lives in `src/lib/links.ts` (`greeting`, `sourceLabel`). The precise `ref` code (e.g. `ar-home-hero`) stays in the analytics events.
 
 ## Contact form
 
