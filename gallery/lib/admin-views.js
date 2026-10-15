@@ -60,7 +60,7 @@ export function codesPage({ grants, created = null, base }) {
   let result = '';
   if (created) {
     const link = `${base}/a/${created.grant.id}`;
-    const msg = `مرحبًا ${created.grant.label}،\nهذا رابط دخولك الشخصي إلى معرض رحلات الالتئام في سبيرانزا هيلث:\n${link}\nرمز الدخول: ${created.code}\nصالح حتى ${fmt(created.grant.expiresAt)}.\nالرابط والرمز شخصيان لك وحدك: يُرجى عدم مشاركتهما أو تصوير محتوى المعرض أو نشره.`;
+    const msg = `مرحبًا ${created.grant.label}،\nهذا رابط دخولك الشخصي إلى معرض رحلات الالتئام في سبيرانزا هيلث:\n${link}\nرمز الدخول: ${created.code}\nصالح حتى ${new Date(created.grant.expiresAt).toLocaleString('ar-JO-u-nu-latn', { timeZone: 'Asia/Amman', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}.\nالرابط والرمز شخصيان لك وحدك: يُرجى عدم مشاركتهما أو تصوير محتوى المعرض أو نشره.`;
     const phone = (created.grant.phone || '').replace(/[^0-9]/g, '').replace(/^00/, '').replace(/^0(?=7)/, '962');
     result = `<section class="card created" id="created"><h2>تم إنشاء الرمز</h2>
       <p>يظهر الرمز الآن فقط، ولا يُحفظ في النظام. أرسله للشخص مباشرة.</p>
