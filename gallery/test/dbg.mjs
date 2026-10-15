@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const p = await b.newPage();
+p.on('console', (m) => console.log('console', m.text()));
+await p.goto('http://localhost:4600/admin');
+console.log((await p.content()).slice(0, 300));
+await p.fill('input[name=password]', 'wrong-password-x');
+await Promise.all([p.waitForNavigation(), p.click('button[type=submit]')]);
+console.log(p.url(), (await p.textContent('main')).slice(0, 200));
+await b.close();

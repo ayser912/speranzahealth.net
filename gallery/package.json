@@ -1,0 +1,19 @@
+{
+  "name": "speranza-healing-journeys",
+  "private": true,
+  "type": "module",
+  "description": "Private, access-controlled gallery of consented, de-identified wound-healing journeys (cases.speranzahealth.net).",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node dev-server.mjs"
+  },
+  "engines": { "node": "22.x" },
+  "dependencies": {
+    "@vercel/blob": "2.8.0",
+    "sharp": "0.35.5",
+    "opentype.js": "1.3.4"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

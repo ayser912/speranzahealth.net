@@ -1,0 +1,19 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "public",
+  "functions": {
+    "api/app.js": { "maxDuration": 60, "memory": 1024, "includeFiles": "fonts/**" }
+  },
+  "rewrites": [
+    { "source": "/((?!static/|favicon|robots\\.txt).*)", "destination": "/api/app?__path=/$1" }
+  ],
+  "headers": [
+    { "source": "/(.*)", "headers": [
+      { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive, noimageindex" },
+      { "key": "X-Frame-Options", "value": "DENY" },
+      { "key": "Referrer-Policy", "value": "same-origin" },
+      { "key": "X-Content-Type-Options", "value": "nosniff" }
+    ] }
+  ]
+}
