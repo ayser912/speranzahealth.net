@@ -556,3 +556,9 @@ html[lang^='ar'] .dc-label { text-transform: none; letter-spacing: 0; font-size:
 .dc-note { margin: auto 0 0; padding-top: 0.6rem; border-top: 1px dashed var(--line); font-size: 0.85rem; color: var(--ink-soft); }
 .dc-more { margin: auto 0 0; padding-top: 0.6rem; font-weight: 600; }
 .dc-note + .dc-more { margin-top: 0; }
+
+/* ---------- Healing journeys (public page) ---------- */
+.hj-dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--gold); display: inline-block; }
+.hj-dot.open { background: #2f9e6e; }
+.hj-steps { margin-top: 1rem; }
+.hj-steps h2 { margin-top: 0; }
