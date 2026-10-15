@@ -80,7 +80,7 @@ const copy = {
     updated: 'Last updated',
   },
 }[lang];
-const starter = articles.filter((a) => ['choosing-wound-dressings', 'wound-infection-warning-signs', 'venous-vs-arterial-leg-ulcers'].includes(a.slug));
+const starter = articles.filter((a) => ['when-to-see-a-wound-care-specialist', 'wound-infection-warning-signs', 'venous-vs-arterial-leg-ulcers'].includes(a.slug));
 const schema = pageGraph({ lang, key: 'education', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated, aboutTopic: lang === 'ar' ? 'التدريب في العناية بالجروح' : 'Wound-care education' });
 ---
 <BaseLayout lang={lang} pageKey="education" title={copy.title} description={copy.description} schema={schema}>

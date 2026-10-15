@@ -4,7 +4,7 @@ import { R } from '../refs';
 const a: Article = {
   slug: 'when-to-see-a-wound-care-specialist',
   order: 1,
-  topic: 'chronic',
+  topic: 'articles',
   published: '2026-10-06',
   reviewed: '2026-10-06',
   refs: [R.timers, R.frykberg, R.iwgdf, R.piGuideline],

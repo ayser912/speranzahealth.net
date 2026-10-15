@@ -1,10 +1,12 @@
 ---
 import type { Lang } from '../config/site';
-import { path, pages, type PageKey } from '../lib/routes';
+import { path, pages, parentOf, type PageKey } from '../lib/routes';
 interface Props { lang: Lang; pageKey?: PageKey; trail?: Array<{ name: string; path: string }> }
 const { lang, pageKey, trail } = Astro.props;
+const parent = pageKey ? parentOf(pageKey) : undefined;
 const items = trail ?? [
   { name: pages.home.nav[lang], path: path(lang, 'home') },
+  ...(parent ? [{ name: pages[parent].nav[lang], path: path(lang, parent) }] : []),
   { name: pages[pageKey!].nav[lang], path: path(lang, pageKey!) },
 ];
 ---

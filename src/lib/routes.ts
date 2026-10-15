@@ -30,7 +30,8 @@ export const pages: Record<PageKey, PageDef> = {
   dressings: { slug: 'advanced-wound-dressings', nav: { ar: 'ضمادات الجروح الحديثة', en: 'Dressings' }, built: true, priority: 0.8 },
   journeys: { slug: 'healing-journeys', nav: { ar: 'معرض الحالات', en: 'Case gallery' }, built: true, priority: 0.6 },
   education: { slug: 'wound-care-education', nav: { ar: 'التعليم والتدريب', en: 'Education' }, built: true, priority: 0.7 },
-  articles: { slug: 'articles', nav: { ar: 'المقالات', en: 'Articles' }, built: true, priority: 0.7 },
+  /** Wound-care hub (merged with the former Articles section on 15 Oct 2026): guides by wound type + articles. */
+  articles: { slug: 'wound-care', nav: { ar: 'العناية بالجروح', en: 'Wound care' }, built: true, priority: 0.8 },
   homeVisits: { slug: 'home-wound-care', nav: { ar: 'الزيارات المنزلية', en: 'Home visits' }, built: false && flags.homeVisitsPage, priority: 0.8 },
 };
 
@@ -48,10 +49,12 @@ export const isBuilt = (key: PageKey) => pages[key].built;
 /** Wound-care topic pages, shown as the "Wound care" menu group and footer column. */
 export const careNav: PageKey[] = ['chronic', 'pressure', 'diabeticFoot', 'surgical', 'npwt'];
 export const careLabel: Record<Lang, string> = { ar: 'العناية بالجروح', en: 'Wound care' };
+/** Parent page in the breadcrumb trail: the wound-type guides sit under the wound-care hub. */
+export const parentOf = (key: PageKey): PageKey | undefined => (careNav.includes(key) ? 'articles' : undefined);
 /** Main navigation, in display order. 'care' renders the careNav group as a submenu. */
-export const mainNav: Array<PageKey | 'care'> = ['about', 'care', 'dressings', 'journeys', 'education', 'articles', 'contact'];
+export const mainNav: Array<PageKey | 'care'> = ['about', 'care', 'dressings', 'journeys', 'education', 'contact'];
 /** Footer "site" column. */
-export const footerNav: PageKey[] = ['about', 'dressings', 'journeys', 'education', 'articles', 'contact', 'legal'];
+export const footerNav: PageKey[] = ['about', 'dressings', 'journeys', 'education', 'contact', 'legal'];
 
 /** Credentials live on the About page (merged 6 Oct 2026). */
 export const credentialsHref = (lang: Lang) => `${path(lang, 'about')}#credentials`;
@@ -61,6 +64,11 @@ export function redirects(): Array<[string, string]> {
   const out: Array<[string, string]> = [['/', '/ar/']];
   for (const l of langs) {
     for (const alias of person.aboutSlugAliases) out.push([`/${l}/${alias}/`, path(l, 'about')]);
+  }
+  // Former Articles index → wound-care hub; the dressings article was merged into the dressings guide.
+  for (const l of langs) {
+    out.push([`/${l}/articles/`, path(l, 'articles')]);
+    out.push([`/${l}/articles/choosing-wound-dressings/`, path(l, 'dressings')]);
   }
   out.push(['/about/', path('en', 'about')]);
   out.push(['/contact/', path('ar', 'contact')]);

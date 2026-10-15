@@ -116,7 +116,7 @@ html[lang^='ar'] .site-nav a { font-weight: 600; }
 .site-nav a[aria-current='page'] { color: var(--teal); box-shadow: inset 0 -2px 0 var(--teal); border-radius: 0; }
 .lang-switch { font-weight: 600; text-decoration: none; border: 1px solid var(--line); border-radius: var(--radius-s); padding: 0.45rem 0.8rem; min-height: 44px; display: inline-flex; align-items: center; }
 
-@media (max-width: 74rem) {
+@media (max-width: 68rem) {
   .site-header .wrap { gap: 0.5rem; flex-wrap: wrap; }
   /* brand shrinks so Menu and the language button stay on the first row */
   .brand { flex: 1 1 0; min-width: 0; }
@@ -267,6 +267,7 @@ html[lang^='ar'] .sub-toggle { font-weight: 600; }
 .sub-toggle svg { transition: transform 0.15s; }
 .sub-toggle[aria-expanded='true'] svg { transform: rotate(180deg); }
 .site-nav .sub { list-style: none; margin: 0; padding: 0.4rem; }
+.site-nav .sub-hub { font-weight: 600; border-bottom: 1px solid var(--line); margin-bottom: 0.25rem; padding-bottom: 0.25rem; }
 .js .site-nav .sub { display: none; }
 .js .site-nav .sub.open { display: block; }
 @media (min-width: 52.01rem) {
@@ -500,6 +501,7 @@ html[dir='rtl'] .founder-line { border-radius: var(--radius-s) 0 0 var(--radius-
 .service-links { margin: auto 0 0; padding-inline-start: 1.1rem; }
 .service-links li { margin: 0.2rem 0; }
 .service-more { margin: auto 0 0; font-weight: 600; }
+.service-links + .service-more { margin-top: 0.75rem; }
 .soon-badge { display: inline-block; margin-inline-start: 0.75rem; vertical-align: middle; padding: 0.2rem 0.7rem; border-radius: 999px; background: rgba(201, 163, 95, 0.16); border: 1px solid rgba(201, 163, 95, 0.6); color: var(--gold-ink); font-size: var(--step--1); font-weight: 700; }
 .soon-note { padding: 0.75rem 1rem; border-radius: var(--radius-s); background: rgba(201, 163, 95, 0.09); border-inline-start: 3px solid var(--gold); color: var(--ink); }
 
@@ -553,6 +555,9 @@ html[lang^='ar'] .dc-label { text-transform: none; letter-spacing: 0; font-size:
 .dc-uses { list-style: none; margin: 0 0 0.6rem; padding: 0; }
 .dc-uses li { display: flex; gap: 0.45rem; align-items: flex-start; margin: 0 0 0.3rem; font-size: 0.95rem; }
 .dc-uses svg { flex: none; width: 1rem; height: 1rem; margin-top: 0.35em; color: var(--teal); }
+.dc-notfor { margin: 0.75rem 0 0; font-size: 0.88rem; color: var(--ink-soft); }
+.dc-notfor .dc-label { display: inline; margin: 0; color: var(--gold-ink); }
+.dc-notfor + .dc-note { margin-top: auto; }
 .dc-note { margin: auto 0 0; padding-top: 0.6rem; border-top: 1px dashed var(--line); font-size: 0.85rem; color: var(--ink-soft); }
 .dc-more { margin: auto 0 0; padding-top: 0.6rem; font-weight: 600; }
 .dc-note + .dc-more { margin-top: 0; }
@@ -567,3 +572,12 @@ html[lang^='ar'] .dc-label { text-transform: none; letter-spacing: 0; font-size:
 @media (max-width: 52rem) { .hj-request { grid-template-columns: 1fr; } }
 .hj-request .form { margin: 0; border: 0; padding: 0; max-width: none; background: transparent; }
 .hj-hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+
+/* Wound-care hub (guides + articles) */
+.hub-guide .service-more { margin-top: auto; padding-top: 0.8rem; color: var(--teal); }
+.hub-guide .sf-icon { width: 2.5rem; height: 2.5rem; margin-bottom: 0.6rem; }
+.hub-articles { margin-top: 0.8rem; padding-top: 0.7rem; border-top: 1px dashed var(--line); position: relative; z-index: 1; }
+.hub-articles ul { list-style: none; margin: 0; padding: 0; }
+.hub-articles li { margin: 0.25rem 0; font-size: 0.93rem; }
+.hub-articles li::before { content: '›'; margin-inline-end: 0.4rem; color: var(--gold-ink); }
+html[dir='rtl'] .hub-articles li::before { content: '‹'; }

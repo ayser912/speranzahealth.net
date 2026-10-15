@@ -1,0 +1,137 @@
+---
+/**
+ * Wound-care hub (15 Oct 2026): merges the former "Articles" index with the "Wound care" menu group.
+ * Every topic appears once: a guide per wound type (with the articles that belong to it),
+ * then general articles that apply to any wound, then the dressings guide.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ArticleCards from '../../components/ArticleCards.astro';
+import Icon from '../../components/Icon.astro';
+import { articles, articlePath, articlesForTopic } from '../../content/articles/index';
+import { langs, pages, path, careNav, type PageKey } from '../../lib/routes';
+import { pageGraph, abs } from '../../lib/schema';
+import { formatDate, t } from '../../lib/i18n';
+import type { Lang } from '../../config/site';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const s = t(lang);
+const copy = {
+  ar: {
+    title: 'العناية بالجروح: أدلة حسب نوع الجرح ومقالات | سبيرانزا هيلث',
+    description: 'أدلة تثقيفية للجروح المزمنة وقرح الضغط والقدم السكري والجروح الجراحية والعلاج بالضغط السلبي، ومقالات موثقة بمراجع علمية للمرضى والأسر والكوادر الصحية.',
+    h1: 'العناية بالجروح: أدلة ومقالات',
+    lead: 'كل ما ننشره عن العناية بالجروح في مكان واحد: دليل شامل لكل نوع من الجروح، ومقالات تجيب عن الأسئلة الأكثر شيوعًا لدى المرضى والأسر والممرضين في الأردن. كل موضوع له صفحة واحدة، دون تكرار.',
+    updated: 'آخر تحديث',
+    guidesH: 'أدلة حسب نوع الجرح',
+    guidesP: 'كل دليل يجمع الوقاية والعناية وعلامات الخطر لنوع واحد من الجروح.',
+    inTopic: 'مقالات في هذا الموضوع',
+    read: 'اقرأ الدليل',
+    generalH: 'أسئلة عامة لكل أنواع الجروح',
+    generalP: 'مقالات تنطبق على أي جرح، أيًّا كان نوعه.',
+    toolsH: 'دليل مساند',
+    dressingsP: 'الأنواع الرئيسية للضمادات الحديثة، وما يُستخدم له كل نوع عادةً وما لا يناسبه، ومتى يتغير نوع الضماد.',
+    blurbs: {
+      chronic: 'جرح لم يلتئم في المدة المتوقعة: لماذا يتأخر الالتئام، وعلامات الخطر، وما يتضمنه التقييم.',
+      pressure: 'قرح الضغط: من الأكثر عرضة لها، ومراحلها، وكيف نقي منها ونعتني بها.',
+      diabeticFoot: 'جروح القدم لدى مرضى السكري: لماذا تحتاج إلى اهتمام مبكر، والفحص اليومي، والأخطاء الشائعة.',
+      surgical: 'ما الطبيعي بعد العملية، ومتى تصبح علامات الجرح الجراحي مقلقة، وكيف يُعتنى به في المنزل.',
+      npwt: 'ما هو العلاج بالضغط السلبي (VAC)، ومتى يُستخدم ومتى لا يناسب، وكيف تكون المتابعة اليومية.',
+    } as Record<string, string>,
+  },
+  en: {
+    title: 'Wound Care: Guides by Wound Type and Articles | Speranza Health',
+    description: 'Educational guides to chronic wounds, pressure injuries, diabetic foot wounds, surgical wounds and NPWT, plus referenced articles for patients, families and clinicians.',
+    h1: 'Wound care: guides and articles',
+    lead: 'Everything we publish on wound care in one place: a complete guide for each type of wound, and articles answering the questions patients, families and nurses in Jordan ask most. Each topic has one page, with no repetition.',
+    updated: 'Last updated',
+    guidesH: 'Guides by wound type',
+    guidesP: 'Each guide brings together prevention, care and warning signs for one type of wound.',
+    inTopic: 'Articles on this topic',
+    read: 'Read the guide',
+    generalH: 'General questions for any wound',
+    generalP: 'Articles that apply to any wound, whatever its type.',
+    toolsH: 'Supporting guide',
+    dressingsP: 'The main types of modern dressing, what each is typically used for and not suited to, and when the type of dressing changes.',
+    blurbs: {
+      chronic: 'A wound that has not healed in the expected time: why healing stalls, the warning signs, and what an assessment involves.',
+      pressure: 'Pressure injuries: who is most at risk, the stages, and how to prevent and care for them.',
+      diabeticFoot: 'Foot wounds in people with diabetes: why they need early attention, daily checks, and common mistakes.',
+      surgical: 'What is normal after surgery, when a surgical wound looks worrying, and how to care for it at home.',
+      npwt: 'What negative pressure wound therapy (VAC) is, when it is used and when it is not suitable, and what daily follow-up involves.',
+    } as Record<string, string>,
+  },
+}[lang];
+
+const guides = careNav.map((k: PageKey) => ({ key: k, items: articlesForTopic(k) }));
+const general = articlesForTopic('articles');
+const latest = articles.map((a) => a.reviewed).sort().at(-1)!;
+const schema = pageGraph({ lang, key: 'articles', type: 'CollectionPage', title: copy.title, description: copy.description, dateModified: latest });
+const listed = [
+  ...guides.flatMap((g) => [
+    { url: abs(path(lang, g.key)), name: pages[g.key].nav[lang] },
+    ...g.items.map((a) => ({ url: abs(articlePath(lang, a.slug)), name: a[lang].h1 })),
+  ]),
+  ...general.map((a) => ({ url: abs(articlePath(lang, a.slug)), name: a[lang].h1 })),
+  { url: abs(path(lang, 'dressings')), name: pages.dressings.nav[lang] },
+];
+(schema['@graph'] as unknown[]).push({
+  '@type': 'ItemList',
+  '@id': `${abs(path(lang, 'articles'))}#list`,
+  itemListElement: listed.map((it, i) => ({ '@type': 'ListItem', position: i + 1, url: it.url, name: it.name })),
+});
+---
+<BaseLayout lang={lang} pageKey="articles" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="articles" />
+    <header class="page-head prose">
+      <h1>{copy.h1}</h1>
+      <p class="lead">{copy.lead}</p>
+      <p class="page-dates">{copy.updated}: <time datetime={latest}>{formatDate(latest, lang)}</time></p>
+    </header>
+
+    <section aria-labelledby="guides-h">
+      <h2 id="guides-h" class="flush">{copy.guidesH}</h2>
+      <p class="muted">{copy.guidesP}</p>
+      <ul class="card-list hub-guides" role="list">
+        {guides.map((g) => (
+          <li>
+            <article class="card hub-guide">
+              <h3><a href={path(lang, g.key)}>{pages[g.key].nav[lang]}</a></h3>
+              <p>{copy.blurbs[g.key]}</p>
+              {g.items.length > 0 && (
+                <div class="hub-articles">
+                  <p class="dc-label">{copy.inTopic}</p>
+                  <ul role="list">{g.items.map((a) => <li><a href={articlePath(lang, a.slug)}>{a[lang].card ?? a[lang].h1}</a></li>)}</ul>
+                </div>
+              )}
+              <p class="service-more" aria-hidden="true">{copy.read} <span>{lang === 'ar' ? '←' : '→'}</span></p>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="section-gap" aria-labelledby="general-h">
+      <h2 id="general-h" class="flush">{copy.generalH}</h2>
+      <p class="muted">{copy.generalP}</p>
+      <ArticleCards lang={lang} items={general} showTopic={false} />
+    </section>
+
+    <section class="section-gap" aria-labelledby="tools-h">
+      <h2 id="tools-h" class="flush">{copy.toolsH}</h2>
+      <ul class="card-list" role="list">
+        <li>
+          <article class="card hub-guide">
+            <span class="sf-icon" aria-hidden="true"><Icon name="layers" /></span>
+            <h3><a href={path(lang, 'dressings')}>{pages.dressings.nav[lang]}</a></h3>
+            <p>{copy.dressingsP}</p>
+          </article>
+        </li>
+      </ul>
+    </section>
+
+    <div class="callout prose section-gap" role="note"><p>{s.educationalNote}</p><p><strong>{s.emergencyShort}</strong></p></div>
+  </div>
+</BaseLayout>

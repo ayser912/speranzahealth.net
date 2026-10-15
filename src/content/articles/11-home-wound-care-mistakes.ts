@@ -4,12 +4,12 @@ import { R } from '../refs';
 const a: Article = {
   slug: 'home-wound-care-mistakes',
   order: 11,
-  topic: 'chronic',
+  topic: 'articles',
   published: '2026-10-06',
   reviewed: '2026-10-06',
   refs: [R.iwii, R.timers, R.exudate, R.piGuideline],
   related: ['chronic', 'pressure', 'surgical'],
-  relatedArticles: ['choosing-wound-dressings', 'wound-infection-warning-signs', 'venous-vs-arterial-leg-ulcers'],
+  relatedArticles: ['wound-infection-warning-signs', 'venous-vs-arterial-leg-ulcers'],
   ar: {
     title: 'أخطاء شائعة في العناية المنزلية بالجروح | أيسر شواقفه CWS®',
     description: 'أخطاء منتشرة تؤخر التئام الجروح في المنزل: ترك الجرح «يتنفس»، والمطهرات القوية، والخلطات الشعبية، وتغيير الضماد بكثرة، وإهمال الضغط والتغذية.',

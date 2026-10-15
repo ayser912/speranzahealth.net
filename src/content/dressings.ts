@@ -22,6 +22,8 @@ export interface Dressing {
   partsH: L;
   parts: LL;
   uses?: LL;
+  /** situations where the type is usually not suitable (merged from the former «choosing dressings» article) */
+  notFor?: L;
   note?: L;
   /** registry page with more detail */
   more?: { key: 'npwt'; label: L };
@@ -33,7 +35,7 @@ export interface DressingGroup { id: string; h: L; p: L; items: Dressing[] }
 export const published = '2026-10-15';
 export const reviewed = '2026-10-15';
 
-export const refs: Ref[] = [R.exudate, R.niceDressings, R.dhivya, R.iwii, R.timers, R.ewmaNpwt];
+export const refs: Ref[] = [R.exudate, R.niceDressings, R.dhivya, R.iwii, R.timers, R.schultz, R.ewmaNpwt];
 
 export const tagLabels: Record<DressingTag, L> = {
   dry: { ar: 'جرح جاف أو فيه نسيج ميت', en: 'Dry or necrotic wound' },
@@ -64,8 +66,9 @@ export const groups: DressingGroup[] = [
         what: { ar: 'تقلّل الحمل البكتيري في الجرح.', en: 'Reduce the bacterial load in the wound.' },
         partsH: { ar: 'أمثلة على المواد الفعّالة', en: 'Active agents' },
         parts: { ar: ['الفضة (Ag)', 'اليود', 'العسل الطبي', 'الكيتوزان (Chitosan)'], en: ['Silver (Ag)', 'Iodine', 'Medical-grade honey', 'Chitosan'] },
-        uses: { ar: ['الجروح الملتهبة (المصابة بالعدوى)'], en: ['Infected wounds'] },
-        note: { ar: 'تُستخدم لفترة محددة ثم يُعاد تقييم الحاجة إليها.', en: 'Used for a set period, then the need for them is reassessed.' },
+        uses: { ar: ['الجروح الملتهبة (المصابة بالعدوى)', 'الجروح ذات الخطر المرتفع للعدوى، حسب تقييم المختص'], en: ['Infected wounds', 'Wounds at high risk of infection, as assessed by a specialist'] },
+        notFor: { ar: 'الاستخدام الروتيني الطويل في جروح غير ملتهبة', en: 'Long-term routine use on wounds that are not infected' },
+        note: { ar: 'تُستخدم لفترة محددة ثم يُعاد تقييم الحاجة إليها. ولبعضها احتياطات خاصة، مثل الحذر من ضمادات اليود في أمراض الغدة الدرقية أو الجروح الكبيرة.', en: 'Used for a set period, then the need for them is reassessed. Some have specific precautions, such as caution with iodine dressings in thyroid disease or large wounds.' },
       },
       {
         id: 'alginate', term: 'Alginate', tags: ['moderateHeavy', 'infected', 'cavity'],
@@ -74,6 +77,7 @@ export const groups: DressingGroup[] = [
         partsH: materials,
         parts: { ar: ['ألجينات الكالسيوم (Ca)', 'غنية بحمض الغولورونيك (High G)'], en: ['Calcium alginate (Ca)', 'High guluronic acid (High G)'] },
         uses: { ar: ['إفرازات متوسطة إلى غزيرة', 'الجروح الملتهبة', 'الجروح التجويفية (حشو التجاويف)'], en: ['Moderate to heavy exudate', 'Infected wounds', 'Cavity wounds (filling cavities)'] },
+        notFor: { ar: 'الجروح الجافة والقشرة السوداء الجافة', en: 'Dry wounds and dry eschar' },
       },
       {
         id: 'hydrocolloid', term: 'Hydrocolloid', tags: ['lowModerate'],
@@ -82,6 +86,7 @@ export const groups: DressingGroup[] = [
         partsH: materials,
         parts: { ar: ['مواد مكوِّنة للهلام (Gel-forming agents)'], en: ['Gel-forming agents'] },
         uses: { ar: ['إفرازات قليلة إلى متوسطة'], en: ['Low to moderate exudate'] },
+        notFor: { ar: 'الجروح الملتهبة والإفرازات الغزيرة', en: 'Infected wounds and heavy exudate' },
       },
       {
         id: 'foam', term: 'Foam', tags: ['moderateHeavy'],
@@ -90,6 +95,7 @@ export const groups: DressingGroup[] = [
         partsH: materials,
         parts: { ar: ['بولي يوريثان (Polyurethane)', 'سيليكون (Silicone)'], en: ['Polyurethane', 'Silicone'] },
         uses: { ar: ['إفرازات متوسطة إلى غزيرة'], en: ['Moderate to heavy exudate'] },
+        notFor: { ar: 'الجروح الجافة', en: 'Dry wounds' },
       },
       {
         id: 'hydrogel', term: 'Hydrogel', tags: ['dry'],
@@ -98,6 +104,7 @@ export const groups: DressingGroup[] = [
         partsH: materials,
         parts: { ar: ['هلام مائي نشط غير متشكّل (Hydroactive amorphous gel)'], en: ['Hydroactive amorphous gel'] },
         uses: { ar: ['الجروح الجافة', 'الجروح ذات النسيج الميت (النخر)'], en: ['Dry wounds', 'Necrotic wounds (dead tissue)'] },
+        notFor: { ar: 'الجروح كثيرة الإفرازات', en: 'Heavily exuding wounds' },
       },
     ],
   },
@@ -122,6 +129,7 @@ export const groups: DressingGroup[] = [
         partsH: materials,
         parts: { ar: ['بوليمرات فائقة الامتصاص (Superabsorbent polymers)'], en: ['Superabsorbent polymers'] },
         uses: { ar: ['الجروح ذات الإفرازات الغزيرة جدًا'], en: ['Wounds with very high exudate'] },
+        notFor: { ar: 'الجروح الجافة أو قليلة الإفرازات', en: 'Dry or low-exudate wounds' },
       },
       {
         id: 'film', term: 'Film', tags: ['superficial'],
@@ -130,6 +138,7 @@ export const groups: DressingGroup[] = [
         partsH: materials,
         parts: { ar: ['غشاء بولي يوريثان شفاف'], en: ['Transparent polyurethane film'] },
         uses: { ar: ['الجروح السطحية', 'مواقع القسطرة الوريدية (الكانيولا)', 'ضماد ثانوي فوق ضماد آخر'], en: ['Superficial wounds', 'IV cannula sites', 'As a secondary dressing'] },
+        notFor: { ar: 'الإفرازات المتوسطة أو الغزيرة، والجلد الهش جدًا', en: 'Moderate or heavy exudate, and very fragile skin' },
       },
       {
         id: 'silicone', term: 'Silicone', tags: ['fragile'],
@@ -168,7 +177,7 @@ export const groups: DressingGroup[] = [
         what: { ar: 'طبقة رقيقة توضع مباشرة على قاع الجرح لحمايته ومنع التصاق الضماد الثانوي به.', en: 'A thin layer placed directly on the wound bed to protect it and stop the secondary dressing sticking.' },
         partsH: { ar: 'الأنواع', en: 'Types' },
         parts: { ar: ['مشبعة بالفازلين (Petroleum)', 'مشبعة بالبارافين (Paraffin)'], en: ['Petroleum-impregnated', 'Paraffin-impregnated'] },
-        uses: { ar: ['حماية قاع الجرح'], en: ['Protecting the wound bed'] },
+        uses: { ar: ['حماية قاع الجرح الهش', 'حماية الطعوم الجلدية'], en: ['Protecting a fragile wound bed', 'Protecting skin grafts'] },
         note: { ar: 'تحتاج عادة إلى ضماد ثانوي ماص فوقها.', en: 'Usually needs an absorbent secondary dressing on top.' },
       },
       {

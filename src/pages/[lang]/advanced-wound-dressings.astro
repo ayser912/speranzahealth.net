@@ -15,7 +15,6 @@ import { type Lang } from '../../config/site';
 import { path, langs } from '../../lib/routes';
 import { pageGraph } from '../../lib/schema';
 import { t } from '../../lib/i18n';
-import { articlePath } from '../../content/articles/index';
 import { groups, refs, published, reviewed, tagLabels, tagOrder, usesIn } from '../../content/dressings';
 
 export function getStaticPaths() {
@@ -50,7 +49,15 @@ const copy = {
       '<strong>حالة الجلد المحيط:</strong> هش، أو متهيج، أو متشبع بالرطوبة.',
     ],
     howAfter: 'الضماد جزء من الخطة وليس الخطة كلها: معالجة سبب الجرح، مثل الضغط أو ضعف الدورة الدموية أو السكري أو العدوى، هي الأساس.',
-    articleLink: 'اقرأ: اختيار ضماد الجرح حسب الأنسجة والإفرازات',
+    notForLabel: 'غير مناسب عادة لـ',
+    changeH: 'متى يتغير نوع الضماد؟',
+    change: [
+      'عندما تتغير حالة الجرح، مثل انتقاله من نسيج ميت إلى نسيج حبيبي صحي.',
+      'عندما تزيد الإفرازات أو تقل بشكل واضح.',
+      'عند ظهور علامات عدوى أو تهيّج في الجلد المحيط.',
+      'إذا لم يظهر تقدم بعد فترة متابعة كافية، فيُعاد تقييم الخطة كاملة وليس الضماد وحده.',
+    ],
+    hubLink: 'أدلة العناية حسب نوع الجرح ومقالات ذات صلة',
     warnH: 'قبل أن تستخدم أي ضماد',
     warn: [
       'لا تختر نوع الضماد أو تغيّره أو تغيّر عدد مرات تغييره دون استشارة الفريق المعالج، حتى لو نجح مع شخص آخر.',
@@ -80,7 +87,15 @@ const copy = {
       '<strong>The surrounding skin:</strong> fragile, irritated or waterlogged.',
     ],
     howAfter: 'The dressing is part of the plan, not the whole plan: treating the cause of the wound, such as pressure, poor circulation, diabetes or infection, comes first.',
-    articleLink: 'Read: choosing wound dressings by tissue type and exudate',
+    notForLabel: 'Usually not suitable for',
+    changeH: 'When does the type of dressing change?',
+    change: [
+      'When the wound changes, for example from dead tissue to healthy granulation.',
+      'When exudate clearly increases or decreases.',
+      'When signs of infection or irritation of the surrounding skin appear.',
+      'If there is no progress after an adequate period, the whole plan is reassessed, not just the dressing.',
+    ],
+    hubLink: 'Wound-care guides by wound type, and related articles',
     warnH: 'Before using any dressing',
     warn: [
       'Don’t choose or change a dressing, or how often it is changed, without advice from the treating team, even if it worked for someone else.',
@@ -155,6 +170,7 @@ const counts = Object.fromEntries(tagOrder.map((tg) => [tg, groups.flatMap((g) =
                   <ul class="dc-uses" role="list">{d.uses[lang].map((u) => <li><Icon name="check" /><span set:html={bidi(u)} /></li>)}</ul>
                 </Fragment>
               )}
+              {d.notFor && <p class="dc-notfor"><span class="dc-label">{copy.notForLabel}:</span> <span set:html={bidi(d.notFor[lang])} /></p>}
               {d.note && <p class="dc-note" set:html={bidi(d.note[lang])} />}
               {d.more && <p class="dc-more"><a href={path(lang, d.more.key)}>{d.more.label[lang]} <span aria-hidden="true">{lang === 'ar' ? '←' : '→'}</span></a></p>}
             </li>
@@ -168,7 +184,9 @@ const counts = Object.fromEntries(tagOrder.map((tg) => [tg, groups.flatMap((g) =
         <h2 id="how-h" class="flush">{copy.howH}</h2>
         <ul>{copy.how.map((h) => <li set:html={h} />)}</ul>
         <p>{copy.howAfter}</p>
-        <p><a href={articlePath(lang, 'choosing-wound-dressings')}>{copy.articleLink}</a></p>
+        <h2 id="change-h">{copy.changeH}</h2>
+        <ul>{copy.change.map((c) => <li>{c}</li>)}</ul>
+        <p><a href={path(lang, 'articles')}>{copy.hubLink}</a></p>
       </section>
       <section class="callout callout-warn prose" aria-labelledby="warn-h">
         <h2 id="warn-h" class="flush">{copy.warnH}</h2>

@@ -68,11 +68,10 @@ const copy = {
       'الحالات الطارئة لا تُدار عن بعد: توجّه إلى أقرب قسم طوارئ.',
     ],
     services: [
-      { icon: 'care', h: 'إرشاد متخصص حسب نوع الجرح', p: 'معلومات وإرشاد عملي لكل نوع من الجروح، ومتى يحتاج الجرح إلى مراجعة عاجلة.', links: careNav },
+      { icon: 'care', h: 'العناية بالجروح: أدلة ومقالات', p: 'دليل لكل نوع من الجروح يجمع الوقاية والعناية وعلامات الخطر، ومقالات تثقيفية مدعومة بمراجع علمية تساعد الأسرة على المشاركة في العناية بثقة.', links: careNav, href: 'articles', cta: 'كل الأدلة والمقالات' },
       { icon: 'layers', h: 'دليل ضمادات الجروح الحديثة', p: 'الأنواع الرئيسية للضمادات الحديثة، ومكوّنات كل نوع، وما يُستخدم له عادةً، مع أداة بحث حسب حالة الجرح.', href: 'dressings', cta: 'ضمادات الجروح الحديثة' },
       { icon: 'image', h: 'معرض رحلات الالتئام', p: 'حالات حقيقية موثّقة بالصور لمراحل التئام جروح مختلفة، بموافقة أصحابها. معرض خاص يُفتح برمز شخصي.', href: 'journeys', cta: 'تعرّف على المعرض' },
       { icon: 'teach', h: 'التعليم والتدريب للكوادر الصحية', p: 'محاضرات وورش عملية للممرضين ومقدّمي الرعاية حول تقييم الجروح واختيار الضمادات والعلاج بالضغط السلبي.', href: 'education', cta: 'التعليم والتدريب' },
-      { icon: 'book', h: 'تثقيف المرضى والأسر', p: 'مقالات واضحة تُراجَع بانتظام ومدعومة بمراجع علمية، تساعد الأسرة على المشاركة في العناية بثقة.', href: 'articles', cta: 'كل المقالات' },
     ],
     approachH: 'منهجنا في العمل',
     approach: [
@@ -82,7 +81,7 @@ const copy = {
       ['وضوح في نطاق الممارسة', 'كل تخصص يعمل ضمن نطاقه، ودون وعود بنتائج علاجية مضمونة.'],
     ],
     articlesH: 'من مقالاتنا التثقيفية',
-    allArticles: 'كل المقالات',
+    allArticles: 'كل الأدلة والمقالات',
     contactH: 'التواصل',
     contactP: 'للاستفسار عن التدريب أو التعاون، أو لتسجيل اهتمامك بالاستشارة عن بعد، من جميع أنحاء الأردن.',
   },
@@ -130,11 +129,10 @@ const copy = {
       'Emergencies are not managed remotely: go to the nearest emergency department.',
     ],
     services: [
-      { icon: 'care', h: 'Guidance by wound type', p: 'Practical information and guidance for each type of wound, and when a wound needs urgent review.', links: careNav },
+      { icon: 'care', h: 'Wound care: guides and articles', p: 'A guide for each type of wound covering prevention, care and warning signs, plus referenced educational articles that help families take part in care with confidence.', links: careNav, href: 'articles', cta: 'All guides and articles' },
       { icon: 'layers', h: 'Advanced wound dressings guide', p: 'The main types of modern dressing, what each is made of and what it is typically used for, with a finder by wound situation.', href: 'dressings', cta: 'Advanced wound dressings' },
       { icon: 'image', h: 'Healing journeys gallery', p: 'Real, photo-documented healing stages of different wounds, with patient consent. A private gallery opened with a personal code.', href: 'journeys', cta: 'About the gallery' },
       { icon: 'teach', h: 'Education and training for healthcare teams', p: 'Lectures and hands-on workshops for nurses and caregivers on wound assessment, dressing selection and negative pressure wound therapy.', href: 'education', cta: 'Education and training' },
-      { icon: 'book', h: 'Education for patients and families', p: 'Clear, regularly reviewed articles with scientific references, so families can take part in care with confidence.', href: 'articles', cta: 'All articles' },
     ],
     approachH: 'How we work',
     approach: [
@@ -144,7 +142,7 @@ const copy = {
       ['A clear scope of practice', 'Each specialty works within its own scope, with no promises of guaranteed outcomes.'],
     ],
     articlesH: 'From our educational articles',
-    allArticles: 'All articles',
+    allArticles: 'All guides and articles',
     contactH: 'Contact',
     contactP: 'For training or collaboration, or to register interest in remote consultation, from anywhere in Jordan.',
   },
@@ -237,9 +235,8 @@ const specialties = team.filter((m) => m.id !== 'other');
             <span class="sf-icon" aria-hidden="true"><Icon name={sv.icon as 'care' | 'teach' | 'book' | 'layers' | 'image'} /></span>
             <h3>{sv.h}</h3>
             <p>{sv.p}</p>
-            {sv.links
-              ? <ul class="service-links">{sv.links.map((k) => <li><a href={path(lang, k)}>{pages[k].nav[lang]}</a></li>)}</ul>
-              : <p class="service-more"><a href={path(lang, sv.href as 'education' | 'articles' | 'dressings' | 'journeys')}>{sv.cta} <span aria-hidden="true">{lang === 'ar' ? '←' : '→'}</span></a></p>}
+            {sv.links && <ul class="service-links">{sv.links.map((k) => <li><a href={path(lang, k)}>{pages[k].nav[lang]}</a></li>)}</ul>}
+            {sv.href && <p class="service-more"><a href={path(lang, sv.href as 'education' | 'articles' | 'dressings' | 'journeys')}>{sv.cta} <span aria-hidden="true">{lang === 'ar' ? '←' : '→'}</span></a></p>}
           </li>
         ))}
       </ul>

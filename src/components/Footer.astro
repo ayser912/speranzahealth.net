@@ -21,6 +21,7 @@ const year = new Date().getFullYear();
       <div>
         <h2>{careLabel[lang]}</h2>
         <ul>
+          <li><a href={path(lang, 'articles')}>{lang === 'ar' ? 'كل الأدلة والمقالات' : 'All guides and articles'}</a></li>
           {careNav.map((k) => <li><a href={path(lang, k)}>{pages[k].nav[lang]}</a></li>)}
         </ul>
       </div>

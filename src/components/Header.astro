@@ -7,7 +7,8 @@ const { lang, pageKey, altHref } = Astro.props;
 const s = t(lang);
 const alt = otherLang(lang);
 const switchHref = altHref ?? path(alt, pageKey ?? 'home');
-const careActive = pageKey ? careNav.includes(pageKey) : false;
+const careActive = pageKey ? careNav.includes(pageKey) || pageKey === 'articles' : false;
+const hubLabel = lang === 'ar' ? 'كل الأدلة والمقالات' : 'All guides and articles';
 ---
 <header class="site-header">
   <div class="wrap">
@@ -25,6 +26,7 @@ const careActive = pageKey ? careNav.includes(pageKey) : false;
                 {careLabel[lang]}<svg aria-hidden="true" viewBox="0 0 12 12" width="12" height="12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
               </button>
               <ul id="sub-care" class="sub">
+                <li class="sub-hub"><a href={path(lang, 'articles')} aria-current={pageKey === 'articles' ? 'page' : undefined}>{hubLabel}</a></li>
                 {careNav.map((c) => (
                   <li><a href={path(lang, c)} aria-current={c === pageKey ? 'page' : undefined}>{pages[c].nav[lang]}</a></li>
                 ))}

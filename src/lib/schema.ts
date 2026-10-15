@@ -5,7 +5,7 @@
  * when flags.organizationConfirmed; sameAs only from verified profiles.
  */
 import { site, brand, person, credentials, profiles, flags, contact, featuredVideo, media, type Lang } from '../config/site';
-import { pages, path, type PageKey } from './routes';
+import { pages, path, type PageKey, parentOf } from './routes';
 import type { Video } from './content-types';
 
 const base = () => (import.meta.env.SITE as string | undefined)?.replace(/\/$/, '') || `https://${site.domain}`;
@@ -125,8 +125,10 @@ export interface PageSchemaOpts {
 }
 
 export function pageGraph(o: PageSchemaOpts) {
+  const parent = parentOf(o.key);
   const trail = o.key === 'home' ? [] : [
     { name: pages.home.nav[o.lang], path: path(o.lang, 'home') },
+    ...(parent ? [{ name: pages[parent].nav[o.lang], path: path(o.lang, parent) }] : []),
     { name: pages[o.key].nav[o.lang], path: path(o.lang, o.key) },
   ];
   return docGraph({ ...o, path: path(o.lang, o.key), trail });
