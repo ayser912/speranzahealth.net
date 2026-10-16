@@ -155,14 +155,27 @@ export const contact = {
 };
 
 /**
- * Profiles: only `verified: true` entries are shown publicly. `owner` decides the schema: 'person' profiles go in
+ * Profiles: only `verified: true` entries are used. `owner` decides the schema: 'person' profiles go in
  * Person.sameAs, 'brand' profiles (Speranza Health accounts) in WebSite.sameAs.
+ * `schemaOnly: true` entries are never shown to visitors (footer, llms.txt); they only feed structured data.
  */
 export const profiles = [
-  { id: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/in/aissar-shawaqfeh-cws/', verified: true, owner: 'person' },
+  /** Speranza Health's LinkedIn company page (supplied by Aissar 16 Oct 2026; replaces his personal profile link). */
+  { id: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/company/speranza-health-mena/', verified: true, owner: 'brand' },
   /** Speranza Health's Instagram (supplied by Aissar 11 Oct 2026; the old @aissar_shawaqfeh912 no longer exists). */
   { id: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/speranza_health/', verified: true, owner: 'brand' },
-  { id: 'facebook', label: 'Facebook', url: 'https://www.facebook.com/ayser.alshawaqfeh', verified: true, owner: 'person' },
+  /**
+   * Speranza Health's Facebook page (supplied by Aissar 16 Oct 2026; replaces his personal profile link).
+   * This is Facebook's share link with the mobile tracking parameter removed; swap in the page's
+   * direct address (facebook.com/<page-name>) once known.
+   */
+  { id: 'facebook', label: 'Facebook', url: 'https://www.facebook.com/share/1HeJ2BkRgX/', verified: true, owner: 'brand' },
+  /**
+   * Aissar's personal profiles. Since 16 Oct 2026 the visible LinkedIn/Facebook links are the Speranza Health
+   * pages above; these stay in Person.sameAs only, so search engines can still tie the clinician to his profiles.
+   */
+  { id: 'linkedin-personal', label: 'LinkedIn', url: 'https://www.linkedin.com/in/aissar-shawaqfeh-cws/', verified: true, owner: 'person', schemaOnly: true },
+  { id: 'facebook-personal', label: 'Facebook', url: 'https://www.facebook.com/ayser.alshawaqfeh', verified: true, owner: 'person', schemaOnly: true },
   /** TODO: create channel and set verified: true */
   { id: 'youtube', label: 'YouTube', url: 'https://www.youtube.com/@TODO', verified: false, owner: 'brand' },
   /** A directory search, not a profile page, so it stays out of schema sameAs; it is used as the credential's verify link. */

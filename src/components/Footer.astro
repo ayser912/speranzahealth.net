@@ -37,7 +37,7 @@ const year = new Date().getFullYear();
           <li><a href={whatsappUrl(ref)} {...track('whatsapp_click', ref)} rel="noopener">WhatsApp</a></li>
           <li><a href={telUrl()} {...track('phone_click', ref)}><span class="ltr">{contact.phoneDisplay}</span></a></li>
           <li><a href={mailtoUrl(ref)} {...track('email_click', ref)}><span class="ltr">{contact.email}</span></a></li>
-          {profiles.filter((p) => p.verified).map((p) => (
+          {profiles.filter((p) => p.verified && !('schemaOnly' in p && p.schemaOnly)).map((p) => (
             <li><a href={p.url} rel="noopener me" {...track('outbound_profile', { ...ref, placement: `footer-${p.id}` })}>{p.label}</a></li>
           ))}
         </ul>

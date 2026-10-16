@@ -19,7 +19,7 @@ const topics: Array<[PageKey, { ar: { title: string; description: string }; en: 
 
 export const GET: APIRoute = () => {
   const cws = credentials.find((c) => c.id === 'cws')!;
-  const verified = profiles.filter((p) => p.verified);
+  const verified = profiles.filter((p) => p.verified && !('schemaOnly' in p && p.schemaOnly));
   const L: string[] = [];
   L.push(`# ${site.siteName.en} (${site.siteName.ar}) — Wound care in Jordan, founded by ${person.name.en}, RN, CWS®`);
   L.push('');
