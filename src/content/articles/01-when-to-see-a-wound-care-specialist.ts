@@ -47,7 +47,7 @@ const a: Article = {
         id: 'team', h: 'من يشارك في العناية بالجرح؟',
         body: [
           'الجروح المعقدة تحتاج عادة إلى فريق متعدد التخصصات: جراحة العظام، وجراحة الأوعية الدموية، والجراحة العامة، والجراحة التجميلية، وطب القدم، والأمراض المعدية، والتغذية العلاجية، وغيرهم حسب الحالة.',
-          'أخصائي الجروح من الكادر التمريضي يقيّم الجرح، ويضع خطة العناية بالضمادات وتخفيف الضغط والتثقيف، ويتابع التقدم، وينسّق مع الطبيب والفريق. التشخيص ووصف الأدوية والقرارات الجراحية تبقى من مسؤولية الطبيب.',
+          'أخصائي الجروح المعتمد يقيّم الجرح، ويضع خطة العناية بالضمادات وتخفيف الضغط والتثقيف، ويتابع التقدم، وينسّق مع الطبيب والفريق. التشخيص ووصف الأدوية والقرارات الجراحية تبقى من مسؤولية الطبيب.',
         ],
       },
       {
@@ -119,7 +119,7 @@ const a: Article = {
         id: 'team', h: 'Who is involved in wound care?',
         body: [
           'Complex wounds usually need a multidisciplinary team: orthopaedic, vascular, general and plastic surgery, podiatry, infectious diseases, clinical nutrition and others as the case requires.',
-          'The nursing wound specialist assesses the wound, plans care with dressings, pressure relief and education, tracks progress and coordinates with the doctor and the team. Diagnosis, prescribing and surgical decisions remain the physician’s responsibility.',
+          'The certified wound specialist assesses the wound, plans care with dressings, pressure relief and education, tracks progress and coordinates with the doctor and the team. Diagnosis, prescribing and surgical decisions remain the physician’s responsibility.',
         ],
       },
       {

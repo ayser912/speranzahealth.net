@@ -100,7 +100,7 @@ const page: ClinicalPageData = {
         },
       },
       {
-        id: 'nurse-role', h: 'دور الممرض المتخصص',
+        id: 'nurse-role', h: 'دور أخصائي الجروح',
         body: ['يتطلب NPWT مهارة في تطبيق الضماد وإحكام إغلاقه وحماية الجلد المحيط ومتابعة الإنذارات، بالتنسيق مع الطبيب والفريق متعدد التخصصات. يتوفر تدريب عملي للكوادر التمريضية على أساسيات هذا العلاج.'],
         after: ['<a href="/ar/wound-care-education/">التعليم والتدريب في العناية بالجروح</a>'],
       },
@@ -199,7 +199,7 @@ const page: ClinicalPageData = {
         },
       },
       {
-        id: 'nurse-role', h: 'The specialist nurse’s role',
+        id: 'nurse-role', h: 'The wound specialist’s role',
         body: ['NPWT requires skill in applying and sealing the dressing, protecting the surrounding skin and managing alarms, in coordination with the physician and the multidisciplinary team. Hands-on training in the fundamentals is available for nursing teams.'],
         after: ['<a href="/en/wound-care-education/">Wound-care education and training</a>'],
       },

@@ -21,7 +21,7 @@ export const GET: APIRoute = () => {
   const cws = credentials.find((c) => c.id === 'cws')!;
   const verified = profiles.filter((p) => p.verified && !('schemaOnly' in p && p.schemaOnly));
   const L: string[] = [];
-  L.push(`# ${site.siteName.en} (${site.siteName.ar}) — Wound care in Jordan, founded by ${person.name.en}, RN, CWS®`);
+  L.push(`# ${site.siteName.en} (${site.siteName.ar}) — Wound care in Jordan, founded by ${person.name.en}, CWS®`);
   L.push('');
   L.push(`> ${brand.description.en} ${brand.meaning.en}.`);
   L.push('');
@@ -42,18 +42,18 @@ export const GET: APIRoute = () => {
   L.push('## Key facts about the founder');
   L.push(`- Name: ${person.name.en} (Arabic: ${person.name.ar}). Other spellings: ${person.alternateNames.join(', ')}.`);
   L.push(`- Title: ${person.title.en} / ${person.title.ar}`);
-  L.push(`- Credentials: ${credentials.map((c) => `${c.name.en} — ${c.issuer.en} (${c.year})`).join('; ')}; Registered Nurse licensed in Jordan.`);
+  L.push(`- Credentials: ${credentials.map((c) => `${c.name.en} — ${c.issuer.en} (${c.year})`).join('; ')}.`);
   L.push(`- Verify CWS®: ${cws.verifyUrl}`);
   L.push(`- Areas: ${person.knowsAbout.en.join('; ')}.`);
   L.push(`- Works with a multidisciplinary team: ${team.map((t) => t.en).join(', ')}.`);
   L.push(`- Serves: all of Jordan. Languages: Arabic, English.`);
-  L.push(`- Scope: Registered Nurse and wound specialist, not a physician. Diagnosis, prescribing and surgical decisions stay with the physician. The site gives education, not individual medical advice; emergencies are not handled online.`);
+  L.push(`- Scope: American Board–certified wound specialist (CWS®), not a physician. Diagnosis, prescribing and surgical decisions stay with the physician. The site gives education, not individual medical advice; emergencies are not handled online.`);
   L.push(`- Contact: ${abs(path('en', 'contact'))} · WhatsApp ${contact.phoneDisplay} · ${contact.email}`);
   if (verified.length) L.push(`- Profiles: ${verified.map((p) => `${p.label}${p.owner === 'brand' ? ' (Speranza Health)' : ''} ${p.url}`).join(' · ')}`);
   L.push('');
   L.push('## In the media');
   L.push(`- [${featuredVideo.title.en}](${abs(path('en', 'about'))}): ${featuredVideo.outlet.en}, ${featuredVideo.uploadDate}. ${featuredVideo.description.en}`);
-  for (const m of media.filter((x) => x.kind === 'news')) L.push(`- [${m.headline.ar}](${m.url}): ${m.outlet.en}${m.date ? `, ${m.date}` : ''} (Arabic). ${m.headline.en}.`);
+  for (const m of media.filter((x) => x.kind === 'news')) L.push(`- [${(m.label ?? m.headline).ar}](${m.url}): ${m.outlet.en}${m.date ? `, ${m.date}` : ''} (Arabic). ${(m.label ?? m.headline).en}.`);
   L.push('');
   for (const lang of ['en', 'ar'] as const) {
     L.push(lang === 'en' ? '## Main pages (English)' : '## الصفحات الرئيسية (العربية)');

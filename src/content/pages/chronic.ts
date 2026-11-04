@@ -11,7 +11,7 @@ const page: ClinicalPageData = {
     title: 'العناية بالجروح المزمنة في الأردن | أيسر شواقفه CWS®',
     description: 'متى يُعد الجرح مزمنًا، ولماذا يتأخر التئامه، وما علامات الخطر التي تستدعي مراجعة طبية عاجلة؟ دليل تثقيفي من أخصائي جروح معتمد CWS® في الأردن.',
     h1: 'العناية بالجروح المزمنة في الأردن',
-    lead: 'الجرح المزمن هو جرح لا يتقدم في مراحل الالتئام الطبيعية بالشكل والوقت المتوقعين. هذه الصفحة تشرح أسباب ذلك، وعلامات الخطر، وما يتضمنه التقييم التمريضي المتخصص، وكيف تدعم الأسرة العناية في المنزل.',
+    lead: 'الجرح المزمن هو جرح لا يتقدم في مراحل الالتئام الطبيعية بالشكل والوقت المتوقعين. هذه الصفحة تشرح أسباب ذلك، وعلامات الخطر، وما يتضمنه تقييم أخصائي الجروح، وكيف تدعم الأسرة العناية في المنزل.',
     card: 'الجروح المزمنة',
     sections: [
       {
@@ -79,7 +79,7 @@ const page: ClinicalPageData = {
         after: ['اقرأ أيضًا: <a href="/ar/articles/wound-infection-warning-signs/">علامات التهاب الجرح التي لا ينبغي تجاهلها</a>.'],
       },
       {
-        id: 'assessment', h: 'ماذا يشمل التقييم التمريضي المتخصص؟',
+        id: 'assessment', h: 'ماذا يشمل تقييم أخصائي الجروح؟',
         body: ['التقييم الشامل هو الأساس قبل اختيار أي ضماد أو علاج. يشمل عادة:'],
         list: {
           items: [
@@ -93,7 +93,7 @@ const page: ClinicalPageData = {
           ],
         },
         after: [
-          'التشخيص الطبي، ووصف المضادات الحيوية أو الأدوية، والتدخلات الجراحية، تبقى من مسؤولية الطبيب. دور الممرض المتخصص أن يقدّم تقييمًا تمريضيًا دقيقًا ويطبّق خطة العناية ويتابعها.',
+          'التشخيص الطبي، ووصف المضادات الحيوية أو الأدوية، والتدخلات الجراحية، تبقى من مسؤولية الطبيب. دور أخصائي الجروح أن يقدّم تقييمًا دقيقًا للجرح ويطبّق خطة العناية ويتابعها.',
           'لمعرفة متى تحتاج إلى هذا التقييم وكيف تستعد له اقرأ: <a href="/ar/articles/when-to-see-a-wound-care-specialist/">متى تحتاج إلى أخصائي عناية بالجروح؟</a>',
         ],
       },
@@ -114,7 +114,7 @@ const page: ClinicalPageData = {
     ],
     faq: [
       { q: 'متى أحتاج إلى أخصائي في العناية بالجروح؟', a: 'إذا لم يُظهر الجرح تحسنًا واضحًا بعد نحو أربعة أسابيع من العناية المناسبة، أو إذا كان الجرح في قدم مريض سكري، أو تكرّر ظهوره، أو ظهرت علامات عدوى. التفاصيل في مقال <a href="/ar/articles/when-to-see-a-wound-care-specialist/">متى تراجع أخصائي العناية بالجروح</a>.' },
-      { q: 'هل يوجد أخصائي جروح معتمد CWS® في الأردن؟', a: 'نعم. أيسر شواقفه ممرض قانوني حاصل على اعتماد Certified Wound Specialist (CWS®) من American Board of Wound Management، ويعمل في الأردن. يمكن التحقق من حاملي هذا الاعتماد عبر دليل ABWM الرسمي، والتفاصيل في <a href="/ar/about-aissar-shawaqfeh/#credentials">صفحة المؤهلات</a>.' },
+      { q: 'هل يوجد أخصائي جروح معتمد CWS® في الأردن؟', a: 'نعم. أيسر شواقفه أخصائي جروح حاصل على اعتماد Certified Wound Specialist (CWS®) من American Board of Wound Management، ويعمل في الأردن. يمكن التحقق من حاملي هذا الاعتماد عبر دليل ABWM الرسمي، والتفاصيل في <a href="/ar/about-aissar-shawaqfeh/#credentials">صفحة المؤهلات</a>.' },
       { q: 'ما الفرق بين أخصائي العناية بالجروح والطبيب؟', a: 'أخصائي العناية بالجروح المعتمد يقيّم الجرح ويختار الضمادات ويتابع التقدّم ويثقّف المريض والأسرة. الطبيب يشخّص الحالة ويصف الأدوية ويقرّر التدخلات الجراحية. أفضل النتائج تأتي من عملهما معًا ضمن فريق متعدد التخصصات.' },
     ],
   },
@@ -122,7 +122,7 @@ const page: ClinicalPageData = {
     title: 'Chronic Wound Care in Jordan | Aissar Shawaqfeh, CWS®',
     description: 'When is a wound chronic, why does healing stall, and which warning signs need urgent review? A guide from a Certified Wound Specialist in Jordan.',
     h1: 'Chronic wound care in Jordan',
-    lead: 'A chronic wound is one that does not move through the normal stages of healing in the expected way or time. This page explains why that happens, the warning signs to act on, what a specialist nursing assessment covers, and how families can support care at home.',
+    lead: 'A chronic wound is one that does not move through the normal stages of healing in the expected way or time. This page explains why that happens, the warning signs to act on, what a wound specialist’s assessment covers, and how families can support care at home.',
     card: 'Chronic wounds',
     sections: [
       {
@@ -190,7 +190,7 @@ const page: ClinicalPageData = {
         after: ['Read also: <a href="/en/articles/wound-infection-warning-signs/">Wound infection warning signs you should not ignore</a>.'],
       },
       {
-        id: 'assessment', h: 'What does a specialist nursing assessment include?',
+        id: 'assessment', h: 'What does a wound specialist’s assessment include?',
         body: ['A thorough assessment comes before choosing any dressing or treatment. It usually includes:'],
         list: {
           items: [
@@ -204,7 +204,7 @@ const page: ClinicalPageData = {
           ],
         },
         after: [
-          'Medical diagnosis, prescribing antibiotics or other medicines, and surgical procedures remain the physician’s responsibility. The specialist nurse’s role is to provide an accurate nursing assessment and to carry out and follow up the care plan.',
+          'Medical diagnosis, prescribing antibiotics or other medicines, and surgical procedures remain the physician’s responsibility. The wound specialist’s role is to provide an accurate wound assessment and to carry out and follow up the care plan.',
           'To know when you need this assessment and how to prepare, read <a href="/en/articles/when-to-see-a-wound-care-specialist/">When to see a wound-care specialist</a>.',
         ],
       },
@@ -225,7 +225,7 @@ const page: ClinicalPageData = {
     ],
     faq: [
       { q: 'When do I need a wound care specialist?', a: 'When a wound has not clearly improved after about four weeks of appropriate care, when the wound is on the foot of a person with diabetes, when it keeps coming back, or when there are signs of infection. See <a href="/en/articles/when-to-see-a-wound-care-specialist/">When to see a wound care specialist</a> for details.' },
-      { q: 'Is there a Certified Wound Specialist (CWS®) in Jordan?', a: 'Yes. Aissar Shawaqfeh is a Registered Nurse who holds the Certified Wound Specialist (CWS®) credential from the American Board of Wound Management and works in Jordan. Credential holders can be checked in the official ABWM directory; see the <a href="/en/about-aissar-shawaqfeh/#credentials">credentials section</a>.' },
+      { q: 'Is there a Certified Wound Specialist (CWS®) in Jordan?', a: 'Yes. Aissar Shawaqfeh is a wound specialist who holds the Certified Wound Specialist (CWS®) credential from the American Board of Wound Management and works in Jordan. Credential holders can be checked in the official ABWM directory; see the <a href="/en/about-aissar-shawaqfeh/#credentials">credentials section</a>.' },
       { q: 'How is a wound care specialist different from a doctor?', a: 'A certified wound specialist assesses the wound, selects dressings, tracks progress and educates patients and families. The doctor diagnoses the condition, prescribes medicines and decides on surgical treatment. The best results come from both working together in a multidisciplinary team.' },
     ],
   },

@@ -28,7 +28,7 @@ export function personNode(lang: Lang) {
     name: person.name[lang],
     alternateName: [person.name[lang === 'ar' ? 'en' : 'ar'], ...person.alternateNames.filter((n) => n !== person.name[lang])]
       .filter((v, i, a) => a.indexOf(v) === i),
-    honorificSuffix: 'RN, CWS',
+    honorificSuffix: 'CWS',
     jobTitle: person.jobTitleSchema,
     description: person.bio[lang],
     url: abs(path(lang, 'about')),
@@ -47,15 +47,14 @@ export function personNode(lang: Lang) {
         recognizedBy: { '@type': c.category === 'degree' ? 'CollegeOrUniversity' : 'Organization', name: c.issuer?.en, ...(c.issuerUrl ? { url: c.issuerUrl } : {}) },
       })),
     hasOccupation: [
-      { '@type': 'Occupation', name: lang === 'ar' ? 'ممرض قانوني' : 'Registered Nurse', occupationLocation: { '@type': 'Country', name: 'Jordan' } },
-      { '@type': 'Occupation', name: lang === 'ar' ? 'أخصائي معتمد في العناية بالجروح (CWS®)' : 'Certified Wound Specialist (wound care nurse)', occupationLocation: { '@type': 'Country', name: 'Jordan' }, skills: person.knowsAbout.en.join(', ') },
+      { '@type': 'Occupation', name: lang === 'ar' ? 'أخصائي جروح معتمد من البورد الأمريكي (CWS®)' : 'Certified Wound Specialist (CWS®), American Board of Wound Management', occupationLocation: { '@type': 'Country', name: 'Jordan' }, skills: person.knowsAbout.en.join(', ') },
     ],
     knowsAbout: [...person.knowsAbout[lang], ...(lang === 'ar' ? person.knowsAbout.en : [])],
     sameAs: profiles.filter((p) => p.verified && p.owner === 'person').map((p) => p.url),
     subjectOf: media.filter((m) => m.kind === 'news').map((m) => ({
       '@type': 'NewsArticle',
       url: m.url,
-      headline: m.headline.ar,
+      ...(m.label ? {} : { headline: m.headline.ar }),
       inLanguage: 'ar',
       ...(m.date ? { datePublished: dt(m.date) } : {}),
       publisher: { '@type': 'Organization', name: m.outlet.ar },

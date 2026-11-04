@@ -67,7 +67,7 @@ const page: ClinicalPageData = {
         id: 'complex', h: 'الجروح الجراحية المعقدة',
         body: [
           'عندما ينفتح جرح العملية أو يتأخر التئامه، قد يحتاج إلى خطة عناية متقدمة يقررها الجرّاح، مثل التنظيف الجراحي، أو ضمادات متخصصة، أو <a href="/ar/negative-pressure-wound-therapy/">العلاج بالضغط السلبي</a>.',
-          'يقدّم الممرض المتخصص في الجروح التقييم والعناية بالجرح والمتابعة والتثقيف، بالتنسيق المستمر مع الجرّاح.',
+          'يقدّم أخصائي الجروح التقييم والعناية بالجرح والمتابعة والتثقيف، بالتنسيق المستمر مع الجرّاح.',
         ],
       },
     ],
@@ -132,7 +132,7 @@ const page: ClinicalPageData = {
         id: 'complex', h: 'Complex surgical wounds',
         body: [
           'When a surgical wound opens or is slow to heal, it may need an advanced care plan decided by the surgeon, such as surgical cleaning, specialist dressings or <a href="/en/negative-pressure-wound-therapy/">negative pressure wound therapy</a>.',
-          'The specialist wound nurse provides assessment, wound care, follow-up and education, in close coordination with the surgeon.',
+          'The wound specialist provides assessment, wound care, follow-up and education, in close coordination with the surgeon.',
         ],
       },
     ],

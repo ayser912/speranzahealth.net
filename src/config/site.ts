@@ -38,8 +38,8 @@ export const site = {
 export const brand = {
   meaning: { ar: 'كلمة «سبيرانزا» (Speranza) إيطالية وتعني «الأمل»', en: '“Speranza” is the Italian word for “hope”' },
   description: {
-    ar: 'سبيرانزا هيلث (Speranza Health) منصة رقمية أردنية للعناية بالجروح أسسها أيسر شواقفه، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®. تقدّم تثقيفًا موثوقًا للمرضى والأسر وتدريبًا للكوادر الصحية في جميع أنحاء الأردن، وتعمل على إطلاق خدمة استشارات عن بعد بالتنسيق مع فريق طبي متعدد التخصصات.',
-    en: 'Speranza Health is a Jordanian digital wound-care platform founded by Aissar Shawaqfeh, a Registered Nurse and Certified Wound Specialist (CWS®). It offers reliable education for patients and families and training for healthcare teams across Jordan, and is preparing to launch remote consultations coordinated with a multidisciplinary medical team.',
+    ar: 'سبيرانزا هيلث (Speranza Health) منصة رقمية أردنية للعناية بالجروح أسسها أيسر شواقفه، أخصائي جروح معتمد من البورد الأمريكي CWS®. تقدّم تثقيفًا موثوقًا للمرضى والأسر وتدريبًا للكوادر الصحية في جميع أنحاء الأردن، وتعمل على إطلاق خدمة استشارات عن بعد بالتنسيق مع فريق طبي متعدد التخصصات.',
+    en: 'Speranza Health is a Jordanian digital wound-care platform founded by Aissar Shawaqfeh, an American Board–certified wound specialist (CWS®). It offers reliable education for patients and families and training for healthcare teams across Jordan, and is preparing to launch remote consultations coordinated with a multidisciplinary medical team.',
   },
 };
 
@@ -57,16 +57,16 @@ export const person = {
   aboutSlug: 'about-aissar-shawaqfeh',
   /** Slugs of the other spelling that should 301 to aboutSlug. */
   aboutSlugAliases: ['about-ayser-shawaqfeh', 'about-aysar-shawaqfeh', 'about'],
-  postNominals: 'RN, CWS®',
+  postNominals: 'CWS®',
   title: {
-    ar: 'ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®',
-    en: 'Registered Nurse and Certified Wound Specialist, CWS®, in Jordan',
+    ar: 'أخصائي جروح معتمد من البورد الأمريكي CWS®',
+    en: 'American Board–Certified Wound Specialist, CWS®, in Jordan',
   },
   shortTitle: {
-    ar: 'ممرض قانوني · أخصائي جروح معتمد CWS®',
-    en: 'Registered Nurse · Certified Wound Specialist (CWS®)',
+    ar: 'أخصائي جروح معتمد من البورد الأمريكي CWS®',
+    en: 'American Board–Certified Wound Specialist (CWS®)',
   },
-  jobTitleSchema: 'Registered Nurse and Certified Wound Specialist',
+  jobTitleSchema: 'Certified Wound Specialist (American Board of Wound Management)',
   country: { ar: 'الأردن', en: 'Jordan' },
   countryCode: 'JO',
   /** Approx. years in healthcare (since 2017). Update yearly or compute. */
@@ -79,8 +79,8 @@ export const person = {
   photo: '/images/aissar-shawaqfeh-certified-wound-specialist-jordan' as string | null,
   /** One-paragraph factual summary, reused by schema description and llms.txt. Keep it free of superlatives. */
   bio: {
-    ar: `أيسر شواقفه (Aissar Shawaqfeh) ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في الأردن، بخبرة تمتد لنحو ${new Date().getFullYear() - 2017} سنوات في القطاع الصحي. يعمل في العناية بالجروح المزمنة وقرح الضغط وجروح القدم السكري والجروح الجراحية والعلاج بالضغط السلبي (VAC)، بالتنسيق مع فريق متعدد التخصصات، ويقدّم التثقيف والتدريب للمرضى والأسر والكوادر الصحية في جميع أنحاء الأردن.`,
-    en: `Aissar Shawaqfeh (أيسر شواقفه) is a Registered Nurse and Certified Wound Specialist (CWS®) in Jordan with about ${new Date().getFullYear() - 2017} years in healthcare. He works in chronic wound care, pressure injuries, diabetic foot wounds, surgical wounds and negative pressure wound therapy (VAC), coordinated with a multidisciplinary team, and provides education and training for patients, families and healthcare teams across Jordan.`,
+    ar: `أيسر شواقفه (Aissar Shawaqfeh) أخصائي جروح معتمد من البورد الأمريكي CWS® في الأردن، بخبرة تمتد لنحو ${new Date().getFullYear() - 2017} سنوات في القطاع الصحي. يعمل في العناية بالجروح المزمنة وقرح الضغط وجروح القدم السكري والجروح الجراحية والعلاج بالضغط السلبي (VAC)، بالتنسيق مع فريق متعدد التخصصات، ويقدّم التثقيف والتدريب للمرضى والأسر والكوادر الصحية في جميع أنحاء الأردن.`,
+    en: `Aissar Shawaqfeh (أيسر شواقفه) is an American Board–certified wound specialist (CWS®) in Jordan with about ${new Date().getFullYear() - 2017} years in healthcare. He works in chronic wound care, pressure injuries, diabetic foot wounds, surgical wounds and negative pressure wound therapy (VAC), coordinated with a multidisciplinary team, and provides education and training for patients, families and healthcare teams across Jordan.`,
   },
   knowsAbout: {
     en: [
@@ -133,7 +133,7 @@ export const credentials = [
   },
 ] as const;
 
-/** Nursing licence: publish only what Aissar approves. */
+/** Nursing licence: NOT shown on the site (Aissar, 4 Nov 2026: present him only as an American Board–certified wound specialist). Kept for reference. */
 export const nursingLicence = {
   /** TODO: confirm licensing body wording and whether the licence year/number may be published. */
   body: { ar: 'مجلس التمريض الأردني / وزارة الصحة', en: 'Jordanian Nursing Council / Ministry of Health' },
@@ -261,7 +261,7 @@ export const featuredVideo = {
 /**
  * Experience figures shown under the homepage video. Supplied by Aissar (10 Oct 2026) from his own
  * records; shown with a note saying so. Never put them in structured data or in "best/first" claims.
- * Wording keeps a nurse's scope: "cared for", "supported", "worked with".
+ * Wording keeps a wound specialist's scope: "cared for", "supported", "worked with".
  */
 export const stats: Array<{ value: number; suffix: string; percent?: boolean; ar: string; en: string }> = [
   { value: 1700, suffix: '+', ar: 'حالة جروح تمت رعايتها', en: 'Wound cases cared for' },
@@ -286,6 +286,8 @@ export const media: Array<{
   outlet: { ar: string; en: string };
   date?: string;
   headline: { ar: string; en: string };
+  /** Link text shown instead of the published headline (and the headline is then left out of schema). */
+  label?: { ar: string; en: string };
 }> = [
   {
     kind: 'news',
@@ -294,6 +296,11 @@ export const media: Array<{
     headline: {
       ar: 'ممرض أردني: الأردن بحاجة إلى تخصصات دقيقة في رعاية الجروح لمواكبة المعايير العالمية',
       en: 'Jordanian nurse: Jordan needs specialised wound-care disciplines to keep pace with global standards',
+    },
+    // Aissar (4 Nov 2026): no “nurse” wording about him on the site, so the link shows his statement, not the headline.
+    label: {
+      ar: 'أيسر شواقفه: الأردن بحاجة إلى تخصصات دقيقة في رعاية الجروح لمواكبة المعايير العالمية',
+      en: 'Aissar Shawaqfeh: Jordan needs specialised wound-care disciplines to keep pace with global standards',
     },
   },
   {

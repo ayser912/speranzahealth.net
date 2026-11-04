@@ -11,7 +11,7 @@ import VideoSection from '../../components/VideoSection.astro';
 import Portrait from '../../components/Portrait.astro';
 import Faq from '../../components/Faq.astro';
 import FeaturedInterview from '../../components/FeaturedInterview.astro';
-import { person, credentials, nursingLicence, yearsExperience, media, type Lang } from '../../config/site';
+import { person, credentials, yearsExperience, media, type Lang } from '../../config/site';
 import { path, langs, careNav, pages, credentialsHref } from '../../lib/routes';
 import { pageGraph, faqNode, featuredVideoNode } from '../../lib/schema';
 import { formatDate, t } from '../../lib/i18n';
@@ -29,15 +29,15 @@ const cws = credentials.find((c) => c.id === 'cws')!;
 const copy = {
   ar: {
     title: 'أيسر شواقفه | مؤسس سبيرانزا هيلث وأخصائي جروح معتمد CWS®',
-    description: 'أيسر شواقفه، مؤسس سبيرانزا هيلث، ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS® في الأردن: الخبرة، والمقابلات، والمؤهلات وطرق التحقق.',
+    description: 'أيسر شواقفه، مؤسس سبيرانزا هيلث، أخصائي جروح معتمد من البورد الأمريكي CWS® في الأردن: الخبرة، والمقابلات، والمؤهلات وطرق التحقق.',
     eyebrow: 'المؤسس',
     h1Name: 'أيسر شواقفه',
-    h1Title: 'ممرض قانوني وأخصائي معتمد في العناية بالجروح CWS®',
+    h1Title: 'أخصائي جروح معتمد من البورد الأمريكي CWS®',
     founderOf: 'مؤسس سبيرانزا هيلث',
-    intro: `أسّس أيسر سبيرانزا هيلث، وهو ممرض قانوني وأخصائي معتمد في العناية بالجروح في الأردن، بخبرة تمتد لنحو ${yrs} سنوات في القطاع الصحي تشمل العناية الحثيثة والعناية المتقدمة بالجروح والعلاج بالضغط السلبي. يركّز على الجروح التي لا تلتئم كما يُتوقع، وعلى تثقيف المرضى والأسر والكوادر الصحية بوضوح ووفق الدليل العلمي.`,
+    intro: `أسّس أيسر سبيرانزا هيلث، وهو أخصائي جروح معتمد من البورد الأمريكي في الأردن، بخبرة تمتد لنحو ${yrs} سنوات في القطاع الصحي تشمل العناية الحثيثة والعناية المتقدمة بالجروح والعلاج بالضغط السلبي. يركّز على الجروح التي لا تلتئم كما يُتوقع، وعلى تثقيف المرضى والأسر والكوادر الصحية بوضوح ووفق الدليل العلمي.`,
     focusH: 'مجالات الخبرة',
     scopeH: 'نطاق الممارسة',
-    scope: 'أيسر ممرض قانوني وأخصائي جروح معتمد، وليس طبيبًا. يقدّم التقييم التمريضي والعناية بالجرح والتثقيف، بينما يبقى التشخيص ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات.',
+    scope: 'أيسر أخصائي جروح معتمد من البورد الأمريكي، وليس طبيبًا. يقدّم تقييم الجرح والعناية به والتثقيف، بينما يبقى التشخيص ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات.',
     credH: 'المؤهلات والتحقق',
     th: ['المؤهل', 'الجهة المانحة', 'السنة'],
     cwsP: 'اعتماد CWS® تمنحه American Board of Wound Management للممارسين الصحيين المرخصين ذوي الخبرة السريرية المثبتة في العناية بالجروح (ثلاث سنوات على الأقل) بعد اجتياز اختبار مستقل، والبرنامج معتمد من NCCA.',
@@ -55,22 +55,22 @@ const copy = {
       { q: 'ما علاقة أيسر شواقفه بسبيرانزا هيلث؟', a: 'أيسر شواقفه هو مؤسس سبيرانزا هيلث (Speranza Health)، وهي منصة رقمية أردنية للعناية بالجروح تقدّم تثقيفًا موثوقًا للمرضى والأسر وتدريبًا للكوادر الصحية، وتعمل على إطلاق خدمة استشارات عن بعد بالتنسيق مع فريق طبي متعدد التخصصات. «سبيرانزا» كلمة إيطالية تعني «الأمل». <a href="/ar/">تعرّف على سبيرانزا هيلث</a>.' },
       { q: 'ماذا يعني اعتماد CWS®؟', a: 'CWS® اختصار Certified Wound Specialist، وهو اعتماد تمنحه American Board of Wound Management (ABWM) للممارسين الصحيين المرخصين بعد ثلاث سنوات على الأقل من الخبرة السريرية في العناية بالجروح واجتياز اختبار مستقل. البرنامج معتمد من NCCA، ويمكن التحقق منه في دليل ABWM الرسمي.' },
       { q: 'هل يعمل أيسر شواقفه في العناية بجروح القدم السكري؟', a: 'نعم، العناية بجروح القدم السكري من مجالات خبرته الأساسية، بالتنسيق مع الطبيب المعالج وجرّاح الأوعية الدموية وجرّاح العظام وأخصائي القدم وأخصائي الأمراض المعدية وأخصائي التغذية. أي جرح جديد في قدم مريض السكري يحتاج إلى مراجعة طبية في اليوم نفسه. اقرأ المزيد عن <a href="/ar/diabetic-foot-wounds/">العناية بجروح القدم السكري</a>.' },
-      { q: 'هل أيسر شواقفه طبيب؟', a: 'لا. أيسر ممرض قانوني وأخصائي معتمد في العناية بالجروح. التشخيص ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات.' },
+      { q: 'هل أيسر شواقفه طبيب؟', a: 'لا. أيسر أخصائي جروح معتمد من البورد الأمريكي. التشخيص ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات.' },
       { q: 'كيف أتواصل مع أيسر شواقفه، ومن أي مناطق؟', a: 'تُستقبل الاستفسارات المهنية وطلبات التدريب والتعاون من جميع أنحاء الأردن عبر واتساب أو البريد الإلكتروني من <a href="/ar/contact/">صفحة التواصل</a>. لا تُدار الحالات الطارئة عبر الموقع أو واتساب.' },
       { q: 'كيف يُكتب اسم أيسر شواقفه؟', a: 'بالعربية: أيسر شواقفه، وبالإنجليزية: Aissar Shawaqfeh كما في شهادة CWS®. قد يظهر الاسم أيضًا بتهجئات مثل آيسر شواقفة أو Ayser Shawaqfeh أو Aysar Shawagfeh، وجميعها للشخص نفسه.' },
     ],
   },
   en: {
-    title: 'Aissar Shawaqfeh, RN, CWS® | Founder of Speranza Health, Jordan',
-    description: 'Aissar Shawaqfeh, founder of Speranza Health, Registered Nurse and Certified Wound Specialist (CWS®) in Jordan: experience, interviews, credentials and verification.',
+    title: 'Aissar Shawaqfeh, CWS® | Founder of Speranza Health, Jordan',
+    description: 'Aissar Shawaqfeh, founder of Speranza Health, American Board–certified wound specialist (CWS®) in Jordan: experience, interviews, credentials and verification.',
     eyebrow: 'Founder',
     h1Name: 'Aissar Shawaqfeh',
-    h1Title: 'Registered Nurse and Certified Wound Specialist, CWS®',
+    h1Title: 'American Board–Certified Wound Specialist, CWS®',
     founderOf: 'Founder of Speranza Health',
-    intro: `Aissar founded Speranza Health. He is a Registered Nurse and Certified Wound Specialist in Jordan, with about ${yrs} years in healthcare spanning intensive care, advanced wound care and negative pressure wound therapy. His focus is wounds that are not healing as expected, and clear, evidence-based education for patients, families and healthcare teams.`,
+    intro: `Aissar founded Speranza Health. He is an American Board–certified wound specialist in Jordan, with about ${yrs} years in healthcare spanning intensive care, advanced wound care and negative pressure wound therapy. His focus is wounds that are not healing as expected, and clear, evidence-based education for patients, families and healthcare teams.`,
     focusH: 'Areas of experience',
     scopeH: 'Scope of practice',
-    scope: 'Aissar is a Registered Nurse and certified wound specialist, not a physician. He provides nursing assessment, wound care and education, while diagnosis, prescribing and surgical decisions remain the physician’s responsibility within the multidisciplinary team.',
+    scope: 'Aissar is an American Board–certified wound specialist, not a physician. He provides wound assessment, wound care and education, while diagnosis, prescribing and surgical decisions remain the physician’s responsibility within the multidisciplinary team.',
     credH: 'Credentials and verification',
     th: ['Qualification', 'Issued by', 'Year'],
     cwsP: 'The CWS® credential is awarded by the American Board of Wound Management to licensed clinicians with documented clinical wound-care experience (at least three years) who pass an independent exam. The programme is NCCA-accredited.',
@@ -88,7 +88,7 @@ const copy = {
       { q: 'How is Aissar Shawaqfeh connected to Speranza Health?', a: 'Aissar Shawaqfeh is the founder of Speranza Health, a Jordanian digital wound-care platform offering reliable education for patients and families and training for healthcare teams, and preparing to launch remote consultations coordinated with a multidisciplinary medical team. “Speranza” is Italian for “hope”. <a href="/en/">About Speranza Health</a>.' },
       { q: 'What does CWS® mean?', a: 'CWS® stands for Certified Wound Specialist, a credential awarded by the American Board of Wound Management (ABWM) to licensed clinicians with at least three years of clinical wound-care experience who pass an independent exam. The programme is NCCA-accredited, and holders can be checked in the official ABWM directory.' },
       { q: 'Does Aissar Shawaqfeh work with diabetic foot wounds?', a: 'Yes. Diabetic foot wound care is one of his main areas, coordinated with the treating physician, vascular and orthopaedic surgeons, podiatry, infectious diseases and clinical nutrition. Any new wound on the foot of a person with diabetes needs a medical review the same day. Read more about <a href="/en/diabetic-foot-wounds/">diabetic foot wound care</a>.' },
-      { q: 'Is Aissar Shawaqfeh a doctor?', a: 'No. Aissar is a Registered Nurse and Certified Wound Specialist. Diagnosis, prescribing and surgical decisions are the physician’s responsibility within the multidisciplinary team.' },
+      { q: 'Is Aissar Shawaqfeh a doctor?', a: 'No. Aissar is an American Board–certified wound specialist. Diagnosis, prescribing and surgical decisions are the physician’s responsibility within the multidisciplinary team.' },
       { q: 'How can I contact Aissar Shawaqfeh, and from where?', a: 'Professional enquiries, training requests and collaboration are welcome from anywhere in Jordan, by WhatsApp or email via the <a href="/en/contact/">contact page</a>. Emergencies are not handled through the website or WhatsApp.' },
       { q: 'How is the name written?', a: 'In Arabic: أيسر شواقفه. In English: Aissar Shawaqfeh, as on the CWS® certificate. The name may also appear as آيسر شواقفة, Ayser Shawaqfeh or Aysar Shawagfeh; all refer to the same person.' },
     ],
@@ -141,7 +141,6 @@ const ref = { lang, page: 'about', placement: 'hero' };
           {credentials.map((c) => (
             <tr><td data-label={copy.th[0]}><strong>{c.name[lang]}</strong></td><td data-label={copy.th[1]}>{c.issuer[lang]}</td><td data-label={copy.th[2]}>{c.year}</td></tr>
           ))}
-          <tr><td data-label={copy.th[0]}><strong>{nursingLicence.status[lang]}</strong></td><td data-label={copy.th[1]}>{nursingLicence.body[lang]}</td><td data-label={copy.th[2]}>—</td></tr>
         </tbody>
       </table>
       <div class="prose">
@@ -159,7 +158,7 @@ const ref = { lang, page: 'about', placement: 'hero' };
           <li>
             <article class="media-card">
               <p class="media-meta"><span class="media-kind">{copy.kind[m.kind]}</span><span>{m.outlet[lang]}</span>{m.date && <time datetime={m.date}>{formatDate(m.date, lang)}</time>}</p>
-              <a href={m.url} rel="noopener" lang={lang === 'en' && m.kind === 'news' ? 'en' : undefined}>{m.headline[lang]}</a>
+              <a href={m.url} rel="noopener" lang={lang === 'en' && m.kind === 'news' ? 'en' : undefined}>{(m.label ?? m.headline)[lang]}</a>
             </article>
           </li>
         ))}

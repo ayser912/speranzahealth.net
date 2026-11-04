@@ -68,7 +68,7 @@ const page: ClinicalPageData = {
             '<strong>ضبط سكر الدم</strong> بالتنسيق مع الطبيب المعالج.',
           ],
         },
-        after: ['يشارك الممرض المتخصص في التقييم والعناية بالجرح وتثقيف المريض، ضمن خطة الطبيب والفريق متعدد التخصصات.'],
+        after: ['يشارك أخصائي الجروح في التقييم والعناية بالجرح وتثقيف المريض، ضمن خطة الطبيب والفريق متعدد التخصصات.'],
       },
       {
         id: 'after-healing', h: 'بعد التئام الجرح',
@@ -156,7 +156,7 @@ const page: ClinicalPageData = {
             '<strong>Blood glucose control</strong>, coordinated with the treating doctor.',
           ],
         },
-        after: ['The specialist nurse contributes assessment, wound care and patient education within the plan set by the physician and the multidisciplinary team.'],
+        after: ['The wound specialist contributes assessment, wound care and patient education within the plan set by the physician and the multidisciplinary team.'],
       },
       {
         id: 'after-healing', h: 'After the wound heals',
