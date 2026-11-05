@@ -34,7 +34,7 @@ Do **not** choose Doctor, Physician or any physician specialty.
 
 ## 4. Description (Arabic, 750 characters max)
 
-> أيسر شواقفه ممرض قانوني وأخصائي معتمد في العناية بالجروح (CWS®) من American Board of Wound Management. يقدّم العناية بالجروح في الأردن بالتنسيق مع فريق متعدد التخصصات: الجروح المزمنة، قرح الضغط، جروح القدم السكري، الجروح الجراحية، ومتابعة العلاج بالضغط السلبي NPWT. يركز على التقييم المبني على الدليل وتعليم المريض والأسرة. يقدّم أيضًا تدريبًا للممرضين ومقدمي الرعاية. للحالات الطارئة يرجى التوجه إلى أقرب قسم طوارئ. Registered Nurse and Certified Wound Specialist providing wound care across Jordan with a multidisciplinary team.
+> أيسر شواقفه أخصائي جروح معتمد من البورد الأمريكي (CWS®) من American Board of Wound Management. يقدّم العناية بالجروح في الأردن بالتنسيق مع فريق متعدد التخصصات: الجروح المزمنة، قرح الضغط، جروح القدم السكري، الجروح الجراحية، ومتابعة العلاج بالضغط السلبي NPWT. يركز على التقييم المبني على الدليل وتعليم المريض والأسرة. يقدّم أيضًا تدريبًا للممرضين ومقدمي الرعاية. للحالات الطارئة يرجى التوجه إلى أقرب قسم طوارئ. American Board–Certified Wound Specialist (CWS®) providing wound care across Jordan with a multidisciplinary team.
 
 ## 5. Other fields
 

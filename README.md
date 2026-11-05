@@ -1,10 +1,10 @@
 # Speranza Health — speranzahealth.net
 
-Bilingual (Arabic-first, RTL / English, LTR) static website for **Speranza Health (سبيرانزا هيلث)**, the wound-care platform founded by **Aissar Shawaqfeh (أيسر شواقفه), RN, CWS®**, built with [Astro](https://astro.build). It outputs plain HTML/CSS with almost no JavaScript, so it is fast, cheap to host and easy for Google to read.
+Bilingual (Arabic-first, RTL / English, LTR) static website for **Speranza Health (سبيرانزا هيلث)**, the wound-care platform founded by **Aissar Shawaqfeh (أيسر شواقفه), CWS®** (American Board–certified wound specialist), built with [Astro](https://astro.build). It outputs plain HTML/CSS with almost no JavaScript, so it is fast, cheap to host and easy for Google to read.
 
 ## Quick start
 
-Requirements: Node.js 20 or newer.
+Requirements: Node.js 20 or newer. Working with Claude Code? Project rules and context are in `CLAUDE.md`.
 
 ```bash
 npm install          # once
