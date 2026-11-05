@@ -8,8 +8,9 @@
  */
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const dist = new URL('../dist/', import.meta.url).pathname;
+const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 async function* walk(d) { for (const e of await readdir(d, { withFileTypes: true })) { const p = join(d, e.name); if (e.isDirectory()) yield* walk(p); else yield p; } }
 const FORBIDDEN = ['Physician', 'MedicalBusiness', 'LocalBusiness', 'MedicalClinic', 'Hospital', 'Dentist'];
 let errors = 0;
@@ -18,7 +19,7 @@ const titles = new Map(), descs = new Map(), canon = new Map(), alternates = new
 
 for await (const file of walk(dist)) {
   if (!file.endsWith('.html')) continue;
-  const rel = file.replace(dist, '/').replace(/index\.html$/, '');
+  const rel = file.replace(dist, '/').replaceAll('\\', '/').replace(/index\.html$/, '');
   const html = await readFile(file, 'utf8');
   if (/http-equiv="refresh"/.test(html)) continue; // redirect stubs
   if (/^google-site-verification:/.test(html)) continue; // Search Console verification file (must stay as Google wrote it)

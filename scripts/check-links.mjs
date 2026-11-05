@@ -1,8 +1,9 @@
 /** Verifies every internal href/src in dist/ resolves to a built file, and every #fragment exists. */
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const dist = new URL('../dist/', import.meta.url).pathname;
+const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 async function* walk(d) { for (const e of await readdir(d, { withFileTypes: true })) { const p = join(d, e.name); if (e.isDirectory()) yield* walk(p); else yield p; } }
 const exists = async (p) => { try { return (await stat(p)).isFile(); } catch { return false; } };
 const resolve = (urlPath) => { const clean = decodeURI(urlPath.split('#')[0].split('?')[0]); return clean.endsWith('/') ? join(dist, clean, 'index.html') : join(dist, clean); };
