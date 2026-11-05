@@ -21,6 +21,18 @@ const GALLERY_URL = 'https://cases.speranzahealth.net';
 /** Requests are handled by the gallery app (cases.speranzahealth.net) and appear in its admin under «الطلبات». */
 const REQUEST_URL = `${GALLERY_URL}/request?lang=${Astro.params.lang}`;
 const lang = Astro.params.lang as Lang;
+/** Example photos shown on this public page (supplied by Aissar, 5 Nov 2026): metadata stripped, neck photo cropped
+ * below the chin, watermarked. Labels describe the location only; the clinical type is Aissar's to confirm. */
+const EXAMPLES = [
+  { f: 'case-01', w: 339, ar: 'جرح واسع في باطن القدم', en: 'Extensive wound on the sole of the foot' },
+  { f: 'case-02', w: 939, ar: 'جروح جراحية في الرقبة', en: 'Surgical wounds of the neck' },
+  { f: 'case-03', w: 426, ar: 'جرح في ظهر القدم مع نسيج ميت', en: 'Wound on the top of the foot with dead tissue' },
+  { f: 'case-04', w: 395, ar: 'جرح في مقدمة القدم', en: 'Forefoot wound' },
+  { f: 'case-05', w: 607, ar: 'قرحة في باطن القدم: قبل وبعد', en: 'Ulcer on the sole: before and after' },
+  { f: 'case-06', w: 1012, ar: 'جرح في القدم: قبل وبعد', en: 'Foot wound: before and after' },
+  { f: 'case-07', w: 641, ar: 'جرح بين أصابع القدم: قبل وبعد', en: 'Wound between the toes: before and after' },
+  { f: 'case-08', w: 623, ar: 'جروح عميقة في الركبة', en: 'Deep knee wounds' },
+];
 const s = t(lang);
 const ref = { lang, page: 'journeys', placement: 'request' };
 
@@ -69,6 +81,13 @@ const copy = {
     fSend: 'إرسال الطلب',
     fPrivacy: 'تُحذف بيانات الطلب بعد معالجته، أو خلال 30 يومًا كحد أقصى.',
     soonNote: 'نعمل حاليًا على تجهيز الحالات الأولى وتوثيقها. يمكنك طلب الرمز الآن، وسنرسله لك عند افتتاح المعرض.',
+    exH: 'أمثلة على الجروح التي يعرضها المعرض',
+    exP: 'نماذج من أنواع الجروح التي يتابع المعرض مراحل التئامها بالتفصيل. النتائج تختلف من حالة لأخرى.',
+    exWarn: 'صور طبية حقيقية لجروح مفتوحة',
+    exShow: 'عرض الصور',
+    exPause: 'إيقاف الحركة',
+    exPlay: 'تشغيل الحركة',
+    exAlt: 'صورة طبية:',
   },
   en: {
     title: 'Healing Journeys Gallery | Speranza Health',
@@ -114,6 +133,13 @@ const copy = {
     fSend: 'Send request',
     fPrivacy: 'Request details are deleted once handled, or within 30 days at the latest.',
     soonNote: 'We are preparing and documenting the first cases. You can request a code now and we will send it when the gallery opens.',
+    exH: 'Examples of the wounds in the gallery',
+    exP: 'Samples of the wound types whose healing stages the gallery follows in detail. Results vary from case to case.',
+    exWarn: 'Real medical photos of open wounds',
+    exShow: 'Show photos',
+    exPause: 'Pause motion',
+    exPlay: 'Play motion',
+    exAlt: 'Medical photo:',
   },
 }[lang];
 
@@ -132,6 +158,33 @@ const schema = pageGraph({ lang, key: 'journeys', type: 'WebPage', title: copy.t
         {GALLERY_OPEN && <a class="btn btn-secondary" href={GALLERY_URL} rel="noopener">{copy.open}</a>}
       </div>
     </header>
+
+    <section class="cases is-veiled" aria-labelledby="cases-h" data-cases>
+      <div class="cases-head prose">
+        <h2 id="cases-h" class="flush">{copy.exH}</h2>
+        <p>{copy.exP}</p>
+      </div>
+      <div class="cases-frame">
+        <div class="cases-viewport" dir="ltr">
+          <ul class="cases-track" role="list">
+            {[0, 1].map((dup) => EXAMPLES.map((e) => (
+              <li class="case-card" aria-hidden={dup ? 'true' : undefined}>
+                <figure>
+                  <img src={`/images/cases/${e.f}-sm.webp`} srcset={`/images/cases/${e.f}-sm.webp 1x, /images/cases/${e.f}.webp 2x`}
+                    width={Math.round(e.w / 2)} height={280} loading="lazy" decoding="async" alt={dup ? '' : `${copy.exAlt} ${e[lang]}`} />
+                  <figcaption dir={lang === 'ar' ? 'rtl' : 'ltr'}>{e[lang]}</figcaption>
+                </figure>
+              </li>
+            )))}
+          </ul>
+        </div>
+        <div class="cases-veil js-only">
+          <p>{copy.exWarn}</p>
+          <button type="button" class="btn btn-primary" data-cases-show>{copy.exShow}</button>
+        </div>
+      </div>
+      <p class="cases-controls js-only"><button type="button" class="link-btn" data-cases-toggle aria-pressed="false" data-pause={copy.exPause} data-play={copy.exPlay}>{copy.exPause}</button></p>
+    </section>
 
     <section class="hj-steps" aria-labelledby="steps-h">
       <h2 id="steps-h">{copy.stepsH}</h2>
@@ -192,3 +245,18 @@ const schema = pageGraph({ lang, key: 'journeys', type: 'WebPage', title: copy.t
     </div>
   </div>
 </BaseLayout>
+
+<script is:inline>
+  (function () {
+    var root = document.querySelector('[data-cases]');
+    if (!root) return;
+    var show = root.querySelector('[data-cases-show]');
+    var toggle = root.querySelector('[data-cases-toggle]');
+    show.addEventListener('click', function () { root.classList.remove('is-veiled'); });
+    toggle.addEventListener('click', function () {
+      var paused = root.classList.toggle('is-paused');
+      toggle.setAttribute('aria-pressed', paused ? 'true' : 'false');
+      toggle.textContent = paused ? toggle.getAttribute('data-play') : toggle.getAttribute('data-pause');
+    });
+  })();
+</script>
