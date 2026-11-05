@@ -85,8 +85,6 @@ const copy = {
     exP: 'نماذج من أنواع الجروح التي يتابع المعرض مراحل التئامها بالتفصيل. النتائج تختلف من حالة لأخرى.',
     exWarn: 'صور طبية حقيقية لجروح مفتوحة',
     exShow: 'عرض الصور',
-    exPause: 'إيقاف الحركة',
-    exPlay: 'تشغيل الحركة',
     exAlt: 'صورة طبية:',
   },
   en: {
@@ -137,8 +135,6 @@ const copy = {
     exP: 'Samples of the wound types whose healing stages the gallery follows in detail. Results vary from case to case.',
     exWarn: 'Real medical photos of open wounds',
     exShow: 'Show photos',
-    exPause: 'Pause motion',
-    exPlay: 'Play motion',
     exAlt: 'Medical photo:',
   },
 }[lang];
@@ -183,7 +179,6 @@ const schema = pageGraph({ lang, key: 'journeys', type: 'WebPage', title: copy.t
           <button type="button" class="btn btn-primary" data-cases-show>{copy.exShow}</button>
         </div>
       </div>
-      <p class="cases-controls js-only"><button type="button" class="link-btn" data-cases-toggle aria-pressed="false" data-pause={copy.exPause} data-play={copy.exPlay}>{copy.exPause}</button></p>
     </section>
 
     <section class="hj-steps" aria-labelledby="steps-h">
@@ -251,12 +246,6 @@ const schema = pageGraph({ lang, key: 'journeys', type: 'WebPage', title: copy.t
     var root = document.querySelector('[data-cases]');
     if (!root) return;
     var show = root.querySelector('[data-cases-show]');
-    var toggle = root.querySelector('[data-cases-toggle]');
     show.addEventListener('click', function () { root.classList.remove('is-veiled'); });
-    toggle.addEventListener('click', function () {
-      var paused = root.classList.toggle('is-paused');
-      toggle.setAttribute('aria-pressed', paused ? 'true' : 'false');
-      toggle.textContent = paused ? toggle.getAttribute('data-play') : toggle.getAttribute('data-pause');
-    });
   })();
 </script>
