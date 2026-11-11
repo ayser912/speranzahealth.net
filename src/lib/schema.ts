@@ -35,7 +35,7 @@ export function personNode(lang: Lang) {
     email: `mailto:${contact.email}`,
     knowsLanguage: ['ar', 'en'],
     address: { '@type': 'PostalAddress', addressCountry: person.countryCode },
-    areaServed: { '@type': 'Country', name: 'Jordan' },
+    areaServed: [{ '@type': 'Place', name: 'Middle East' }, { '@type': 'Place', name: 'Worldwide' }],
     alumniOf: { '@type': 'CollegeOrUniversity', name: 'Jordan University of Science and Technology', url: 'https://www.just.edu.jo/' },
     hasCredential: credentials
       .filter((c) => c.clinical)
@@ -72,7 +72,7 @@ export function faqNode(lang: Lang, pagePath: string, items: Array<{ q: string; 
     '@type': 'FAQPage',
     '@id': `${url}#faq`,
     url: `${url}#faq`,
-    inLanguage: lang === 'ar' ? 'ar-JO' : 'en-JO',
+    inLanguage: lang === 'ar' ? 'ar' : 'en',
     isPartOf: { '@id': `${url}#webpage` },
     author: { '@id': ids.person() },
     mainEntity: items.map((it) => ({ '@type': 'Question', name: it.q, acceptedAnswer: { '@type': 'Answer', text: plain(it.a) } })),
@@ -89,7 +89,7 @@ export function websiteNode(lang: Lang) {
     alternateName: [site.siteName.ar, 'Speranza', 'سبيرانزا'],
     description: brand.description[lang],
     sameAs: profiles.filter((p) => p.verified && p.owner === 'brand').map((p) => p.url),
-    inLanguage: ['ar-JO', 'en-JO'],
+    inLanguage: ['ar', 'en'],
     publisher: { '@id': flags.organizationConfirmed ? ids.org() : ids.person() },
   };
 }
@@ -151,7 +151,7 @@ export function docGraph(o: DocGraphOpts) {
     url,
     name: o.title,
     description: o.description,
-    inLanguage: o.lang === 'ar' ? 'ar-JO' : 'en-JO',
+    inLanguage: o.lang === 'ar' ? 'ar' : 'en',
     isPartOf: { '@id': ids.website() },
     author: { '@id': ids.person() },
   };
@@ -189,7 +189,7 @@ export function articleNode(o: {
     '@id': `${o.url}#article`,
     headline: o.headline,
     description: o.description,
-    inLanguage: o.lang === 'ar' ? 'ar-JO' : 'en-JO',
+    inLanguage: o.lang === 'ar' ? 'ar' : 'en',
     datePublished: dt(o.datePublished),
     dateModified: dt(o.dateModified),
     author: { '@id': ids.person() },
@@ -211,7 +211,7 @@ export function videoNode(lang: Lang, pagePath: string, v: Video) {
     duration: v.duration,
     embedUrl: `https://www.youtube-nocookie.com/embed/${v.youtubeId}`,
     contentUrl: `https://www.youtube.com/watch?v=${v.youtubeId}`,
-    inLanguage: lang === 'ar' ? 'ar-JO' : 'en-JO',
+    inLanguage: lang === 'ar' ? 'ar' : 'en',
     author: { '@id': ids.person() },
   };
 }

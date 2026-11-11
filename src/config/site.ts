@@ -26,20 +26,21 @@ export const site = {
   },
   domain: 'speranzahealth.net',
   defaultLang: 'ar' as const,
-  locales: { ar: 'ar-JO', en: 'en-JO' },
-  ogLocale: { ar: 'ar_JO', en: 'en_JO' },
+  /** Global audience (Aissar, 11 Nov 2026): plain language codes, no country. */
+  locales: { ar: 'ar', en: 'en' },
+  ogLocale: { ar: 'ar_AR', en: 'en_US' },
 };
 
 /**
- * What Speranza Health is: a digital platform, not a registered company yet (confirmed by Aissar 11 Oct 2026).
+ * What Speranza Health is: an Arabic digital platform for everyone, worldwide, with a focus on the Middle East
+ * (Aissar, 11 Nov 2026: never describe it as Jordanian; remote consultation is live).
  * Reused by the homepage, the domain root, schema and llms.txt.
- * When remote consultation launches (flags.remoteConsultationLive), change "is preparing to launch / تعمل على إطلاق" here.
  */
 export const brand = {
-  meaning: { ar: 'كلمة «سبيرانزا» (Speranza) إيطالية وتعني «الأمل»', en: '“Speranza” is the Italian word for “hope”' },
+  meaning: { ar: 'كلمة «سبيرانزا» (Speranza) تعني «الأمل»', en: '“Speranza” means “hope”' },
   description: {
-    ar: 'سبيرانزا هيلث (Speranza Health) منصة رقمية أردنية للعناية بالجروح أسسها أيسر شواقفه، أخصائي جروح معتمد من البورد الأمريكي CWS®. تقدّم تثقيفًا موثوقًا للمرضى والأسر وتدريبًا للكوادر الصحية في جميع أنحاء الأردن، وتعمل على إطلاق خدمة استشارات عن بعد بالتنسيق مع فريق طبي متعدد التخصصات.',
-    en: 'Speranza Health is a Jordanian digital wound-care platform founded by Aissar Shawaqfeh, an American Board–certified wound specialist (CWS®). It offers reliable education for patients and families and training for healthcare teams across Jordan, and is preparing to launch remote consultations coordinated with a multidisciplinary medical team.',
+    ar: 'سبيرانزا هيلث (Speranza Health) منصة رقمية عربية للعناية بالجروح، موجّهة لكل الناس حول العالم مع تركيز على الشرق الأوسط، أسسها أيسر شواقفه، أخصائي جروح معتمد من البورد الأمريكي CWS®. تقدّم تثقيفًا موثوقًا للمرضى والأسر، وتدريبًا للكوادر الصحية، واستشارات عن بعد مع المختص المعني من فريق طبي متعدد التخصصات.',
+    en: 'Speranza Health is an Arabic digital wound-care platform for people worldwide, with a focus on the Middle East, founded by Aissar Shawaqfeh, an American Board–certified wound specialist (CWS®). It offers reliable education for patients and families, training for healthcare teams, and remote consultations with the relevant specialist from a multidisciplinary medical team.',
   },
 };
 
@@ -60,7 +61,7 @@ export const person = {
   postNominals: 'CWS®',
   title: {
     ar: 'أخصائي جروح معتمد من البورد الأمريكي CWS®',
-    en: 'American Board–Certified Wound Specialist, CWS®, in Jordan',
+    en: 'American Board–Certified Wound Specialist, CWS®',
   },
   shortTitle: {
     ar: 'أخصائي جروح معتمد من البورد الأمريكي CWS®',
@@ -79,8 +80,8 @@ export const person = {
   photo: '/images/aissar-shawaqfeh-certified-wound-specialist-jordan' as string | null,
   /** One-paragraph factual summary, reused by schema description and llms.txt. Keep it free of superlatives. */
   bio: {
-    ar: `أيسر شواقفه (Aissar Shawaqfeh) أخصائي جروح معتمد من البورد الأمريكي CWS® في الأردن، بخبرة تمتد لنحو ${new Date().getFullYear() - 2017} سنوات في القطاع الصحي. يعمل في العناية بالجروح المزمنة وقرح الضغط وجروح القدم السكري والجروح الجراحية والعلاج بالضغط السلبي (VAC)، بالتنسيق مع فريق متعدد التخصصات، ويقدّم التثقيف والتدريب للمرضى والأسر والكوادر الصحية في جميع أنحاء الأردن.`,
-    en: `Aissar Shawaqfeh (أيسر شواقفه) is an American Board–certified wound specialist (CWS®) in Jordan with about ${new Date().getFullYear() - 2017} years in healthcare. He works in chronic wound care, pressure injuries, diabetic foot wounds, surgical wounds and negative pressure wound therapy (VAC), coordinated with a multidisciplinary team, and provides education and training for patients, families and healthcare teams across Jordan.`,
+    ar: `أيسر شواقفه (Aissar Shawaqfeh) أخصائي جروح معتمد من البورد الأمريكي CWS®، بخبرة تمتد لنحو ${new Date().getFullYear() - 2017} سنوات في القطاع الصحي. يعمل في العناية بالجروح المزمنة وقرح الضغط وجروح القدم السكري والجروح الجراحية والعلاج بالضغط السلبي (VAC)، بالتنسيق مع فريق متعدد التخصصات، ويقدّم التثقيف والتدريب للمرضى والأسر والكوادر الصحية حول العالم، مع تركيز على الشرق الأوسط.`,
+    en: `Aissar Shawaqfeh (أيسر شواقفه) is an American Board–certified wound specialist (CWS®) with about ${new Date().getFullYear() - 2017} years in healthcare. He works in chronic wound care, pressure injuries, diabetic foot wounds, surgical wounds and negative pressure wound therapy (VAC), coordinated with a multidisciplinary team, and provides education and training for patients, families and healthcare teams worldwide, with a focus on the Middle East.`,
   },
   knowsAbout: {
     en: [
@@ -150,8 +151,8 @@ export const contact = {
   phoneDisplay: '+962 79 883 9394',
   /** TODO: confirm public response hours, e.g. { ar: 'الأحد–الخميس، 9 صباحًا – 6 مساءً', en: 'Sun–Thu, 9 am – 6 pm' } (null = not shown) */
   hours: null as { ar: string; en: string } | null,
-  /** The website serves all of Jordan. */
-  serviceArea: { ar: 'جميع أنحاء الأردن', en: 'All of Jordan' },
+  /** Global platform with a focus on the Middle East (Aissar, 11 Nov 2026). */
+  serviceArea: { ar: 'حول العالم، مع تركيز على الشرق الأوسط', en: 'Worldwide, with a focus on the Middle East' },
 };
 
 /**
@@ -193,11 +194,13 @@ export const profiles = [
  *   still being formed, so the homepage shows the service as "coming soon" with "register interest").
  */
 export const flags = {
-  patientServicesConfirmed: false,
+  /** 11 Nov 2026: Aissar confirmed diagnosis/medical advice via remote consultation, home visit or clinic/centre appointment. */
+  patientServicesConfirmed: true,
   homeVisitsPage: false,
   organizationConfirmed: false,
   brandNeutralNote: true,
-  remoteConsultationLive: false,
+  /** Live since 11 Nov 2026 (Aissar). Online booking comes later; requests go through the contact page. */
+  remoteConsultationLive: true,
 };
 
 /**
@@ -212,6 +215,8 @@ export const team = [
   { id: 'plastic', ar: 'الجراحة التجميلية والترميمية', en: 'Plastic and reconstructive surgery' },
   { id: 'podiatry', ar: 'طب وجراحة القدم (Podiatry)', en: 'Podiatry' },
   { id: 'id', ar: 'الأمراض المعدية', en: 'Infectious diseases' },
+  { id: 'endocrine', ar: 'الغدد الصماء والسكري', en: 'Endocrinology and diabetes' },
+  { id: 'nephrology', ar: 'أمراض الكلى', en: 'Nephrology (kidney disease)' },
   { id: 'nutrition', ar: 'التغذية العلاجية', en: 'Clinical nutrition' },
   { id: 'other', ar: 'وغيرهم من الكوادر الصحية حسب حاجة كل حالة', en: 'Other healthcare professionals as each case requires' },
 ] as const;
@@ -249,8 +254,8 @@ export const featuredVideo = {
   inLanguage: 'ar',
   outlet: { ar: 'راديو البلد 92.5 · برنامج «طلة صبح»', en: 'Radio Al-Balad 92.5 · “Tallet Sobeh” morning show' },
   title: {
-    ar: 'أيسر شواقفه على راديو البلد: العناية بالجروح في الأردن',
-    en: 'Aissar Shawaqfeh on Radio Al-Balad: wound care in Jordan',
+    ar: 'أيسر شواقفه على راديو البلد: العناية المتخصصة بالجروح',
+    en: 'Aissar Shawaqfeh on Radio Al-Balad: specialised wound care',
   },
   description: {
     ar: 'حوار عن اعتماد أخصائي الجروح CWS®، وحاجة الأردن إلى تخصصات دقيقة وتوثيق للخبرة في رعاية الجروح، ومخاطر الخلطات الشعبية على الجروح.',

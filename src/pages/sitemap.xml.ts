@@ -3,7 +3,7 @@ import { pages, langs, path, type PageKey } from '../lib/routes';
 import { articles, articlePath } from '../content/articles/index';
 import type { Lang } from '../config/site';
 
-/** XML sitemap with ar-JO / en-JO alternates for every built page and article. */
+/** XML sitemap with ar / en alternates for every built page and article. */
 export const GET: APIRoute = ({ site }) => {
   const base = (site?.toString() ?? 'https://speranzahealth.net/').replace(/\/$/, '');
   const today = new Date().toISOString().slice(0, 10);
@@ -15,7 +15,7 @@ export const GET: APIRoute = ({ site }) => {
   const urls = entries.flatMap((e) =>
     langs.map((l) => {
       const alts = langs
-        .map((a) => `    <xhtml:link rel="alternate" hreflang="${a === 'ar' ? 'ar-JO' : 'en-JO'}" href="${base}${e.paths[a]}"/>`)
+        .map((a) => `    <xhtml:link rel="alternate" hreflang="${a === 'ar' ? 'ar' : 'en'}" href="${base}${e.paths[a]}"/>`)
         .concat(`    <xhtml:link rel="alternate" hreflang="x-default" href="${base}${e.paths.ar}"/>`)
         .join('\n');
       return `  <url>\n    <loc>${base}${e.paths[l]}</loc>\n    <lastmod>${e.lastmod}</lastmod>\n    <priority>${e.priority.toFixed(1)}</priority>\n${alts}\n  </url>`;

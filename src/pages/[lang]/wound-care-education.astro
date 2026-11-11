@@ -3,7 +3,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Disclosure from '../../components/Disclosure.astro';
 import ArticleCards from '../../components/ArticleCards.astro';
-import VideoSection from '../../components/VideoSection.astro';
 import Illustration from '../../components/Illustration.astro';
 import { profiles, type Lang } from '../../config/site';
 import { path, langs, credentialsHref } from '../../lib/routes';
@@ -15,15 +14,15 @@ import { articles } from '../../content/articles/index';
 export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
 const lang = Astro.params.lang as Lang;
 const s = t(lang);
-const updated = '2026-10-06';
+const updated = '2026-11-11';
 const youtube = profiles.find((p) => p.id === 'youtube');
 
 const copy = {
   ar: {
     title: 'التعليم والتدريب في العناية بالجروح | أيسر شواقفه CWS®',
-    description: 'محاضرات وورش عمل تطبيقية للممرضين ومقدمي الرعاية والمنشآت الصحية في تقييم الجروح واختيار الضمادات وقرح الضغط والقدم السكري والعلاج بالضغط السلبي NPWT.',
+    description: 'محاضرات وورش عمل للأطباء والممرضين والصيادلة وأخصائيي العلاج الطبيعي حول العالم في تقييم الجروح واختيار الضمادات وقرح الضغط والقدم السكري والعلاج بالضغط السلبي.',
     h1: 'التعليم والتدريب في العناية بالجروح',
-    lead: 'محاضرات وورش عمل تطبيقية في جميع أنحاء الأردن، تساعد الفرق الصحية ومقدمي الرعاية على العناية بالجروح بثقة وأمان ووفق الدليل العلمي.',
+    lead: 'محاضرات وورش عمل تطبيقية للكوادر الصحية في أي مكان في العالم، مع تركيز على الشرق الأوسط، تساعد الأطباء والممرضين والصيادلة وأخصائيي العلاج الطبيعي ومقدمي الرعاية على العناية بالجروح بثقة وأمان ووفق الدليل العلمي.',
     topicsH: 'موضوعات التدريب',
     topics: [
       ['تقييم الجروح وتوثيقها', 'التاريخ الصحي، والقياس، ووصف الأنسجة والإفرازات والحواف، والتوثيق الذي يسمح بمتابعة التقدم.'],
@@ -33,15 +32,17 @@ const copy = {
       ['القدم السكري', 'فحص القدم، وعلامات الخطر، وتخفيف الضغط، ومتى تكون الإحالة عاجلة.'],
       ['أساسيات العلاج بالضغط السلبي NPWT', 'دواعي الاستعمال وموانعه، وتطبيق الضماد وإحكام إغلاقه، والتعامل مع الإنذارات.'],
       ['التعرّف على عدوى الجروح', 'العلامات الموضعية والعامة، ومتى يجب إبلاغ الطبيب.'],
+      ['التغذية العلاجية والفحوصات المخبرية', 'دور التغذية والفيتامينات في الالتئام، وقراءة الفحوصات المخبرية والصور الشعاعية المرتبطة بالجروح.'],
+      ['الضمادات الضاغطة والقرح الوريدية', 'أنواع الرباط الضاغط والجوارب الضاغطة، ومتى تُستخدم ومتى تكون خطرة.'],
       ['تثقيف المرضى والأسر', 'كيف تُشرح خطة العناية المنزلية بوضوح وأمان.'],
     ],
     audienceH: 'لمن هذا التدريب؟',
-    audience: ['الممرضون في المستشفيات والمراكز الصحية وخدمات الرعاية المنزلية.', 'طلبة التمريض.', 'مقدمو الرعاية وأفراد الأسرة الذين يعتنون بمريض في المنزل.', 'المنشآت الصحية التي ترغب في تدريب فرقها.'],
+    audience: ['الأطباء من مختلف التخصصات.', 'الممرضون في المستشفيات والمراكز الصحية وخدمات الرعاية المنزلية.', 'الصيادلة.', 'أخصائيو العلاج الطبيعي.', 'طلبة المهن الصحية.', 'مقدمو الرعاية وأفراد الأسرة الذين يعتنون بمريض في المنزل.', 'المنشآت الصحية التي ترغب في تدريب فرقها، في أي بلد.'],
     formatsH: 'أشكال التدريب',
-    formats: ['محاضرة أو عرض علمي.', 'ورشة عمل تطبيقية.', 'تدريب داخل المنشأة الصحية.', 'برنامج يُصمَّم حسب احتياج الفريق.'],
+    formats: ['محاضرة أو عرض علمي.', 'ورشة عمل تطبيقية.', 'تدريب داخل المنشأة الصحية.', 'تدريب عن بعد (أونلاين).', 'برنامج يُصمَّم حسب احتياج الفريق.'],
     formatsNote: 'يتم الاتفاق على المحتوى والمدة واللغة (العربية أو الإنجليزية) مسبقًا مع الجهة الطالبة.',
     approachH: 'منهج التدريب',
-    approach: 'يعتمد التدريب على الإرشادات الدولية في العناية بالجروح، ويراعي نطاق ممارسة التمريض في الأردن ومعايير وكفاءات تمريض العناية بالجروح الصادرة عن مجلس التمريض الأردني. يركّز على الحالات العملية والمهارات التي يحتاجها الممرض في عمله اليومي.',
+    approach: 'يعتمد التدريب على الإرشادات الدولية في العناية بالجروح، ويراعي نطاق ممارسة كل مهنة والأنظمة المحلية في البلد الذي يُقدَّم فيه. يركّز على الحالات العملية والمهارات التي يحتاجها كل عضو في الفريق الصحي في عمله اليومي.',
     ctaH: 'اطلب تدريبًا لفريقك',
     ctaP: 'أرسل استفسارًا قصيرًا يتضمن نوع الجهة وعدد المشاركين والموضوعات التي تهمك، وسيتم التواصل معك لترتيب التفاصيل.',
     cta: 'اطلب تدريبًا',
@@ -51,9 +52,9 @@ const copy = {
   },
   en: {
     title: 'Wound-Care Education and Training | Aissar Shawaqfeh, CWS®',
-    description: 'Lectures and hands-on workshops for nurses, caregivers and healthcare facilities on wound assessment, dressing selection, pressure injuries, diabetic foot and NPWT.',
+    description: 'Lectures and workshops for physicians, nurses, pharmacists and physiotherapists worldwide on wound assessment, dressings, pressure injuries, diabetic foot and NPWT.',
     h1: 'Wound-care education and training',
-    lead: 'Lectures and hands-on workshops across Jordan that help healthcare teams and caregivers provide wound care confidently, safely and in line with the evidence.',
+    lead: 'Lectures and hands-on workshops for healthcare teams anywhere in the world, with a focus on the Middle East, helping physicians, nurses, pharmacists, physiotherapists and caregivers provide wound care confidently, safely and in line with the evidence.',
     topicsH: 'Training topics',
     topics: [
       ['Wound assessment and documentation', 'Health history, measurement, describing tissue, exudate and edges, and documentation that makes progress visible.'],
@@ -63,15 +64,17 @@ const copy = {
       ['The diabetic foot', 'Foot checks, warning signs, offloading and when referral is urgent.'],
       ['Fundamentals of negative pressure wound therapy', 'Indications and contraindications, applying and sealing the dressing, and managing alarms.'],
       ['Recognising wound infection', 'Local and systemic signs, and when to inform the physician.'],
+      ['Clinical nutrition and laboratory tests', 'The role of nutrition and vitamins in healing, and reading the laboratory tests and imaging relevant to wounds.'],
+      ['Compression bandaging and venous ulcers', 'Types of compression bandage and stocking, when they are used and when they are dangerous.'],
       ['Educating patients and families', 'Explaining a home-care plan clearly and safely.'],
     ],
     audienceH: 'Who is it for?',
-    audience: ['Nurses in hospitals, healthcare centres and home-care services.', 'Nursing students.', 'Caregivers and family members looking after a patient at home.', 'Healthcare facilities that want to train their teams.'],
+    audience: ['Physicians from different specialties.', 'Nurses in hospitals, healthcare centres and home-care services.', 'Pharmacists.', 'Physiotherapists.', 'Students of the health professions.', 'Caregivers and family members looking after a patient at home.', 'Healthcare facilities in any country that want to train their teams.'],
     formatsH: 'Formats',
-    formats: ['A lecture or scientific talk.', 'A hands-on workshop.', 'On-site training at a healthcare facility.', 'A programme tailored to a team’s needs.'],
+    formats: ['A lecture or scientific talk.', 'A hands-on workshop.', 'On-site training at a healthcare facility.', 'Online (remote) training.', 'A programme tailored to a team’s needs.'],
     formatsNote: 'Content, duration and language (Arabic or English) are agreed in advance with the requesting organisation.',
     approachH: 'Approach',
-    approach: 'Training is based on international wound-care guidelines and respects the nursing scope of practice in Jordan, including the wound-care nursing standards and competencies published by the Jordanian Nursing Council. It focuses on practical cases and the skills nurses need in daily work.',
+    approach: 'Training is based on international wound-care guidelines and respects each profession’s scope of practice and the local regulations of the country where it is delivered. It focuses on practical cases and the skills every member of the healthcare team needs in daily work.',
     ctaH: 'Request training for your team',
     ctaP: 'Send a short enquiry with the type of organisation, the number of participants and the topics you are interested in, and you will be contacted to arrange the details.',
     cta: 'Request training',
@@ -136,7 +139,6 @@ const schema = pageGraph({ lang, key: 'education', type: 'WebPage', title: copy.
       </section>
     )}
 
-    <VideoSection lang={lang} page="education" />
 
     <Disclosure lang={lang} />
   </div>

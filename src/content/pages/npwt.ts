@@ -8,7 +8,7 @@ const page: ClinicalPageData = {
   refs: [R.ewmaNpwt, R.timers, R.iwii, R.niceSsi],
   related: ['chronic', 'surgical', 'diabeticFoot', 'pressure', 'dressings', 'education'],
   ar: {
-    title: 'العلاج بالضغط السلبي للجروح NPWT وجهاز VAC في الأردن',
+    title: 'العلاج بالضغط السلبي للجروح NPWT وجهاز VAC: دليل شامل',
     description: 'ما هو العلاج بالضغط السلبي للجروح (NPWT / VAC)، وكيف يعمل، ولأي الجروح قد يُستخدم، وما الذي تتطلبه متابعته بأمان؟ دليل تثقيفي من أخصائي جروح معتمد CWS®.',
     h1: 'العلاج بالضغط السلبي للجروح (NPWT / VAC)',
     lead: 'العلاج بالضغط السلبي تقنية تستخدم ضمادًا محكم الإغلاق متصلًا بجهاز شفط لطيف ومتواصل. قد يساعد في العناية ببعض الجروح المعقدة، لكنه يحتاج إلى اختيار مناسب للحالة ومتابعة دقيقة.',
@@ -107,7 +107,7 @@ const page: ClinicalPageData = {
     ],
   },
   en: {
-    title: 'Negative Pressure Wound Therapy (NPWT) and VAC in Jordan',
+    title: 'Negative Pressure Wound Therapy (NPWT) and VAC: A Guide',
     description: 'What negative pressure wound therapy (NPWT / VAC) is, how it works, which wounds it may suit, and what safe follow-up requires. From a Certified Wound Specialist.',
     h1: 'Negative pressure wound therapy (NPWT / VAC)',
     lead: 'Negative pressure wound therapy uses a sealed dressing connected to a device that applies gentle, continuous suction. It can help with some complex wounds, but it needs careful patient selection and close follow-up.',

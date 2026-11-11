@@ -1,0 +1,161 @@
+---
+/**
+ * Generic, original illustrations of each dressing category (added 11 Nov 2026 at Aissar's request:
+ * "pictures of each modern dressing type, in general, not specific brands"). Simple cross-sections:
+ * skin band at the bottom with a wound bed, the dressing drawn on top. Compression items show a lower leg.
+ * Never draw a product's shape, colour scheme or logo.
+ */
+import type { Lang } from '../config/site';
+interface Props { id: string; label: string; lang: Lang }
+const { id, label, lang } = Astro.props;
+const alt = lang === 'ar' ? `رسم توضيحي عام: ${label}` : `Generic illustration: ${label}`;
+
+const C = { skin: '#efd6c4', skinLine: '#d9b49c', fat: '#f7e9c8', bed: '#c96f63', bedDeep: '#a9524a', ink: '#10302a', teal: '#0a5c47', gold: '#c9a35f', white: '#ffffff', grey: '#9aa7a2' };
+const leg = ['short-stretch', 'long-stretch', 'multilayer', 'stockings', 'wraps', 'ipc'].includes(id);
+const dots = (n: number, x0: number, x1: number, y0: number, y1: number, seed = 7) => {
+  const out: Array<[number, number]> = []; let s = seed;
+  for (let i = 0; i < n; i++) { s = (s * 9301 + 49297) % 233280; const a = s / 233280; s = (s * 9301 + 49297) % 233280; const b = s / 233280; out.push([x0 + a * (x1 - x0), y0 + b * (y1 - y0)]); }
+  return out;
+};
+---
+<svg class="dc-art" viewBox="0 0 320 180" role="img" aria-label={alt} xmlns="http://www.w3.org/2000/svg">
+  {!leg && (
+    <g>
+      <rect x="0" y="118" width="320" height="62" fill={C.fat} />
+      <rect x="0" y="104" width="320" height="16" fill={C.skin} />
+      <line x1="0" y1="104" x2="320" y2="104" stroke={C.skinLine} stroke-width="2" />
+      <path d="M100 104 Q110 140 160 142 Q210 140 220 104 Z" fill={C.bed} />
+      <path d="M120 112 Q160 134 200 112" fill="none" stroke={C.bedDeep} stroke-width="2" opacity="0.5" />
+    </g>
+  )}
+
+  {id === 'antimicrobial' && (
+    <g>
+      <rect x="70" y="80" width="180" height="24" rx="6" fill={C.white} stroke={C.grey} stroke-width="2" />
+      {dots(34, 78, 242, 85, 100).map(([x, y]) => <circle cx={x} cy={y} r="2.4" fill="#8f9aa0" />)}
+      <text x="160" y="58" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill={C.teal}>Ag</text>
+    </g>
+  )}
+  {id === 'alginate' && (
+    <g>
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => <path d={`M${104 + i * 16} 104 q8 -40 0 -70 q-8 -20 6 -26`} fill="none" stroke={C.gold} stroke-width="5" stroke-linecap="round" opacity="0.9" />)}
+      <path d="M104 106 Q112 136 160 138 Q208 136 216 106 Z" fill={C.gold} opacity="0.55" />
+    </g>
+  )}
+  {id === 'hydrocolloid' && (
+    <g>
+      <path d="M50 104 L80 74 H240 L270 104 Z" fill="#e8c99a" stroke="#b9925a" stroke-width="2" />
+      <rect x="80" y="70" width="160" height="5" rx="2" fill="#d2ad76" />
+      {dots(10, 95, 225, 82, 98, 3).map(([x, y]) => <ellipse cx={x} cy={y} rx="6" ry="3" fill="#f3dfbc" />)}
+    </g>
+  )}
+  {id === 'foam' && (
+    <g>
+      <rect x="64" y="58" width="192" height="46" rx="10" fill="#fdf7e8" stroke={C.gold} stroke-width="2" />
+      {dots(40, 72, 248, 62, 100, 11).map(([x, y], i) => <circle cx={x} cy={y} r={2 + (i % 3)} fill="none" stroke={C.gold} stroke-width="1.5" />)}
+      <rect x="64" y="58" width="192" height="8" rx="4" fill={C.teal} opacity="0.85" />
+    </g>
+  )}
+  {id === 'hydrogel' && (
+    <g>
+      <path d="M104 106 Q112 136 160 138 Q208 136 216 106 Z" fill="#9fd3e6" opacity="0.8" />
+      <rect x="196" y="20" width="80" height="30" rx="8" fill={C.white} stroke={C.grey} stroke-width="2" transform="rotate(28 236 35)" />
+      <path d="M190 58 l-14 18" stroke={C.grey} stroke-width="8" stroke-linecap="round" />
+      <path d="M172 80 q-6 10 0 16 q6 -6 0 -16 Z" fill="#7cc3dd" />
+    </g>
+  )}
+  {id === 'collagen' && (
+    <g>
+      <rect x="84" y="82" width="152" height="22" rx="4" fill="#f5efe4" stroke="#c9b48f" stroke-width="2" />
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => <path d={`M${88 + i * 17} 84 l12 18 M${100 + i * 17} 84 l-12 18`} stroke="#c9b48f" stroke-width="1.6" />)}
+    </g>
+  )}
+  {id === 'superabsorbent' && (
+    <g>
+      <rect x="54" y="50" width="212" height="54" rx="12" fill={C.white} stroke={C.grey} stroke-width="2" />
+      <rect x="66" y="62" width="188" height="30" rx="6" fill="#e6f1f5" />
+      {dots(46, 70, 250, 65, 89, 21).map(([x, y]) => <circle cx={x} cy={y} r="2.6" fill="#8cc4d8" />)}
+    </g>
+  )}
+  {id === 'film' && (
+    <g>
+      <path d="M40 103 H280" stroke={C.teal} stroke-width="3" opacity="0.6" />
+      <path d="M40 99 H280" stroke={C.teal} stroke-width="1" stroke-dasharray="6 6" opacity="0.6" />
+      <circle cx="160" cy="70" r="20" fill="none" stroke={C.teal} stroke-width="3" />
+      <circle cx="160" cy="70" r="7" fill={C.teal} />
+      <path d="M140 70 q20 -22 40 0 q-20 22 -40 0" fill="none" stroke={C.teal} stroke-width="2" />
+    </g>
+  )}
+  {id === 'silicone' && (
+    <g>
+      <rect x="64" y="66" width="192" height="30" rx="8" fill="#fdf7e8" stroke={C.gold} stroke-width="2" />
+      <rect x="64" y="96" width="192" height="8" rx="3" fill="#cfe6ee" />
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => <circle cx={74 + i * 15.5} cy="100" r="2" fill={C.white} />)}
+    </g>
+  )}
+  {id === 'charcoal' && (
+    <g>
+      <rect x="64" y="62" width="192" height="42" rx="8" fill={C.white} stroke={C.grey} stroke-width="2" />
+      <rect x="72" y="74" width="176" height="16" rx="3" fill="#3a3f3d" />
+      {[0, 1, 2].map((i) => <path d={`M${120 + i * 40} 52 q-8 -12 0 -22 q8 -10 0 -22`} fill="none" stroke={C.grey} stroke-width="3" stroke-linecap="round" opacity="0.7" />)}
+    </g>
+  )}
+  {id === 'skin-substitutes' && (
+    <g>
+      <path d="M100 104 Q110 128 160 130 Q210 128 220 104 Z" fill="#f2c6b4" stroke="#d99f88" stroke-width="2" />
+      {dots(28, 116, 204, 106, 124, 5).map(([x, y]) => <circle cx={x} cy={y} r="2.6" fill="#d98d74" />)}
+    </g>
+  )}
+  {id === 'contact-layer' && (
+    <g>
+      <rect x="70" y="96" width="180" height="8" fill="#f4e7b8" opacity="0.9" />
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => <line x1={74 + i * 15} y1="96" x2={74 + i * 15} y2="104" stroke="#b9925a" stroke-width="1.5" />)}
+      <rect x="64" y="60" width="192" height="34" rx="8" fill={C.white} stroke={C.grey} stroke-width="2" stroke-dasharray="5 4" />
+    </g>
+  )}
+  {id === 'npwt' && (
+    <g>
+      <path d="M104 106 Q112 136 160 138 Q208 136 216 106 Z" fill="#3a3f3d" />
+      {dots(24, 112, 208, 108, 132, 9).map(([x, y]) => <circle cx={x} cy={y} r="2.4" fill="#5c625f" />)}
+      <path d="M60 103 H260" stroke={C.teal} stroke-width="3" opacity="0.7" />
+      <rect x="146" y="90" width="28" height="12" rx="4" fill={C.teal} />
+      <path d="M160 90 C160 50 220 40 252 46" fill="none" stroke={C.teal} stroke-width="5" stroke-linecap="round" />
+      <rect x="248" y="22" width="52" height="44" rx="8" fill={C.white} stroke={C.teal} stroke-width="3" />
+      <text x="274" y="50" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill={C.teal}>−125</text>
+    </g>
+  )}
+
+  {leg && (
+    <g>
+      <path d="M128 6 C126 50 124 92 130 120 C134 140 128 150 126 160 L200 166 C214 168 222 160 214 154 C196 150 182 146 178 132 C176 104 182 52 184 6 Z" fill={C.skin} stroke={C.skinLine} stroke-width="2" />
+      {id === 'short-stretch' && [0, 1, 2, 3, 4, 5].map((i) => <path d={`M124 ${28 + i * 22} L186 ${16 + i * 22} L186 ${32 + i * 22} L124 ${44 + i * 22} Z`} fill="#e6c79a" stroke="#b9925a" stroke-width="1.5" />)}
+      {id === 'long-stretch' && [0, 1, 2, 3, 4, 5].map((i) => <g><path d={`M124 ${28 + i * 22} L186 ${16 + i * 22} L186 ${32 + i * 22} L124 ${44 + i * 22} Z`} fill="#f2e2c2" stroke={C.gold} stroke-width="1.5" /><rect x="150" y={`${26 + i * 22}`} width="8" height="6" fill={C.teal} opacity="0.7" /></g>)}
+      {id === 'multilayer' && (
+        <g>
+          <path d="M124 20 L186 20 L184 136 L128 136 Z" fill={C.white} stroke={C.grey} stroke-width="1.5" />
+          {[0, 1, 2, 3, 4].map((i) => <path d={`M124 ${30 + i * 22} L186 ${18 + i * 22} L186 ${30 + i * 22} L124 ${42 + i * 22} Z`} fill="#e6c79a" opacity="0.9" />)}
+          {[0, 1, 2, 3, 4].map((i) => <path d={`M124 ${40 + i * 22} L186 ${28 + i * 22} L186 ${34 + i * 22} L124 ${46 + i * 22} Z`} fill={C.teal} opacity="0.55" />)}
+        </g>
+      )}
+      {id === 'stockings' && (
+        <g>
+          <path d="M126 14 C125 52 124 92 130 120 C134 140 128 150 126 160 L198 164 C206 162 206 156 198 154 C190 150 180 146 178 132 C176 104 180 52 182 14 Z" fill="#c8b39a" opacity="0.92" />
+          <path d="M126 14 H182" stroke="#a48d72" stroke-width="5" />
+          <path d="M228 132 V44" stroke={C.teal} stroke-width="3" />
+          {[0, 1, 2, 3].map((i) => <rect x="240" y={`${50 + i * 22}`} width={`${10 + i * 8}`} height="10" rx="3" fill={C.teal} opacity="0.7" />)}
+          <path d="M222 124 L228 136 L234 124" fill="none" stroke={C.teal} stroke-width="3" />
+        </g>
+      )}
+      {id === 'wraps' && [0, 1, 2, 3, 4].map((i) => <g><rect x="120" y={`${24 + i * 24}`} width="70" height="18" rx="4" fill="#d9e6e1" stroke={C.teal} stroke-width="1.5" /><rect x="176" y={`${27 + i * 24}`} width="22" height="12" rx="3" fill={C.teal} /></g>)}
+      {id === 'ipc' && (
+        <g>
+          <path d="M120 16 L190 16 L188 140 L124 140 Z" fill="#dbe8f0" stroke="#7aa6bd" stroke-width="2" />
+          {[0, 1, 2, 3].map((i) => <line x1="122" y1={`${46 + i * 26}`} x2="189" y2={`${46 + i * 26}`} stroke="#7aa6bd" stroke-width="2" />)}
+          <path d="M190 40 C230 40 236 70 252 84" fill="none" stroke="#7aa6bd" stroke-width="5" stroke-linecap="round" />
+          <rect x="236" y="84" width="64" height="44" rx="8" fill={C.white} stroke={C.teal} stroke-width="3" />
+          <path d="M252 106 h32 M268 94 v24" stroke={C.teal} stroke-width="3" />
+        </g>
+      )}
+    </g>
+  )}
+</svg>

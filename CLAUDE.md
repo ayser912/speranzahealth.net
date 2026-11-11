@@ -37,9 +37,12 @@ npm test           # build + internal link check + schema/SEO check — must pas
 - **Never** call him «ممرض» / "nurse" / "Registered Nurse" / "RN" anywhere on the site (decided 4 Nov 2026). Never physician/doctor/surgeon. No `Physician` schema; no `LocalBusiness`/`Organization` schema unless the flags say so.
 - No "best / first / only / number one" claims, no guaranteed healing or outcomes, no invented qualifications, testimonials, statistics or partnerships. Missing facts → clearly marked TODO, then ask him.
 - Say "diabetic foot wound care", never "diabetic foot specialist".
-- Service area is **all of Jordan** — never limit it to Amman.
+- Audience (11 Nov 2026): Speranza Health is an **Arabic platform for people worldwide, with a focus on the Middle East**. Never describe the platform as Jordanian or limit services/training to Jordan. Factual items (his university, press headlines as published, privacy law) may still name Jordan. «Speranza» = «الأمل» / “hope” — never say it is Italian.
 - Experience wording: "about 9 years in healthcare". **No employment information** (employer, job title, company) anywhere.
-- Speranza Health is a digital platform, not yet a registered entity. Remote consultation = "coming soon" (`flags.remoteConsultationLive=false`).
+- Speranza Health is a digital platform, not yet a registered entity. Remote consultation is **live** since 11 Nov 2026 (`flags.remoteConsultationLive=true`, `patientServicesConfirmed=true`): diagnosis or medical advice through remote consultation with the relevant specialist, a home visit, or a clinic/centre appointment. Booking is by WhatsApp/contact page for now; an online booking flow is a later step.
+- Training is for physicians, nurses, pharmacists and physiotherapists, anywhere in the world.
+- Instagram videos are "educational/awareness" («تثقيفية», not «تعليمية») and live on the homepage.
+- Articles keep references collapsed and link to the full list on the wound-care hub (`/…/wound-care/#all-references`).
 - Contact form: first name, preferred contact method, consent only. Never ask for wound photos, diagnoses or documents. Emergencies are not handled through the site or WhatsApp.
 - Patient images only with written consent + de-identification. Wound photos on public pages stay behind the "عرض الصور" veil (see `healing-journeys.astro`); strip EXIF, watermark `speranzahealth.net`.
 - Every clinical page keeps: author box, credentials link, educational note, emergency guidance, references, reviewed date.
@@ -50,7 +53,7 @@ npm test           # build + internal link check + schema/SEO check — must pas
 - OAuth/permission grants and anything that sends messages or publishes outside this repo: ask first.
 
 ## Quality bar
-- Build passes with 0 link errors and 0 schema errors (34 indexable pages as of Nov 2026).
+- Build passes with 0 link errors and 0 schema errors (58 indexable pages as of 11 Nov 2026). hreflang/lang codes are plain `ar` / `en`.
 - Check Arabic RTL and English LTR, phone width (390px) and desktop. Header: tabs visible on desktop/tablet; the Menu button appears only at ≤48rem.
 - Respect `prefers-reduced-motion`; keep visible focus states and accessible contrast.
 

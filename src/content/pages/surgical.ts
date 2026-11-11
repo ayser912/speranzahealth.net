@@ -8,7 +8,7 @@ const page: ClinicalPageData = {
   refs: [R.niceSsi, R.whoSsi, R.iwii, R.ewmaNpwt],
   related: ['chronic', 'npwt', 'diabeticFoot'],
   ar: {
-    title: 'العناية بالجروح الجراحية وجرح العملية الذي لا يلتئم | الأردن',
+    title: 'العناية بالجروح الجراحية وجرح العملية الذي لا يلتئم',
     description: 'كيف يلتئم جرح العملية، وما علامات التهاب الجرح أو انفتاحه، ومتى تتواصل مع الجرّاح؟ دليل تثقيفي حول العناية بالجروح الجراحية.',
     h1: 'العناية بالجروح الجراحية',
     lead: 'يلتئم معظم جروح العمليات دون مشاكل خلال أسابيع قليلة. لكن بعضها يتأخر بسبب العدوى أو انفتاح الجرح أو عوامل صحية لدى المريض. هذه الصفحة تشرح ما هو طبيعي، وما يحتاج إلى مراجعة.',
@@ -73,7 +73,7 @@ const page: ClinicalPageData = {
     ],
   },
   en: {
-    title: 'Surgical Wound Care and Non-Healing Surgical Wounds | Jordan',
+    title: 'Surgical Wound Care and Non-Healing Surgical Wounds',
     description: 'How surgical wounds heal, the signs of infection or a wound opening, and when to contact your surgeon. An educational guide to surgical wound care.',
     h1: 'Surgical wound care',
     lead: 'Most surgical wounds heal without problems within a few weeks. Some are delayed by infection, the wound opening, or the patient’s health. This page explains what is normal and what needs review.',

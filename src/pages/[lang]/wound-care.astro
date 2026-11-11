@@ -22,7 +22,7 @@ const copy = {
     title: 'العناية بالجروح: أدلة حسب نوع الجرح ومقالات | سبيرانزا هيلث',
     description: 'أدلة تثقيفية للجروح المزمنة وقرح الضغط والقدم السكري والجروح الجراحية والعلاج بالضغط السلبي، ومقالات موثقة بمراجع علمية للمرضى والأسر والكوادر الصحية.',
     h1: 'العناية بالجروح: أدلة ومقالات',
-    lead: 'كل ما ننشره عن العناية بالجروح في مكان واحد: دليل شامل لكل نوع من الجروح، ومقالات تجيب عن الأسئلة الأكثر شيوعًا لدى المرضى والأسر والممرضين في الأردن. كل موضوع له صفحة واحدة، دون تكرار.',
+    lead: 'كل ما ننشره عن العناية بالجروح في مكان واحد: دليل شامل لكل نوع من الجروح، ومقالات تجيب عن الأسئلة الأكثر شيوعًا لدى المرضى والأسر والكوادر الصحية. كل موضوع له صفحة واحدة، دون تكرار.',
     updated: 'آخر تحديث',
     guidesH: 'أدلة حسب نوع الجرح',
     guidesP: 'كل دليل يجمع الوقاية والعناية وعلامات الخطر لنوع واحد من الجروح.',
@@ -31,6 +31,10 @@ const copy = {
     generalH: 'أسئلة عامة لكل أنواع الجروح',
     generalP: 'مقالات تنطبق على أي جرح، أيًّا كان نوعه.',
     toolsH: 'دليل مساند',
+    refsH: 'مراجع جميع المقالات',
+    refsP: 'روابط المراجع العلمية لكل مقال في ملف واحد، مرتبة حسب المقال.',
+    refsOpen: 'افتح ملف المراجع',
+    refsCount: (n: number) => `${n} مرجعًا`,
     dressingsP: 'الأنواع الرئيسية للضمادات الحديثة، وما يُستخدم له كل نوع عادةً وما لا يناسبه، ومتى يتغير نوع الضماد.',
     blurbs: {
       chronic: 'جرح لم يلتئم في المدة المتوقعة: لماذا يتأخر الالتئام، وعلامات الخطر، وما يتضمنه التقييم.',
@@ -44,7 +48,7 @@ const copy = {
     title: 'Wound Care: Guides by Wound Type and Articles | Speranza Health',
     description: 'Educational guides to chronic wounds, pressure injuries, diabetic foot wounds, surgical wounds and NPWT, plus referenced articles for patients, families and clinicians.',
     h1: 'Wound care: guides and articles',
-    lead: 'Everything we publish on wound care in one place: a complete guide for each type of wound, and articles answering the questions patients, families and nurses in Jordan ask most. Each topic has one page, with no repetition.',
+    lead: 'Everything we publish on wound care in one place: a complete guide for each type of wound, and articles answering the questions patients, families and healthcare teams ask most. Each topic has one page, with no repetition.',
     updated: 'Last updated',
     guidesH: 'Guides by wound type',
     guidesP: 'Each guide brings together prevention, care and warning signs for one type of wound.',
@@ -53,6 +57,10 @@ const copy = {
     generalH: 'General questions for any wound',
     generalP: 'Articles that apply to any wound, whatever its type.',
     toolsH: 'Supporting guide',
+    refsH: 'References for all articles',
+    refsP: 'Links to the scientific references for every article in one file, grouped by article.',
+    refsOpen: 'Open the references file',
+    refsCount: (n: number) => `${n} references`,
     dressingsP: 'The main types of modern dressing, what each is typically used for and not suited to, and when the type of dressing changes.',
     blurbs: {
       chronic: 'A wound that has not healed in the expected time: why healing stalls, the warning signs, and what an assessment involves.',
@@ -67,6 +75,7 @@ const copy = {
 const guides = careNav.map((k: PageKey) => ({ key: k, items: articlesForTopic(k) }));
 const general = articlesForTopic('articles');
 const latest = articles.map((a) => a.reviewed).sort().at(-1)!;
+const uniqueRefs = new Set(articles.flatMap((a) => a.refs.map((r) => r.url))).size;
 const schema = pageGraph({ lang, key: 'articles', type: 'CollectionPage', title: copy.title, description: copy.description, dateModified: latest });
 const listed = [
   ...guides.flatMap((g) => [
@@ -130,6 +139,20 @@ const listed = [
           </article>
         </li>
       </ul>
+    </section>
+
+    <section class="section-gap prose" id="all-references" aria-labelledby="allrefs-h">
+      <h2 id="allrefs-h" class="flush">{copy.refsH}</h2>
+      <p class="muted">{copy.refsP} ({copy.refsCount(uniqueRefs)})</p>
+      <details class="refs-details refs-file">
+        <summary>{copy.refsOpen}</summary>
+        {articles.map((a) => (
+          <Fragment>
+            <h3><a href={articlePath(lang, a.slug)}>{a[lang].card ?? a[lang].h1}</a></h3>
+            <ol lang="en" dir="ltr">{a.refs.map((r) => <li><a href={r.url} rel="noopener">{r.text}</a></li>)}</ol>
+          </Fragment>
+        ))}
+      </details>
     </section>
 
     <div class="callout prose section-gap" role="note"><p>{s.educationalNote}</p><p><strong>{s.emergencyShort}</strong></p></div>

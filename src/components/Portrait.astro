@@ -10,8 +10,8 @@ interface Props { lang: Lang; eager?: boolean; verify?: boolean }
 const { lang, eager = false, verify = false } = Astro.props;
 const cws = credentials.find((c) => c.id === 'cws')!;
 const alt = lang === 'ar'
-  ? `صورة ${person.name.ar}، أخصائي جروح معتمد من البورد الأمريكي CWS® في الأردن`
-  : `Photo of ${person.name.en}, American Board–certified wound specialist (CWS®) in Jordan`;
+  ? `صورة ${person.name.ar}، أخصائي جروح معتمد من البورد الأمريكي CWS®`
+  : `Photo of ${person.name.en}, American Board–certified wound specialist (CWS®)`;
 const b = person.photo;
 const sizes = '(max-width: 56rem) min(92vw, 22rem), 22rem';
 ---

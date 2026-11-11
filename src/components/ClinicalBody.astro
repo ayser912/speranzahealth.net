@@ -33,8 +33,8 @@ const { lang, data, refId, relatedArticles = [], hub } = Astro.props;
 const s = t(lang);
 const c = data[lang];
 const L = lang === 'ar'
-  ? { toc: 'محتويات الصفحة', related: 'صفحات ذات صلة', relArticles: 'مقالات ذات صلة', ctaH: 'التواصل', ctaP: 'للاستفسارات والتدريب والتعاون مع الكوادر والمنشآت الصحية في الأردن.', patientsP: 'للمرضى والأسر: ناقش أي تغيير في خطة العناية مع الطبيب المعالج أو الفريق الصحي المسؤول عنك.', assessP: 'لتنسيق تقييم أو إحالة مناسبة:', hubLabel: 'العودة إلى' }
-  : { toc: 'On this page', related: 'Related pages', relArticles: 'Related articles', ctaH: 'Get in touch', ctaP: 'For enquiries, training and collaboration with healthcare teams and facilities across Jordan.', patientsP: 'For patients and families: discuss any change to your care plan with your treating doctor or care team.', assessP: 'To coordinate an appropriate assessment or referral:', hubLabel: 'Back to' };
+  ? { toc: 'محتويات الصفحة', related: 'صفحات ذات صلة', relArticles: 'مقالات ذات صلة', ctaH: 'التواصل', ctaP: 'للاستشارة عن بعد، والاستفسارات، والتدريب والتعاون مع الكوادر والمنشآت الصحية حول العالم.', patientsP: 'للمرضى والأسر: ناقش أي تغيير في خطة العناية مع الطبيب المعالج أو الفريق الصحي المسؤول عنك.', assessP: 'لتنسيق تقييم أو إحالة مناسبة:', hubLabel: 'العودة إلى' }
+  : { toc: 'On this page', related: 'Related pages', relArticles: 'Related articles', ctaH: 'Get in touch', ctaP: 'For remote consultation, enquiries, training and collaboration with healthcare teams and facilities worldwide.', patientsP: 'For patients and families: discuss any change to your care plan with your treating doctor or care team.', assessP: 'To coordinate an appropriate assessment or referral:', hubLabel: 'Back to' };
 ---
 <article>
   <header class="page-head prose">
@@ -121,6 +121,6 @@ const L = lang === 'ar'
     </ul>
   </section>
 
-  <References lang={lang} items={data.refs} />
+  <References lang={lang} items={data.refs} allHref={hub ? `${path(lang, 'articles')}#all-references` : undefined} />
   <Disclosure lang={lang} />
 </article>

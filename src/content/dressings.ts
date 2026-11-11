@@ -10,7 +10,7 @@ type L = { ar: string; en: string };
 type LL = { ar: string[]; en: string[] };
 
 export type DressingTag =
-  | 'dry' | 'lowModerate' | 'moderateHeavy' | 'veryHigh' | 'infected' | 'cavity' | 'superficial' | 'fragile' | 'odour';
+  | 'dry' | 'lowModerate' | 'moderateHeavy' | 'veryHigh' | 'infected' | 'cavity' | 'superficial' | 'fragile' | 'odour' | 'venous';
 
 export interface Dressing {
   id: string;
@@ -33,9 +33,9 @@ export interface Dressing {
 export interface DressingGroup { id: string; h: L; p: L; items: Dressing[] }
 
 export const published = '2026-10-15';
-export const reviewed = '2026-10-15';
+export const reviewed = '2026-11-11';
 
-export const refs: Ref[] = [R.exudate, R.niceDressings, R.dhivya, R.iwii, R.timers, R.schultz, R.ewmaNpwt];
+export const refs: Ref[] = [R.exudate, R.niceDressings, R.dhivya, R.iwii, R.timers, R.schultz, R.ewmaNpwt, R.partschCompression, R.esvsVenous, R.islLymphedema];
 
 export const tagLabels: Record<DressingTag, L> = {
   dry: { ar: 'جرح جاف أو فيه نسيج ميت', en: 'Dry or necrotic wound' },
@@ -47,8 +47,9 @@ export const tagLabels: Record<DressingTag, L> = {
   superficial: { ar: 'جرح سطحي', en: 'Superficial wound' },
   fragile: { ar: 'جلد هش أو تمزق جلدي', en: 'Fragile skin or skin tear' },
   odour: { ar: 'رائحة كريهة', en: 'Malodorous wound' },
+  venous: { ar: 'دوالي أو تورم (سوائل) أو قرحة وريدية', en: 'Varicose veins, oedema or venous ulcer' },
 };
-export const tagOrder: DressingTag[] = ['dry', 'lowModerate', 'moderateHeavy', 'veryHigh', 'infected', 'cavity', 'superficial', 'fragile', 'odour'];
+export const tagOrder: DressingTag[] = ['dry', 'lowModerate', 'moderateHeavy', 'veryHigh', 'infected', 'cavity', 'superficial', 'fragile', 'odour', 'venous'];
 
 const materials: L = { ar: 'المواد', en: 'Materials' };
 const usesIn: L = { ar: 'تُستخدم عادة في', en: 'Typically used for' };
@@ -190,6 +191,70 @@ export const groups: DressingGroup[] = [
           en: ['VAC system', 'Incisional NPWT for closed surgical wounds (to help prevent surgical site infection, SSI)', 'Open abdomen system', 'Irrigation (instillation) system'],
         },
         more: { key: 'npwt', label: { ar: 'اقرأ عن العلاج بالضغط السلبي', en: 'Read about negative pressure wound therapy' } },
+      },
+    ],
+  },
+  {
+    // Added 11 Nov 2026 at Aissar's request: compression for varicose veins, oedema/lymphoedema and venous ulcers.
+    id: 'compression',
+    h: { ar: 'الضمادات الضاغطة (الشادّة)', en: 'Compression bandages and garments' },
+    p: {
+      ar: 'الضغط العلاجي يساعد الأوردة والأوعية اللمفاوية على إرجاع الدم والسوائل من الساق، فيخفف التورم ويحسّن التئام القرحة الوريدية ويقلل عودتها. هو أساس علاج القرح الوريدية، ويُستخدم في الدوالي وتورم الساقين (السوائل) والوذمة اللمفاوية، لكن فقط بعد التأكد من سلامة الشرايين.',
+      en: 'Compression helps the veins and lymphatic vessels return blood and fluid from the leg, reducing swelling, helping venous ulcers heal and lowering the chance they return. It is the foundation of venous ulcer treatment and is used for varicose veins, leg swelling (oedema) and lymphoedema, but only once the arteries are confirmed healthy.',
+    },
+    items: [
+      {
+        id: 'short-stretch', term: 'Short-stretch (inelastic) bandage', tags: ['venous'],
+        name: { ar: 'الرباط قصير المطاطية (غير المرن)', en: 'Short-stretch bandages' },
+        what: { ar: 'رباط قليل التمدد يعطي ضغطًا مرتفعًا أثناء المشي وحركة عضلة الساق، وضغطًا أقل أثناء الراحة.', en: 'A bandage with little stretch that gives high pressure when walking and the calf muscle works, and lower pressure at rest.' },
+        partsH: { ar: 'الخصائص', en: 'Properties' },
+        parts: { ar: ['ضغط عمل مرتفع وضغط راحة منخفض', 'يُلف عادة فوق طبقة حشو قطنية'], en: ['High working pressure, low resting pressure', 'Usually applied over a padding layer'] },
+        uses: { ar: ['القرح الوريدية', 'الوذمة اللمفاوية في مرحلة تقليل التورم', 'المرضى الذين يمشون'], en: ['Venous leg ulcers', 'Lymphoedema in the swelling-reduction phase', 'Patients who walk'] },
+        note: { ar: 'يحتاج إلى من تدرّب على لفّه، ويُعاد لفّه كلما ارتخى مع نقص التورم.', en: 'Needs a trained person to apply it, and re-applying as it loosens when swelling goes down.' },
+      },
+      {
+        id: 'long-stretch', term: 'Long-stretch (elastic) bandage', tags: ['venous'],
+        name: { ar: 'الرباط طويل المطاطية (المرن)', en: 'Long-stretch bandages' },
+        what: { ar: 'رباط مرن يتمدد كثيرًا ويعطي ضغطًا ثابتًا تقريبًا في الحركة والراحة.', en: 'An elastic bandage that stretches a lot and gives fairly constant pressure during movement and at rest.' },
+        partsH: { ar: 'الخصائص', en: 'Properties' },
+        parts: { ar: ['ضغط مستمر حتى أثناء الراحة', 'بعضه بعلامات تساعد على شده بالدرجة الصحيحة'], en: ['Sustained pressure even at rest', 'Some have markers to help apply the right tension'] },
+        uses: { ar: ['القرح الوريدية', 'تورم الساقين', 'المرضى قليلو الحركة، حسب تقييم المختص'], en: ['Venous leg ulcers', 'Leg swelling', 'Less mobile patients, as assessed by a specialist'] },
+        notFor: { ar: 'اللفّ الذاتي دون تدريب، لأن الشد الزائد قد يسبب أذى', en: 'Self-application without training, because over-tightening can cause harm' },
+      },
+      {
+        id: 'multilayer', term: 'Multi-layer compression system', tags: ['venous'],
+        name: { ar: 'أنظمة الضغط متعددة الطبقات', en: 'Multi-layer compression systems' },
+        what: { ar: 'مجموعة جاهزة من طبقتين أو أربع طبقات تجمع الحشو والرباط الضاغط والطبقة اللاصقة، لتعطي ضغطًا علاجيًا ثابتًا لعدة أيام.', en: 'A ready kit of two or four layers combining padding, compression bandage and a cohesive outer layer, giving steady therapeutic pressure for several days.' },
+        partsH: { ar: 'الأنواع', en: 'Types' },
+        parts: { ar: ['نظام الطبقتين', 'نظام الأربع طبقات', 'أنظمة بضغط مخفّض عند ضعف بسيط في الشرايين، بقرار المختص'], en: ['Two-layer systems', 'Four-layer systems', 'Reduced-compression kits for mild arterial disease, as a specialist decides'] },
+        uses: { ar: ['القرح الوريدية', 'تورم الساقين المزمن'], en: ['Venous leg ulcers', 'Chronic leg swelling'] },
+        note: { ar: 'يبقى عادة من 3 إلى 7 أيام، ويُغيّر أبكر عند التسرب أو الانزلاق أو الألم.', en: 'Usually stays on for 3–7 days, changed sooner if it leaks, slips or causes pain.' },
+      },
+      {
+        id: 'stockings', term: 'Compression stockings', tags: ['venous'],
+        name: { ar: 'الجوارب الضاغطة', en: 'Compression stockings' },
+        what: { ar: 'جوارب طبية يكون ضغطها أعلى عند الكاحل ويقل تدريجيًا نحو الأعلى، وتُختار بالمقاس الصحيح ودرجة الضغط المناسبة.', en: 'Medical stockings with the highest pressure at the ankle, reducing gradually upwards, chosen in the correct size and pressure class.' },
+        partsH: { ar: 'درجات الضغط (حسب المعيار الأوروبي)', en: 'Pressure classes (European standard)' },
+        parts: { ar: ['الدرجة 1: 18–21 ملم زئبق', 'الدرجة 2: 23–32 ملم زئبق', 'الدرجة 3: 34–46 ملم زئبق', 'أطقم خاصة لعلاج القرح الوريدية (جورب داخلي وخارجي)'], en: ['Class 1: 18–21 mmHg', 'Class 2: 23–32 mmHg', 'Class 3: 34–46 mmHg', 'Ulcer kits (liner plus outer stocking)'] },
+        uses: { ar: ['دوالي الساقين', 'الوقاية من عودة القرحة الوريدية بعد التئامها', 'المحافظة على نتيجة علاج الوذمة اللمفاوية'], en: ['Varicose veins', 'Preventing venous ulcer recurrence after healing', 'Maintaining lymphoedema treatment results'] },
+        note: { ar: 'تختلف قيم الدرجات قليلًا بين المعايير (البريطاني والأوروبي والأمريكي)، لذلك تُحدد الدرجة بوصفة المختص. تُلبس صباحًا قبل أن يزداد التورم.', en: 'Class values differ slightly between standards (British, European, American), so the class is set by the specialist’s prescription. Put them on in the morning before swelling builds.' },
+      },
+      {
+        id: 'wraps', term: 'Adjustable compression wraps', tags: ['venous'],
+        name: { ar: 'الأربطة الضاغطة القابلة للتعديل', en: 'Adjustable compression wraps' },
+        what: { ar: 'أشرطة متداخلة بلاصق مثل الفيلكرو تُلف حول الساق ويمكن شدها أو إرخاؤها خلال اليوم.', en: 'Overlapping hook-and-loop straps wrapped around the leg that can be tightened or loosened during the day.' },
+        partsH: { ar: 'الخصائص', en: 'Properties' },
+        parts: { ar: ['يمكن للمريض أو أسرته لبسها بعد التدريب', 'بعضها بدليل يحدد الضغط المطلوب'], en: ['Can be applied by the patient or family after training', 'Some have a guide showing the target pressure'] },
+        uses: { ar: ['الوذمة اللمفاوية', 'القرح الوريدية', 'من يصعب عليه لبس الجوارب'], en: ['Lymphoedema', 'Venous leg ulcers', 'People who find stockings hard to put on'] },
+      },
+      {
+        id: 'ipc', term: 'Intermittent pneumatic compression', tags: ['venous'],
+        name: { ar: 'أجهزة الضغط الهوائي المتقطع', en: 'Intermittent pneumatic compression' },
+        what: { ar: 'جهاز يملأ أكمامًا حول الساق بالهواء على مراحل ثم يفرغها، ليدفع الدم والسوائل نحو الأعلى.', en: 'A pump that inflates sleeves around the leg in stages and then deflates them, pushing blood and fluid upwards.' },
+        partsH: { ar: 'المكونات', en: 'Parts' },
+        parts: { ar: ['مضخة هوائية', 'كم واحد أو عدة حجرات'], en: ['Air pump', 'Single or multi-chamber sleeve'] },
+        uses: { ar: ['الوذمة اللمفاوية', 'علاج مساند للقرح الوريدية عندما لا يمكن استخدام الرباط', 'الوقاية من جلطات الأوردة في المستشفى'], en: ['Lymphoedema', 'An adjunct for venous ulcers when bandaging is not possible', 'Preventing vein clots in hospital'] },
+        notFor: { ar: 'جلطة وريدية حديثة غير معالجة، أو فشل القلب غير المضبوط، أو عدوى نشطة في الساق', en: 'An untreated recent deep vein thrombosis, uncontrolled heart failure, or active leg infection' },
       },
     ],
   },

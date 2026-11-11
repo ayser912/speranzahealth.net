@@ -11,6 +11,7 @@ import References from '../../components/References.astro';
 import Disclosure from '../../components/Disclosure.astro';
 import ContactActions from '../../components/ContactActions.astro';
 import Icon from '../../components/Icon.astro';
+import DressingArt from '../../components/DressingArt.astro';
 import { type Lang } from '../../config/site';
 import { path, langs } from '../../lib/routes';
 import { pageGraph } from '../../lib/schema';
@@ -30,11 +31,11 @@ const bidi = (x: string) => (lang === 'ar' ? esc(x).replace(/\(([^()]*[A-Za-z][^
 const copy = {
   ar: {
     title: 'ضمادات الجروح الحديثة: الأنواع واستخداماتها | سبيرانزا هيلث',
-    description: 'دليل مبسّط لأنواع ضمادات الجروح الحديثة: الألجينات، الإسفنج، الهيدروجل، الهيدروكولويد، المضادة للميكروبات، الكولاجين، السيليكون، والعلاج بالضغط السلبي.',
+    description: 'دليل مصوّر لأنواع ضمادات الجروح الحديثة: الألجينات، الإسفنج، الهيدروجل، الهيدروكولويد، المضادة للميكروبات، السيليكون، الضغط السلبي، والضمادات الضاغطة للدوالي.',
     eyebrow: 'دليل تثقيفي',
     h1: 'ضمادات الجروح الحديثة',
     lead: 'الضمادات الحديثة لا تكتفي بتغطية الجرح؛ فكل نوع منها صُمّم لوظيفة محددة: امتصاص الإفرازات، أو ترطيب الجرح الجاف، أو تقليل البكتيريا، أو حماية الجلد الهش. يعرض هذا الدليل الأنواع الرئيسية وما يُستخدم له كل نوع عادةً.',
-    stat: `${total} نوعًا في 3 مجموعات`,
+    stat: `${total} نوعًا في ${groups.length} مجموعات`,
     finderH: 'ابحث حسب حالة الجرح',
     finderP: 'اختر حالة لإبراز الضمادات التي تُستخدم لها عادةً. الاختيار النهائي يحدده الفريق المعالج بعد تقييم الجرح.',
     all: 'عرض الكل',
@@ -61,18 +62,21 @@ const copy = {
     warnH: 'قبل أن تستخدم أي ضماد',
     warn: [
       'لا تختر نوع الضماد أو تغيّره أو تغيّر عدد مرات تغييره دون استشارة الفريق المعالج، حتى لو نجح مع شخص آخر.',
-      'الأسماء هنا فئات علمية عامة، ولا يوصي هذا الدليل بأي علامة تجارية.',
+      'الأسماء والرسوم هنا لفئات علمية عامة، ولا يوصي هذا الدليل بأي علامة تجارية.',
+      'لا تستخدم أي رباط أو جورب ضاغط قبل تقييم الشرايين (مثل قياس ABPI)، وانزعه واطلب المساعدة فورًا عند ألم شديد أو تنميل أو تغيّر لون الأصابع.',
     ],
+    artNote: 'رسوم توضيحية عامة لكل نوع، وليست صورًا لمنتجات أو علامات تجارية.',
+    compLinks: [['/ar/articles/varicose-veins-and-venous-ulcers/', 'دوالي الساقين والقرح الوريدية'], ['/ar/articles/venous-vs-arterial-leg-ulcers/', 'لماذا يجب تقييم الشرايين قبل الرباط الضاغط']],
     contactH: 'للتدريب والاستفسارات المهنية',
     contactP: 'محاضرات وورش عملية للكوادر الصحية حول تقييم الجروح واختيار الضمادات والعلاج بالضغط السلبي.',
   },
   en: {
     title: 'Advanced Wound Dressings: Types and Uses | Speranza Health',
-    description: 'A clear guide to advanced wound dressings: alginates, foams, hydrogels, hydrocolloids, antimicrobials, collagen, silicone and negative pressure wound therapy.',
+    description: 'An illustrated guide to advanced wound dressings: alginates, foams, hydrogels, hydrocolloids, antimicrobials, silicone, NPWT and compression for venous disease.',
     eyebrow: 'Educational guide',
     h1: 'Advanced wound dressings',
     lead: 'Modern dressings do more than cover a wound. Each type is designed for a specific job: absorbing exudate, rehydrating a dry wound, reducing bacteria or protecting fragile skin. This guide sets out the main types and what each is typically used for.',
-    stat: `${total} types in 3 groups`,
+    stat: `${total} types in ${groups.length} groups`,
     finderH: 'Find by wound situation',
     finderP: 'Choose a situation to highlight the dressings typically used for it. The final choice is made by the treating team after assessing the wound.',
     all: 'Show all',
@@ -99,8 +103,11 @@ const copy = {
     warnH: 'Before using any dressing',
     warn: [
       'Don’t choose or change a dressing, or how often it is changed, without advice from the treating team, even if it worked for someone else.',
-      'The names here are generic categories. This guide does not recommend any brand.',
+      'The names and drawings here show generic categories. This guide does not recommend any brand.',
+      'Never use a compression bandage or stocking before the arteries have been assessed (for example with ABPI). Remove it and get help immediately if there is severe pain, numbness or a change in toe colour.',
     ],
+    artNote: 'Generic illustrations of each type, not pictures of products or brands.',
+    compLinks: [['/en/articles/varicose-veins-and-venous-ulcers/', 'Varicose veins and venous ulcers'], ['/en/articles/venous-vs-arterial-leg-ulcers/', 'Why the arteries are checked before compression']],
     contactH: 'Training and professional enquiries',
     contactP: 'Lectures and hands-on workshops for healthcare teams on wound assessment, dressing selection and negative pressure wound therapy.',
   },
@@ -133,7 +140,7 @@ const counts = Object.fromEntries(tagOrder.map((tg) => [tg, groups.flatMap((g) =
       </nav>
     </header>
 
-    <div class="callout prose" role="note"><p>{s.educationalNote}</p></div>
+    <div class="callout prose" role="note"><p>{s.educationalNote}</p><p class="muted">{copy.artNote}</p></div>
 
     <section class="finder js-only" aria-labelledby="finder-h" data-finder>
       <h2 id="finder-h" class="flush">{copy.finderH}</h2>
@@ -154,11 +161,13 @@ const counts = Object.fromEntries(tagOrder.map((tg) => [tg, groups.flatMap((g) =
           <div>
             <h2 id={`${g.id}-h`}>{g.h[lang]}</h2>
             <p>{g.p[lang]}</p>
+            {g.id === 'compression' && <ul class="dg-links">{copy.compLinks.map(([href, label]) => <li><a href={href}>{label}</a></li>)}</ul>}
           </div>
         </div>
         <ul class="dress-grid" role="list">
           {g.items.map((d) => (
             <li class="dress-card" id={d.id} data-tags={d.tags.join(' ')}>
+              <DressingArt id={d.id} label={d.name[lang]} lang={lang} />
               <p class="dc-term" lang="en" dir="ltr">{d.term}</p>
               <h3>{d.name[lang]}</h3>
               <p class="dc-what" set:html={bidi(d.what[lang])} />

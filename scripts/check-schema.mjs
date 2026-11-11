@@ -3,7 +3,7 @@
  *  - JSON-LD parses; no forbidden types (Physician, MedicalBusiness, LocalBusiness, MedicalClinic)
  *  - every {"@id"} reference resolves inside the page graph; Person has name/hasCredential/sameAs
  *  - exactly one <h1>; heading levels never skip downward (h2→h4)
- *  - unique <title> and meta description; canonical present; hreflang ar-JO/en-JO/x-default reciprocal
+ *  - unique <title> and meta description; canonical present; hreflang ar/en/x-default reciprocal
  *  - <html lang/dir> correct per section
  */
 import { readdir, readFile } from 'node:fs/promises';
@@ -27,8 +27,8 @@ for await (const file of walk(dist)) {
 
   // html lang/dir
   const htmlTag = html.match(/<html[^>]*>/)[0];
-  if (rel.startsWith('/ar/') && !/lang="ar-JO"[^>]*dir="rtl"/.test(htmlTag)) err(rel, 'Arabic page missing lang="ar-JO" dir="rtl"');
-  if (rel.startsWith('/en/') && !/lang="en-JO"[^>]*dir="ltr"/.test(htmlTag)) err(rel, 'English page missing lang="en-JO" dir="ltr"');
+  if (rel.startsWith('/ar/') && !/lang="ar"[^>]*dir="rtl"/.test(htmlTag)) err(rel, 'Arabic page missing lang="ar" dir="rtl"');
+  if (rel.startsWith('/en/') && !/lang="en"[^>]*dir="ltr"/.test(htmlTag)) err(rel, 'English page missing lang="en" dir="ltr"');
 
   // headings
   const h1s = html.match(/<h1[\s>]/g) || [];
@@ -46,7 +46,7 @@ for await (const file of walk(dist)) {
   if (desc && desc.length > 170) console.warn(`! ${rel}: description ${desc.length} chars (may truncate)`);
   if (!can) err(rel, 'missing canonical'); else canon.set(rel, can);
   const alts = Object.fromEntries([...html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)"/g)].map((m) => [m[1], m[2]]));
-  for (const h of ['ar-JO', 'en-JO', 'x-default']) if (!alts[h]) err(rel, `missing hreflang ${h}`);
+  for (const h of ['ar', 'en', 'x-default']) if (!alts[h]) err(rel, `missing hreflang ${h}`);
   alternates.set(can, alts);
   if (!/property="og:image"/.test(html)) err(rel, 'missing og:image');
 
@@ -76,10 +76,10 @@ for await (const file of walk(dist)) {
   }
 }
 // reciprocal hreflang
-for (const [can, alts] of alternates) for (const h of ['ar-JO', 'en-JO']) {
+for (const [can, alts] of alternates) for (const h of ['ar', 'en']) {
   const back = alternates.get(alts[h]);
   if (!back) err(can, `hreflang ${h} target ${alts[h]} has no page`);
-  else if (back['ar-JO'] !== alts['ar-JO'] || back['en-JO'] !== alts['en-JO']) err(can, `hreflang not reciprocal with ${alts[h]}`);
+  else if (back['ar'] !== alts['ar'] || back['en'] !== alts['en']) err(can, `hreflang not reciprocal with ${alts[h]}`);
 }
 // canonical matches own URL
 for (const [rel, can] of canon) if (!can.endsWith(rel)) err(rel, `canonical ${can} does not match page path`);

@@ -16,10 +16,10 @@ const s = t(lang);
 
 const copy = {
   ar: {
-    title: 'التواصل مع أيسر شواقفه | العناية بالجروح في الأردن',
-    description: 'تواصل مع أيسر شواقفه، أخصائي جروح معتمد من البورد الأمريكي CWS® في الأردن، عبر WhatsApp أو الهاتف أو البريد الإلكتروني.',
+    title: 'التواصل مع سبيرانزا هيلث | الاستشارة عن بعد والعناية بالجروح',
+    description: 'اطلب استشارة عن بعد أو زيارة منزلية أو موعدًا في العيادة، أو تواصل مع فريق سبيرانزا هيلث عبر WhatsApp أو الهاتف أو البريد الإلكتروني.',
     h1: 'التواصل',
-    lead: 'للاستفسارات والتدريب والتعاون من جميع أنحاء الأردن.',
+    lead: 'لطلب استشارة عن بعد أو زيارة منزلية أو موعد في العيادة أو المركز، وللاستفسارات والتدريب والتعاون، من أي مكان في العالم.',
     direct: 'تواصل مباشر',
     formH: 'أرسل رسالة قصيرة',
     formIntro: 'لا يحفظ الموقع أي بيانات. عند الإرسال تُفتح رسالة جاهزة في WhatsApp أو البريد الإلكتروني لتراجعها قبل إرسالها.',
@@ -36,15 +36,15 @@ const copy = {
       summary: 'يرجى تصحيح الحقول المشار إليها.',
     },
     ok: 'تم تجهيز رسالتك. راجعها في التطبيق الذي فُتح ثم اضغط إرسال.',
-    msg: { hello: greeting.ar, source: '(عبر الموقع · نموذج التواصل)', subject: 'استفسار لفريق سبيرانزا هيلث', name: 'الاسم', method: 'طريقة التواصل المفضلة', topic: 'الموضوع: التدريب والتعليم', remote: 'الموضوع: الاهتمام بخدمة الاستشارة عن بعد مع الفريق متعدد التخصصات' },
+    msg: { hello: greeting.ar, source: '(عبر الموقع · نموذج التواصل)', subject: 'استفسار لفريق سبيرانزا هيلث', name: 'الاسم', method: 'طريقة التواصل المفضلة', topic: 'الموضوع: التدريب والتعليم', remote: 'الموضوع: طلب استشارة عن بعد مع المختص المعني' },
     hours: 'ساعات الرد',
     emergencyH: 'الحالات الطارئة',
   },
   en: {
-    title: 'Contact Aissar Shawaqfeh | Wound Care in Jordan',
-    description: 'Contact Aissar Shawaqfeh, American Board–certified wound specialist (CWS®) in Jordan, by WhatsApp, phone or email.',
+    title: 'Contact Speranza Health | Remote Consultation and Wound Care',
+    description: 'Request a remote consultation, a home visit or a clinic appointment, or contact the Speranza Health team by WhatsApp, phone or email.',
     h1: 'Contact',
-    lead: 'For enquiries, training and collaboration from anywhere in Jordan.',
+    lead: 'To request a remote consultation, a home visit or a clinic or centre appointment, and for enquiries, training and collaboration, from anywhere in the world.',
     direct: 'Direct contact',
     formH: 'Send a short message',
     formIntro: 'This website stores no data. When you send, a ready-made message opens in WhatsApp or your email app so you can review it first.',
@@ -61,13 +61,13 @@ const copy = {
       summary: 'Please correct the highlighted fields.',
     },
     ok: 'Your message is ready. Review it in the app that opened, then press send.',
-    msg: { hello: greeting.en, source: '(Via the website · Contact form)', subject: 'Enquiry for the Speranza Health team', name: 'Name', method: 'Preferred contact', topic: 'Topic: education and training', remote: 'Topic: interest in remote consultation with the multidisciplinary team' },
+    msg: { hello: greeting.en, source: '(Via the website · Contact form)', subject: 'Enquiry for the Speranza Health team', name: 'Name', method: 'Preferred contact', topic: 'Topic: education and training', remote: 'Topic: request for a remote consultation with the relevant specialist' },
     hours: 'Response hours',
     emergencyH: 'Emergencies',
   },
 }[lang];
 
-const schema = pageGraph({ lang, key: 'contact', type: 'ContactPage', title: copy.title, description: copy.description, dateModified: '2026-10-06' });
+const schema = pageGraph({ lang, key: 'contact', type: 'ContactPage', title: copy.title, description: copy.description, dateModified: '2026-11-11' });
 const formConfig = { lang, wa: contact.whatsappE164, email: contact.email, errors: copy.errors, ok: copy.ok, msg: copy.msg, methods: copy.methods };
 ---
 <BaseLayout lang={lang} pageKey="contact" title={copy.title} description={copy.description} schema={schema}>

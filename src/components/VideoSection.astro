@@ -13,8 +13,8 @@ const ig = profiles.find((p) => p.id === 'instagram');
 const yt = profiles.find((p) => p.id === 'youtube');
 const channel = yt?.verified ? yt : ig;
 const L = lang === 'ar'
-  ? { h: 'فيديوهات تعليمية', more: 'شاهد الفيديوهات التعليمية', sub: 'شروحات قصيرة بالعربية عن العناية بالجروح على', reel: 'شاهد على Instagram' }
-  : { h: 'Educational videos', more: 'Watch the educational videos', sub: 'Short wound-care explainers on', reel: 'Watch on Instagram' };
+  ? { h: 'فيديوهات تثقيفية', more: 'شاهد الفيديوهات التثقيفية', sub: 'فيديوهات تثقيفية قصيرة بالعربية عن العناية بالجروح على', reel: 'شاهد على Instagram' }
+  : { h: 'Health awareness videos', more: 'Watch the awareness videos', sub: 'Short wound-care awareness videos in Arabic on', reel: 'Watch on Instagram' };
 ---
 <section class="videos" aria-labelledby={`vid-h-${page}`}>
   <h2 id={`vid-h-${page}`}>{L.h}</h2>

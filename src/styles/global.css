@@ -549,6 +549,13 @@ html[dir='rtl'] .founder-line { border-radius: var(--radius-s) 0 0 var(--radius-
 .dress-card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 4px; border-radius: var(--radius-l) var(--radius-l) 0 0; background: var(--teal-deep); }
 #specific .dress-card::before { background: var(--gold); }
 #advanced .dress-card::before { background: linear-gradient(90deg, var(--teal-deep), var(--gold)); }
+#compression .dress-card::before { background: var(--ink-soft); }
+.dc-art { display: block; width: calc(100% + 2.5rem); max-width: none; height: auto; margin: -1.25rem -1.25rem 0.6rem; aspect-ratio: 16 / 9; background: var(--mint); border-radius: var(--radius-l) var(--radius-l) 0 0; }
+.dg-links { margin: 0.5rem 0 0; padding-inline-start: 1.2rem; }
+.refs-details { margin: 0.5rem 0 1rem; border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--paper); padding: 0.75rem 1rem; }
+.refs-details > summary { cursor: pointer; font-weight: 700; color: var(--teal); }
+.refs-details[open] > summary { margin-bottom: 0.5rem; }
+.refs-file h3 { font-size: var(--step-0); margin: 1.25rem 0 0.4rem; }
 .dress-card.is-dim { opacity: 0.32; filter: grayscale(0.6); }
 .dress-card.is-match { border-color: var(--gold); box-shadow: 0 12px 30px rgba(6, 79, 61, 0.14), 0 0 0 2px rgba(201, 163, 95, 0.55); transform: translateY(-2px); }
 @media (prefers-reduced-motion: reduce) { .dress-card, .dress-group { transition: none; } .dress-card.is-match { transform: none; } }

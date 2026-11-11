@@ -8,7 +8,7 @@ const page: ClinicalPageData = {
   refs: [R.piGuideline, R.npiapStaging, R.iwii, R.timers],
   related: ['chronic', 'diabeticFoot', 'npwt'],
   ar: {
-    title: 'علاج قرح الضغط (قرح الفراش) والوقاية منها في الأردن',
+    title: 'علاج قرح الضغط (قرح الفراش) والوقاية منها: دليل شامل',
     description: 'ما هي قرح الضغط (قرح الفراش)، ومن الأكثر عرضة لها، وكيف نقي منها ونعتني بها في المنزل والمستشفى؟ دليل تثقيفي من أخصائي جروح معتمد CWS®.',
     h1: 'قرح الضغط (قرح الفراش): الوقاية والعناية',
     lead: 'قرحة الضغط إصابة في الجلد أو الأنسجة تحته تنتج عن ضغط مستمر أو احتكاك، وغالبًا فوق بروز عظمي. كثير منها يمكن الوقاية منه، والتعامل المبكر معها يصنع فرقًا كبيرًا في سرعة الالتئام ومنع المضاعفات.',
@@ -114,7 +114,7 @@ const page: ClinicalPageData = {
     ],
   },
   en: {
-    title: 'Pressure Injury (Bedsore) Care and Prevention in Jordan',
+    title: 'Pressure Injury (Bedsore) Care and Prevention: A Guide',
     description: 'What pressure injuries (bedsores) are, who is most at risk, and how they are prevented and cared for at home and in hospital. A guide from a Certified Wound Specialist.',
     h1: 'Pressure injuries (bedsores): prevention and care',
     lead: 'A pressure injury is damage to the skin or the tissue beneath it caused by sustained pressure or friction, usually over a bony area. Many can be prevented, and early action makes a real difference to healing and to avoiding complications.',

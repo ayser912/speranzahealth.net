@@ -21,14 +21,14 @@ export const GET: APIRoute = () => {
   const cws = credentials.find((c) => c.id === 'cws')!;
   const verified = profiles.filter((p) => p.verified && !('schemaOnly' in p && p.schemaOnly));
   const L: string[] = [];
-  L.push(`# ${site.siteName.en} (${site.siteName.ar}) — Wound care in Jordan, founded by ${person.name.en}, CWS®`);
+  L.push(`# ${site.siteName.en} (${site.siteName.ar}) — Arabic wound-care platform for a global audience, founded by ${person.name.en}, CWS®`);
   L.push('');
   L.push(`> ${brand.description.en} ${brand.meaning.en}.`);
   L.push('');
   L.push(`> ${brand.description.ar} ${brand.meaning.ar}.`);
   L.push('');
   L.push('## Services');
-  L.push(`- Remote consultation (video or voice) coordinated with the multidisciplinary medical team${flags.remoteConsultationLive ? '' : ' — coming soon; the physician team is being finalised'}: ${team.filter((t) => t.id !== 'other').map((t) => t.en).join(', ')}. Diagnosis and prescribing stay with the responsible physician; not for emergencies; does not replace a clinical examination when one is needed.`);
+  L.push(`- Diagnosis or medical advice through a remote consultation (video or voice) with the relevant specialist from the multidisciplinary medical team, a home visit, or a clinic or centre appointment${flags.remoteConsultationLive ? ' (available now; booking by WhatsApp or the contact page)' : ' — coming soon'}: ${team.filter((t) => t.id !== 'other').map((t) => t.en).join(', ')}. Each specialist works within their own scope of practice; not for emergencies.`);
   L.push('- Guidance by wound type: chronic wounds, pressure injuries, diabetic foot wounds, surgical wounds, negative pressure wound therapy (NPWT/VAC).');
   L.push('- Education and training for nurses and healthcare teams.');
   L.push('- Educational articles for patients and families (Arabic and English).');
@@ -46,7 +46,7 @@ export const GET: APIRoute = () => {
   L.push(`- Verify CWS®: ${cws.verifyUrl}`);
   L.push(`- Areas: ${person.knowsAbout.en.join('; ')}.`);
   L.push(`- Works with a multidisciplinary team: ${team.map((t) => t.en).join(', ')}.`);
-  L.push(`- Serves: all of Jordan. Languages: Arabic, English.`);
+  L.push(`- Serves: people worldwide, with a focus on the Middle East. Languages: Arabic, English.`);
   L.push(`- Scope: American Board–certified wound specialist (CWS®), not a physician. Diagnosis, prescribing and surgical decisions stay with the physician. The site gives education, not individual medical advice; emergencies are not handled online.`);
   L.push(`- Contact: ${abs(path('en', 'contact'))} · WhatsApp ${contact.phoneDisplay} · ${contact.email}`);
   if (verified.length) L.push(`- Profiles: ${verified.map((p) => `${p.label}${p.owner === 'brand' ? ' (Speranza Health)' : ''} ${p.url}`).join(' · ')}`);
