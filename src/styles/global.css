@@ -261,9 +261,10 @@ table.data thead th { background: var(--mint); font-weight: 600; }
 .author-box .meta { font-size: var(--step--1); color: var(--ink-soft); }
 .page-dates { font-size: var(--step--1); color: var(--ink-soft); display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin-bottom: 1rem; }
 
-.references { font-size: 0.93rem; }
-.references ol { padding-inline-start: 1.4em; }
-.references li { margin-bottom: 0.6em; overflow-wrap: anywhere; }
+/* clinical page photo (e.g. the NPWT device), shown where the illustration used to be */
+.clinical-photo { margin: 1.5rem auto 2rem; max-width: 30rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-l); padding: 1rem; text-align: center; }
+.clinical-photo img { display: block; width: 100%; height: auto; max-height: 26rem; object-fit: contain; margin: 0 auto; }
+.clinical-photo figcaption { margin-top: 0.6rem; font-size: var(--step--1); color: var(--ink-soft); }
 
 .disclosure { font-size: var(--step--1); color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 1rem; margin-top: 2rem; max-width: var(--measure); }
 
@@ -603,10 +604,6 @@ html[dir='rtl'] .founder-line { border-radius: var(--radius-s) 0 0 var(--radius-
 .dc-photos img { display: block; width: 100%; height: 100%; object-fit: contain; padding: 0.5rem; }
 .dc-photos figure.cover img { object-fit: cover; padding: 0; }
 .dc-photos figcaption { position: absolute; inset-block-end: 0.4rem; inset-inline-start: 0.4rem; background: rgba(6, 79, 61, 0.85); color: #fff; font-size: 0.75rem; font-weight: 600; padding: 0.1rem 0.55rem; border-radius: 999px; }
-.refs-details { margin: 0.5rem 0 1rem; border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--paper); padding: 0.75rem 1rem; }
-.refs-details > summary { cursor: pointer; font-weight: 700; color: var(--teal); }
-.refs-details[open] > summary { margin-bottom: 0.5rem; }
-.refs-file h3 { font-size: var(--step-0); margin: 1.25rem 0 0.4rem; }
 .dress-card.is-dim { opacity: 0.32; filter: grayscale(0.6); }
 .dress-card.is-match { border-color: var(--gold); box-shadow: 0 12px 30px rgba(6, 79, 61, 0.14), 0 0 0 2px rgba(201, 163, 95, 0.55); transform: translateY(-2px); }
 @media (prefers-reduced-motion: reduce) { .dress-card, .dress-group { transition: none; } .dress-card.is-match { transform: none; } }

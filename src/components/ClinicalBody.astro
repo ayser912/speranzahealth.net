@@ -6,7 +6,6 @@ import Faq from './Faq.astro';
  * Guarantees the trust elements required on every medical page.
  */
 import AuthorBox from './AuthorBox.astro';
-import References from './References.astro';
 import Disclosure from './Disclosure.astro';
 import VideoEmbed from './VideoEmbed.astro';
 import ArticleCards from './ArticleCards.astro';
@@ -78,7 +77,12 @@ const L = lang === 'ar'
       ))}
       {sec.after?.map((p) => <p set:html={p} />)}
     </section>
-    {si === 0 && data.illustration && <Illustration lang={lang} name={data.illustration} />}
+    {si === 0 && (data.photo ? (
+      <figure class="clinical-photo">
+        <img src={data.photo.src} width={data.photo.w} height={data.photo.h} alt={data.photo.alt[lang]} loading="lazy" decoding="async" />
+        <figcaption>{data.photo.caption[lang]}</figcaption>
+      </figure>
+    ) : data.illustration && <Illustration lang={lang} name={data.illustration} />)}
     </Fragment>
   ))}
 
@@ -121,6 +125,5 @@ const L = lang === 'ar'
     </ul>
   </section>
 
-  <References lang={lang} items={data.refs} allHref={hub ? `${path(lang, 'articles')}#all-references` : undefined} />
   <Disclosure lang={lang} />
 </article>

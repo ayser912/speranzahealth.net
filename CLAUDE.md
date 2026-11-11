@@ -43,11 +43,10 @@ npm test           # build + internal link check + schema/SEO check — must pas
 - Training is for physicians, nurses, pharmacists and physiotherapists, anywhere in the world.
 - Logo motion and colours (chosen 11 Nov 2026: "motion 5 + colours D", 2D only, NOT 3D): the header and homepage logos are drawn inline from the original files by `src/components/LogoArt.astro` + `src/lib/logo-art.mjs` (exact path data, never edit the shapes); the mark floats gently and the gold wings breathe (`motion.css`). Background = mint and gold mist (`--mist` in `global.css`) on the homepage hero and behind every page title. All motion is off with prefers-reduced-motion.
 - Instagram videos are "educational/awareness" («تثقيفية», not «تعليمية») and live on the homepage.
-- Articles keep references collapsed and link to the full list on the wound-care hub (`/…/wound-care/#all-references`).
 - Site search (11 Nov 2026): header box on every page + `/ar/search/`, `/en/search/` (noindex). The index is built from the final HTML by `src/lib/search-integration.mjs` into `dist/{lang}/search-index.json`, so new pages are searchable automatically; it only exists after `npm run build` (use `npm run preview`, not `npm run dev`, to test search).
 - Contact form: first name, preferred contact method, consent only. Never ask for wound photos, diagnoses or documents. Emergencies are not handled through the site or WhatsApp.
 - Patient images only with written consent + de-identification. Wound photos on public pages stay behind the "عرض الصور" veil (see `healing-journeys.astro`); strip EXIF, watermark `speranzahealth.net`.
-- Every clinical page keeps: author box, credentials link, educational note, emergency guidance, references, reviewed date.
+- Every clinical page keeps: author box, credentials link, educational note, emergency guidance, reviewed date. **References are NOT shown on the site** (Aissar, 11 Nov 2026): keep `refs` in each content file anyway; every build writes them to «مراجع الموقع - References.html» in the work folder (see `src/pages/references-export.html.ts` + `src/lib/refs-export-integration.mjs`), so new articles appear there automatically.
 
 ## Safety and accounts
 - Aissar types his own passwords and verification codes. Never ask for, read or store `ADMIN_PASSWORD`, tokens or `.env` values; never commit `.env`.

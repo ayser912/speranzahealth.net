@@ -4,7 +4,12 @@ import { R } from '../refs';
 const page: ClinicalPageData = {
   published: '2026-10-06',
   reviewed: '2026-10-06',
-  illustration: 'npwt',
+  // Aissar, 11 Nov 2026: the device photo replaces the generated drawing (brand name blurred).
+  photo: {
+    src: '/images/dressings/npwt.webp', w: 475, h: 500,
+    alt: { ar: 'جهاز العلاج بالضغط السلبي للجروح مع عبوة تجميع الإفرازات', en: 'Negative pressure wound therapy unit with its exudate canister' },
+    caption: { ar: 'جهاز العلاج بالضغط السلبي (VAC) مع عبوة تجميع الإفرازات. الصورة للتوضيح، وأُخفي اسم الشركة المصنّعة.', en: 'A negative pressure (VAC) therapy unit with its exudate canister. Illustrative photo; the manufacturer’s name is hidden.' },
+  },
   refs: [R.ewmaNpwt, R.timers, R.iwii, R.niceSsi],
   related: ['chronic', 'surgical', 'diabeticFoot', 'pressure', 'dressings', 'education'],
   ar: {

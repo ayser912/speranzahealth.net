@@ -31,10 +31,6 @@ const copy = {
     generalH: 'أسئلة عامة لكل أنواع الجروح',
     generalP: 'مقالات تنطبق على أي جرح، أيًّا كان نوعه.',
     toolsH: 'دليل مساند',
-    refsH: 'مراجع جميع المقالات',
-    refsP: 'روابط المراجع العلمية لكل مقال في ملف واحد، مرتبة حسب المقال.',
-    refsOpen: 'افتح ملف المراجع',
-    refsCount: (n: number) => `${n} مرجعًا`,
     dressingsP: 'الأنواع الرئيسية للضمادات الحديثة، وما يُستخدم له كل نوع عادةً وما لا يناسبه، ومتى يتغير نوع الضماد.',
     blurbs: {
       chronic: 'جرح لم يلتئم في المدة المتوقعة: لماذا يتأخر الالتئام، وعلامات الخطر، وما يتضمنه التقييم.',
@@ -57,10 +53,6 @@ const copy = {
     generalH: 'General questions for any wound',
     generalP: 'Articles that apply to any wound, whatever its type.',
     toolsH: 'Supporting guide',
-    refsH: 'References for all articles',
-    refsP: 'Links to the scientific references for every article in one file, grouped by article.',
-    refsOpen: 'Open the references file',
-    refsCount: (n: number) => `${n} references`,
     dressingsP: 'The main types of modern dressing, what each is typically used for and not suited to, and when the type of dressing changes.',
     blurbs: {
       chronic: 'A wound that has not healed in the expected time: why healing stalls, the warning signs, and what an assessment involves.',
@@ -75,7 +67,6 @@ const copy = {
 const guides = careNav.map((k: PageKey) => ({ key: k, items: articlesForTopic(k) }));
 const general = articlesForTopic('articles');
 const latest = articles.map((a) => a.reviewed).sort().at(-1)!;
-const uniqueRefs = new Set(articles.flatMap((a) => a.refs.map((r) => r.url))).size;
 const schema = pageGraph({ lang, key: 'articles', type: 'CollectionPage', title: copy.title, description: copy.description, dateModified: latest });
 const listed = [
   ...guides.flatMap((g) => [
@@ -139,20 +130,6 @@ const listed = [
           </article>
         </li>
       </ul>
-    </section>
-
-    <section class="section-gap prose" id="all-references" aria-labelledby="allrefs-h">
-      <h2 id="allrefs-h" class="flush">{copy.refsH}</h2>
-      <p class="muted">{copy.refsP} ({copy.refsCount(uniqueRefs)})</p>
-      <details class="refs-details refs-file">
-        <summary>{copy.refsOpen}</summary>
-        {articles.map((a) => (
-          <Fragment>
-            <h3><a href={articlePath(lang, a.slug)}>{a[lang].card ?? a[lang].h1}</a></h3>
-            <ol lang="en" dir="ltr">{a.refs.map((r) => <li><a href={r.url} rel="noopener">{r.text}</a></li>)}</ol>
-          </Fragment>
-        ))}
-      </details>
     </section>
 
     <div class="callout prose section-gap" role="note"><p>{s.educationalNote}</p><p><strong>{s.emergencyShort}</strong></p></div>

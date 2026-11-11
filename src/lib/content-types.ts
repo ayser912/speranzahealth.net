@@ -43,11 +43,14 @@ export interface Video {
 export interface ClinicalPageData {
   published: string;
   reviewed: string;
+  /** Kept in the data only: not shown on the site; exported to the references file in the work folder (11 Nov 2026). */
   refs: Ref[];
   related: PageKey[];
   ar: LangCopy;
   en: LangCopy;
   video?: Video;
+  /** photo shown after the first section instead of the illustration (e.g. the NPWT device, brand blurred) */
+  photo?: { src: string; w: number; h: number; alt: Record<Lang, string>; caption: Record<Lang, string> };
   /** original explanatory illustration shown after the first section */
   illustration?: 'team' | 'time' | 'pressure' | 'foot' | 'npwt' | 'surgical';
   /** physician who reviewed the content (only with their written agreement) */
