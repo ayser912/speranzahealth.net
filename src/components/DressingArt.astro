@@ -12,6 +12,10 @@ const alt = lang === 'ar' ? `رسم توضيحي عام: ${label}` : `Generic il
 
 const C = { skin: '#efd6c4', skinLine: '#d9b49c', fat: '#f7e9c8', bed: '#c96f63', bedDeep: '#a9524a', ink: '#10302a', teal: '#0a5c47', gold: '#c9a35f', white: '#ffffff', grey: '#9aa7a2' };
 const leg = ['short-stretch', 'long-stretch', 'multilayer', 'stockings', 'wraps', 'ipc'].includes(id);
+const ostomy = ['one-piece', 'two-piece', 'closed-bag', 'drainable-bag', 'convex', 'stoma-accessories', 'irrigation'].includes(id);
+const onSkin = ['one-piece', 'two-piece', 'closed-bag', 'drainable-bag'].includes(id);
+/** Generic ostomy-bag outline (rounded pouch). */
+const bag = (x: number, y: number, w: number, h: number) => `M${x} ${y + 18} Q${x} ${y} ${x + 18} ${y} H${x + w - 18} Q${x + w} ${y} ${x + w} ${y + 18} V${y + h * 0.62} Q${x + w} ${y + h} ${x + w / 2} ${y + h} Q${x} ${y + h} ${x} ${y + h * 0.62} Z`;
 const dots = (n: number, x0: number, x1: number, y0: number, y1: number, seed = 7) => {
   const out: Array<[number, number]> = []; let s = seed;
   for (let i = 0; i < n; i++) { s = (s * 9301 + 49297) % 233280; const a = s / 233280; s = (s * 9301 + 49297) % 233280; const b = s / 233280; out.push([x0 + a * (x1 - x0), y0 + b * (y1 - y0)]); }
@@ -19,7 +23,74 @@ const dots = (n: number, x0: number, x1: number, y0: number, y1: number, seed = 
 };
 ---
 <svg class="dc-art" viewBox="0 0 320 180" role="img" aria-label={alt} xmlns="http://www.w3.org/2000/svg">
-  {!leg && (
+  {ostomy && <rect x="0" y="0" width="320" height="180" fill={onSkin ? C.skin : '#e5efe9'} />}
+  {id === 'one-piece' && (
+    <g>
+      <path d={bag(100, 24, 120, 146)} fill="#f4ead8" stroke="#c9b48f" stroke-width="2" />
+      <circle cx="160" cy="62" r="30" fill={C.white} stroke={C.grey} stroke-width="2" />
+      <circle cx="160" cy="62" r="13" fill={C.bed} />
+      <circle cx="200" cy="36" r="5" fill="#3a3f3d" />
+    </g>
+  )}
+  {id === 'two-piece' && (
+    <g>
+      <circle cx="90" cy="90" r="44" fill={C.white} stroke={C.grey} stroke-width="2" />
+      <circle cx="90" cy="90" r="26" fill="none" stroke={C.teal} stroke-width="5" />
+      <circle cx="90" cy="90" r="13" fill={C.bed} />
+      <path d={bag(190, 24, 110, 146)} fill="#f4ead8" stroke="#c9b48f" stroke-width="2" />
+      <circle cx="245" cy="62" r="26" fill="none" stroke={C.teal} stroke-width="5" />
+      <path d="M142 90 H182 M170 80 l12 10 -12 10" fill="none" stroke={C.teal} stroke-width="3" stroke-linecap="round" />
+    </g>
+  )}
+  {id === 'closed-bag' && (
+    <g>
+      <path d={bag(100, 18, 120, 152)} fill="#f4ead8" stroke="#c9b48f" stroke-width="2" />
+      <circle cx="160" cy="56" r="22" fill={C.white} stroke={C.grey} stroke-width="2" />
+      <circle cx="198" cy="34" r="7" fill="#3a3f3d" />
+      <path d="M222 36 q6 -8 0 -16 M236 36 q6 -8 0 -16 M250 36 q6 -8 0 -16" fill="none" stroke={C.grey} stroke-width="2.5" stroke-linecap="round" />
+    </g>
+  )}
+  {id === 'drainable-bag' && (
+    <g>
+      <path d="M100 36 Q100 18 118 18 H202 Q220 18 220 36 V112 Q220 132 196 146 L182 160 H138 L124 146 Q100 132 100 112 Z" fill="#f4ead8" stroke="#c9b48f" stroke-width="2" />
+      <circle cx="160" cy="56" r="22" fill={C.white} stroke={C.grey} stroke-width="2" />
+      <rect x="130" y="158" width="60" height="12" rx="4" fill={C.teal} />
+    </g>
+  )}
+  {id === 'convex' && (
+    <g>
+      <path d="M10 120 H70 Q80 120 82 110 Q86 96 92 110 Q94 120 104 120 H150" fill="none" stroke={C.skinLine} stroke-width="3" />
+      <rect x="10" y="104" width="62" height="10" rx="3" fill={C.white} stroke={C.grey} stroke-width="1.5" />
+      <rect x="106" y="104" width="44" height="10" rx="3" fill={C.white} stroke={C.grey} stroke-width="1.5" />
+      <circle cx="87" cy="102" r="7" fill={C.bed} />
+      <path d="M170 120 H218 Q226 128 232 112 Q236 92 242 112 Q248 128 256 120 H310" fill="none" stroke={C.skinLine} stroke-width="3" />
+      <path d="M170 106 H214 Q224 118 230 104" fill="none" stroke={C.teal} stroke-width="6" stroke-linecap="round" />
+      <path d="M254 104 Q260 118 270 106 H310" fill="none" stroke={C.teal} stroke-width="6" stroke-linecap="round" />
+      <circle cx="237" cy="88" r="8" fill={C.bed} />
+    </g>
+  )}
+  {id === 'stoma-accessories' && (
+    <g>
+      <circle cx="70" cy="90" r="34" fill="#e8c99a" />
+      <circle cx="70" cy="90" r="15" fill="#e5efe9" />
+      <rect x="128" y="52" width="40" height="86" rx="8" fill={C.white} stroke={C.grey} stroke-width="2" />
+      <rect x="138" y="40" width="20" height="14" rx="3" fill={C.teal} />
+      <rect x="190" y="74" width="120" height="30" rx="8" fill="#d9e6e1" stroke={C.teal} stroke-width="2" />
+      <rect x="236" y="70" width="28" height="38" rx="6" fill={C.white} stroke={C.teal} stroke-width="2" />
+    </g>
+  )}
+  {id === 'irrigation' && (
+    <g>
+      <path d="M40 14 H100 V70 Q100 86 70 86 Q40 86 40 70 Z" fill="#cfe6ee" stroke="#7aa6bd" stroke-width="2" />
+      <path d="M70 86 C70 130 130 130 150 110" fill="none" stroke="#7aa6bd" stroke-width="4" />
+      <path d="M150 104 l16 6 -16 6 Z" fill={C.teal} />
+      <path d="M178 70 h40 v90 h-40 Z" fill="#f4ead8" stroke="#c9b48f" stroke-width="2" />
+      <circle cx="270" cy="70" r="24" fill={C.white} stroke={C.grey} stroke-width="2" />
+      <circle cx="270" cy="70" r="10" fill="#f4ead8" />
+    </g>
+  )}
+
+  {!leg && !ostomy && (
     <g>
       <rect x="0" y="118" width="320" height="62" fill={C.fat} />
       <rect x="0" y="104" width="320" height="16" fill={C.skin} />

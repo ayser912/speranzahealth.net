@@ -2,6 +2,7 @@
 import { site, type Lang } from '../config/site';
 import { path, mainNav, careNav, careLabel, pages, otherLang, type PageKey } from '../lib/routes';
 import { t } from '../lib/i18n';
+import SiteSearch from './SiteSearch.astro';
 interface Props { lang: Lang; pageKey?: PageKey; altHref?: string }
 const { lang, pageKey, altHref } = Astro.props;
 const s = t(lang);
@@ -38,6 +39,7 @@ const hubLabel = lang === 'ar' ? 'كل الأدلة والمقالات' : 'All g
         )}
       </ul>
     </nav>
+    <SiteSearch lang={lang} />
     <a class="lang-switch" href={switchHref} hreflang={alt === 'ar' ? 'ar' : 'en'} lang={alt} aria-label={s.switchLangLabel}><span class="ls-long">{s.switchLang}</span><span class="ls-short" aria-hidden="true">{alt === 'en' ? 'EN' : 'ع'}</span></a>
   </div>
 </header>

@@ -44,5 +44,8 @@ export const R: Record<string, Ref> = {
   sheehanArea: { text: 'Sheehan P, Jones P, Caselli A, Giurini JM, Veves A. Percent change in wound area of diabetic foot ulcers over a 4-week period is a robust predictor of complete healing in a 12-week prospective trial. Diabetes Care. 2003;26(6):1879–1882.', url: 'https://doi.org/10.2337/diacare.26.6.1879' },
   langemoMeasure: { text: 'Langemo D, Anderson J, Hanson D, Hunter S, Thompson P. Measuring wound length, width, and area: which technique? Advances in Skin & Wound Care. 2008;21(1):42–45.', url: 'https://doi.org/10.1097/01.ASW.0000284967.69863.2f' },
   medlineLabs: { text: 'MedlinePlus (U.S. National Library of Medicine). Medical tests: laboratory tests and reference ranges.', url: 'https://medlineplus.gov/lab-tests/' },
+  wocnOstomy: { text: 'Wound, Ostomy and Continence Nurses Society Guideline Development Task Force. WOCN Society Clinical Guideline: Management of the Adult Patient With a Fecal or Urinary Ostomy—An Executive Summary. Journal of Wound, Ostomy and Continence Nursing. 2018;45(1):50–58.', url: 'https://doi.org/10.1097/WON.0000000000000396' },
+  stomaComplications: { text: 'Krishnamurty DM, Blatnik J, Mutch M. Stoma complications. Clinics in Colon and Rectal Surgery. 2017;30(3):193–200.', url: 'https://doi.org/10.1055/s-0037-1598160' },
+  ehsParastomal: { text: 'Antoniou SA, Agresta F, Garcia Alamino JM, et al. European Hernia Society guidelines on prevention and treatment of parastomal hernias. Hernia. 2018;22(1):183–198.', url: 'https://doi.org/10.1007/s10029-017-1697-5' },
   jnc: { text: 'Jordanian Nursing Council. Standards and Guidelines.', url: 'https://jnc.gov.jo/EN/List/Standards_and_Guideline' },
 };

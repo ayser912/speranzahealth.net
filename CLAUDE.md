@@ -43,6 +43,7 @@ npm test           # build + internal link check + schema/SEO check — must pas
 - Training is for physicians, nurses, pharmacists and physiotherapists, anywhere in the world.
 - Instagram videos are "educational/awareness" («تثقيفية», not «تعليمية») and live on the homepage.
 - Articles keep references collapsed and link to the full list on the wound-care hub (`/…/wound-care/#all-references`).
+- Site search (11 Nov 2026): header box on every page + `/ar/search/`, `/en/search/` (noindex). The index is built from the final HTML by `src/lib/search-integration.mjs` into `dist/{lang}/search-index.json`, so new pages are searchable automatically; it only exists after `npm run build` (use `npm run preview`, not `npm run dev`, to test search).
 - Contact form: first name, preferred contact method, consent only. Never ask for wound photos, diagnoses or documents. Emergencies are not handled through the site or WhatsApp.
 - Patient images only with written consent + de-identification. Wound photos on public pages stay behind the "عرض الصور" veil (see `healing-journeys.astro`); strip EXIF, watermark `speranzahealth.net`.
 - Every clinical page keeps: author box, credentials link, educational note, emergency guidance, references, reviewed date.

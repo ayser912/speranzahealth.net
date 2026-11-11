@@ -1,0 +1,74 @@
+---
+/**
+ * Search results page (added 11 Nov 2026). Not indexed by search engines (noindex, not in the sitemap).
+ * Results are drawn in the browser from /{lang}/search-index.json (see src/lib/search-integration.mjs).
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { langs } from '../../lib/routes';
+import type { Lang } from '../../config/site';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const L = lang === 'ar'
+  ? {
+      title: 'البحث في الموقع | سبيرانزا هيلث', description: 'ابحث في كل صفحات ومقالات سبيرانزا هيلث.', h1: 'البحث في الموقع',
+      label: 'ما الذي تبحث عنه؟', ph: 'كلمة، جملة، جزء من كلمة، رقم أو اسم', go: 'بحث',
+      hint: 'يمكنك البحث بكلمة أو جملة أو جزء منها أو رقم أو اسم، بالعربية أو الإنجليزية.',
+      count: 'نتيجة', none: 'لا توجد نتائج مطابقة. جرّب كلمة أقصر أو مرادفًا، أو ابحث بالإنجليزية.', loading: 'جارٍ البحث…',
+      noscript: 'يحتاج البحث إلى تفعيل JavaScript في المتصفح.',
+    }
+  : {
+      title: 'Search the Site | Speranza Health', description: 'Search every Speranza Health page and article.', h1: 'Search the site',
+      label: 'What are you looking for?', ph: 'A word, phrase, part of a word, number or name', go: 'Search',
+      hint: 'Search by a word, a phrase or part of one, a number or a name, in English or Arabic.',
+      count: 'results', none: 'No matching results. Try a shorter word or a synonym, or search in Arabic.', loading: 'Searching…',
+      noscript: 'Search needs JavaScript to be enabled in your browser.',
+    };
+---
+<BaseLayout lang={lang} paths={{ ar: '/ar/search/', en: '/en/search/' }} title={L.title} description={L.description} noindex>
+  <div class="wrap search-page" data-lang={lang} data-count={L.count} data-none={L.none} data-loading={L.loading}>
+    <header class="page-head prose">
+      <h1>{L.h1}</h1>
+      <p class="muted">{L.hint}</p>
+    </header>
+    <form class="search-big" role="search" action={`/${lang}/search/`} method="get">
+      <label for="search-page-q">{L.label}</label>
+      <div class="sb-row">
+        <input id="search-page-q" type="search" name="q" placeholder={L.ph} autocomplete="off" enterkeyhint="search" />
+        <button type="submit" class="btn btn-primary">{L.go}</button>
+      </div>
+    </form>
+    <p class="search-status" role="status" aria-live="polite"></p>
+    <ol class="search-results" role="list"></ol>
+    <noscript><p>{L.noscript}</p></noscript>
+  </div>
+</BaseLayout>
+<script>
+  import { loadIndex, search, resultHtml } from '../../lib/search-client';
+  const root = document.querySelector<HTMLElement>('.search-page');
+  if (root) {
+    const lang = root.dataset.lang!;
+    const input = root.querySelector<HTMLInputElement>('#search-page-q')!;
+    const status = root.querySelector<HTMLElement>('.search-status')!;
+    const list = root.querySelector<HTMLElement>('.search-results')!;
+    const render = async (q: string) => {
+      if (!q.trim()) { status.textContent = ''; list.innerHTML = ''; return; }
+      status.textContent = root.dataset.loading!;
+      const hits = search(await loadIndex(lang), q, 60);
+      status.textContent = hits.length ? `${hits.length} ${root.dataset.count}` : root.dataset.none!;
+      list.innerHTML = hits.map((h) => `<li>${resultHtml(h)}</li>`).join('');
+    };
+    const q = new URLSearchParams(location.search).get('q') ?? '';
+    input.value = q;
+    render(q);
+    let timer = 0;
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const url = new URL(location.href); url.searchParams.set('q', input.value); history.replaceState(null, '', url);
+        render(input.value);
+      }, 200);
+    });
+    root.querySelector('form')!.addEventListener('submit', (e) => { e.preventDefault(); render(input.value); });
+  }
+</script>

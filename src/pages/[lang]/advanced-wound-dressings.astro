@@ -67,6 +67,7 @@ const copy = {
     ],
     artNote: 'رسوم توضيحية عامة لكل نوع، وليست صورًا لمنتجات أو علامات تجارية.',
     compLinks: [['/ar/articles/varicose-veins-and-venous-ulcers/', 'دوالي الساقين والقرح الوريدية'], ['/ar/articles/venous-vs-arterial-leg-ulcers/', 'لماذا يجب تقييم الشرايين قبل الرباط الضاغط']],
+    stomaLinks: [['/ar/articles/colostomy-types-and-peristomal-skin/', 'أنواع الكولوستومي وجروح الجلد حولها'], ['/ar/articles/how-to-change-a-colostomy-bag/', 'كيف تغيّر كيس الكولوستومي خطوة بخطوة'], ['/ar/articles/living-with-a-colostomy/', 'الحياة اليومية مع الكولوستومي'], ['/ar/articles/stoma-complications/', 'مضاعفات الفتحة الجانبية']],
     contactH: 'للتدريب والاستفسارات المهنية',
     contactP: 'محاضرات وورش عملية للكوادر الصحية حول تقييم الجروح واختيار الضمادات والعلاج بالضغط السلبي.',
   },
@@ -108,6 +109,7 @@ const copy = {
     ],
     artNote: 'Generic illustrations of each type, not pictures of products or brands.',
     compLinks: [['/en/articles/varicose-veins-and-venous-ulcers/', 'Varicose veins and venous ulcers'], ['/en/articles/venous-vs-arterial-leg-ulcers/', 'Why the arteries are checked before compression']],
+    stomaLinks: [['/en/articles/colostomy-types-and-peristomal-skin/', 'Colostomy types and peristomal skin'], ['/en/articles/how-to-change-a-colostomy-bag/', 'How to change a colostomy bag, step by step'], ['/en/articles/living-with-a-colostomy/', 'Daily life with a colostomy'], ['/en/articles/stoma-complications/', 'Stoma complications']],
     contactH: 'Training and professional enquiries',
     contactP: 'Lectures and hands-on workshops for healthcare teams on wound assessment, dressing selection and negative pressure wound therapy.',
   },
@@ -162,6 +164,7 @@ const counts = Object.fromEntries(tagOrder.map((tg) => [tg, groups.flatMap((g) =
             <h2 id={`${g.id}-h`}>{g.h[lang]}</h2>
             <p>{g.p[lang]}</p>
             {g.id === 'compression' && <ul class="dg-links">{copy.compLinks.map(([href, label]) => <li><a href={href}>{label}</a></li>)}</ul>}
+            {g.id === 'colostomy' && <ul class="dg-links">{copy.stomaLinks.map(([href, label]) => <li><a href={href}>{label}</a></li>)}</ul>}
           </div>
         </div>
         <ul class="dress-grid" role="list">

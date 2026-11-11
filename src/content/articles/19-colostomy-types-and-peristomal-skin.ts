@@ -10,7 +10,7 @@ const a: Article = {
   reviewed: '2026-11-11',
   refs: [R.ascrsOstomy, R.salvadalenaStoma, R.iwii],
   related: ['surgical', 'pressure'],
-  relatedArticles: ['incontinence-associated-dermatitis', 'inflammation-and-infection-in-chronic-wounds'],
+  relatedArticles: ['how-to-change-a-colostomy-bag', 'living-with-a-colostomy', 'stoma-complications'],
   ar: {
     title: 'الفتحة الجانبية (الكولوستومي): أنواعها وجروح الجلد والوقاية',
     description: 'ما هي الفتحة الجانبية (الكولوستومي) وأنواعها حسب المكان والشكل والمدة، والجروح ومشكلات الجلد التي قد تحدث حولها، وطرق الوقاية والعناية اليومية.',

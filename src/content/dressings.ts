@@ -10,7 +10,7 @@ type L = { ar: string; en: string };
 type LL = { ar: string[]; en: string[] };
 
 export type DressingTag =
-  | 'dry' | 'lowModerate' | 'moderateHeavy' | 'veryHigh' | 'infected' | 'cavity' | 'superficial' | 'fragile' | 'odour' | 'venous';
+  | 'dry' | 'lowModerate' | 'moderateHeavy' | 'veryHigh' | 'infected' | 'cavity' | 'superficial' | 'fragile' | 'odour' | 'venous' | 'stoma';
 
 export interface Dressing {
   id: string;
@@ -35,7 +35,7 @@ export interface DressingGroup { id: string; h: L; p: L; items: Dressing[] }
 export const published = '2026-10-15';
 export const reviewed = '2026-11-11';
 
-export const refs: Ref[] = [R.exudate, R.niceDressings, R.dhivya, R.iwii, R.timers, R.schultz, R.ewmaNpwt, R.partschCompression, R.esvsVenous, R.islLymphedema];
+export const refs: Ref[] = [R.exudate, R.niceDressings, R.dhivya, R.iwii, R.timers, R.schultz, R.ewmaNpwt, R.partschCompression, R.esvsVenous, R.islLymphedema, R.wocnOstomy, R.ascrsOstomy];
 
 export const tagLabels: Record<DressingTag, L> = {
   dry: { ar: 'جرح جاف أو فيه نسيج ميت', en: 'Dry or necrotic wound' },
@@ -48,8 +48,9 @@ export const tagLabels: Record<DressingTag, L> = {
   fragile: { ar: 'جلد هش أو تمزق جلدي', en: 'Fragile skin or skin tear' },
   odour: { ar: 'رائحة كريهة', en: 'Malodorous wound' },
   venous: { ar: 'دوالي أو تورم (سوائل) أو قرحة وريدية', en: 'Varicose veins, oedema or venous ulcer' },
+  stoma: { ar: 'فتحة جانبية (كولوستومي)', en: 'Stoma (colostomy)' },
 };
-export const tagOrder: DressingTag[] = ['dry', 'lowModerate', 'moderateHeavy', 'veryHigh', 'infected', 'cavity', 'superficial', 'fragile', 'odour', 'venous'];
+export const tagOrder: DressingTag[] = ['dry', 'lowModerate', 'moderateHeavy', 'veryHigh', 'infected', 'cavity', 'superficial', 'fragile', 'odour', 'venous', 'stoma'];
 
 const materials: L = { ar: 'المواد', en: 'Materials' };
 const usesIn: L = { ar: 'تُستخدم عادة في', en: 'Typically used for' };
@@ -255,6 +256,81 @@ export const groups: DressingGroup[] = [
         parts: { ar: ['مضخة هوائية', 'كم واحد أو عدة حجرات'], en: ['Air pump', 'Single or multi-chamber sleeve'] },
         uses: { ar: ['الوذمة اللمفاوية', 'علاج مساند للقرح الوريدية عندما لا يمكن استخدام الرباط', 'الوقاية من جلطات الأوردة في المستشفى'], en: ['Lymphoedema', 'An adjunct for venous ulcers when bandaging is not possible', 'Preventing vein clots in hospital'] },
         notFor: { ar: 'جلطة وريدية حديثة غير معالجة، أو فشل القلب غير المضبوط، أو عدوى نشطة في الساق', en: 'An untreated recent deep vein thrombosis, uncontrolled heart failure, or active leg infection' },
+      },
+    ],
+  },
+  {
+    // Added 11 Nov 2026 at Aissar's request: colostomy appliance types (generic categories, no brands).
+    id: 'colostomy',
+    h: { ar: 'أنواع أكياس ومستلزمات الكولوستومي', en: 'Colostomy appliances and accessories' },
+    p: {
+      ar: 'الكولوستومي (الفتحة الجانبية من القولون) تحتاج إلى كيس يجمع الفضلات ولوح لاصق يحمي الجلد حولها. يُختار النوع حسب مكان الفتحة وقوام الإخراج وشكل البطن حولها وقدرة المريض على العناية بها، والهدف إغلاق محكم يمنع التسرب ويحمي الجلد.',
+      en: 'A colostomy (a stoma made from the colon) needs a bag to collect output and an adhesive wafer that protects the skin around it. The type is chosen by the stoma’s position, the consistency of the output, the shape of the abdomen around it and the person’s ability to manage it; the aim is a secure seal that prevents leaks and protects the skin.',
+    },
+    items: [
+      {
+        id: 'one-piece', term: 'One-piece system', tags: ['stoma'],
+        name: { ar: 'نظام القطعة الواحدة', en: 'One-piece systems' },
+        what: { ar: 'الكيس واللوح اللاصق قطعة واحدة تُنزع وتُركَّب معًا في كل تغيير.', en: 'The bag and adhesive wafer are a single unit, removed and applied together at every change.' },
+        partsH: { ar: 'الخصائص', en: 'Properties' },
+        parts: { ar: ['مرن ورقيق وغير ظاهر تحت الملابس', 'سهل الاستعمال لكثير من المرضى'], en: ['Flexible, thin and discreet under clothes', 'Simple to use for many people'] },
+        uses: { ar: ['الإخراج المتماسك (الكولوستومي السينية والنازلة) مع الكيس المغلق', 'من يفضّل البساطة'], en: ['Formed output (sigmoid and descending colostomy) with a closed bag', 'People who prefer simplicity'] },
+        notFor: { ar: 'الجلد الهش جدًا إذا كان يحتاج إلى تغيير متكرر، لأن نزع اللاصق كل مرة يرهقه', en: 'Very fragile skin when frequent changes are needed, because removing the adhesive each time stresses it' },
+      },
+      {
+        id: 'two-piece', term: 'Two-piece system', tags: ['stoma'],
+        name: { ar: 'نظام القطعتين', en: 'Two-piece systems' },
+        what: { ar: 'لوح لاصق يبقى على الجلد عدة أيام، وكيس منفصل يُركَّب عليه بحلقة تثبيت أو بلاصق ويمكن تغييره دون نزع اللوح.', en: 'A wafer that stays on the skin for several days, with a separate bag attached by a coupling ring or adhesive, which can be changed without removing the wafer.' },
+        partsH: { ar: 'طرق التثبيت', en: 'Coupling types' },
+        parts: { ar: ['حلقة تثبيت ميكانيكية (طبقة تُشبك)', 'تثبيت لاصق بين الكيس واللوح'], en: ['Mechanical clip-on ring', 'Adhesive coupling between bag and wafer'] },
+        uses: { ar: ['الجلد الحساس، لأن اللوح لا يُنزع في كل تغيير', 'من يحتاج إلى تغيير الكيس كثيرًا'], en: ['Sensitive skin, since the wafer is not removed at every change', 'People who need to change the bag often'] },
+      },
+      {
+        id: 'closed-bag', term: 'Closed bag', tags: ['stoma'],
+        name: { ar: 'الكيس المغلق', en: 'Closed bags' },
+        what: { ar: 'كيس مغلق من الأسفل يُستبدل عند امتلائه، وغالبًا فيه فلتر من الفحم النشط لإخراج الغازات دون رائحة.', en: 'A bag sealed at the bottom that is replaced when full, usually with an activated-charcoal filter that lets gas out without odour.' },
+        partsH: { ar: 'الخصائص', en: 'Properties' },
+        parts: { ar: ['فلتر للغازات والرائحة', 'يُستبدل مرة إلى ثلاث مرات يوميًا عادة'], en: ['Gas and odour filter', 'Usually replaced one to three times a day'] },
+        uses: { ar: ['الإخراج المتماسك في الكولوستومي السينية والنازلة'], en: ['Formed output in sigmoid and descending colostomies'] },
+        notFor: { ar: 'الإخراج السائل أو الغزير', en: 'Liquid or high-volume output' },
+      },
+      {
+        id: 'drainable-bag', term: 'Drainable bag', tags: ['stoma'],
+        name: { ar: 'الكيس القابل للتفريغ', en: 'Drainable bags' },
+        what: { ar: 'كيس مفتوح من الأسفل بإغلاق لاصق أو مشبك، يُفرَّغ عدة مرات ويُستبدل كل يوم إلى ثلاثة أيام.', en: 'A bag open at the bottom with a hook-and-loop or clip closure, emptied several times and replaced every one to three days.' },
+        partsH: { ar: 'الخصائص', en: 'Properties' },
+        parts: { ar: ['إغلاق مدمج أو مشبك', 'يُفرَّغ عند امتلائه إلى الثلث أو النصف'], en: ['Integrated closure or clip', 'Emptied when a third to half full'] },
+        uses: { ar: ['الإخراج اللين أو السائل (الكولوستومي الصاعدة والمستعرضة، والإليوستومي)', 'الأسابيع الأولى بعد العملية'], en: ['Soft or liquid output (ascending and transverse colostomy, and ileostomy)', 'The first weeks after surgery'] },
+        note: { ar: 'لتصريف البول (اليوروستومي) تُستخدم أكياس خاصة فيها صنبور وصمام يمنع الرجوع.', en: 'For urine (urostomy), special bags with a tap and an anti-reflux valve are used.' },
+      },
+      {
+        id: 'convex', term: 'Flat vs convex wafer', tags: ['stoma'],
+        name: { ar: 'اللوح المسطّح واللوح المحدّب', en: 'Flat and convex wafers' },
+        what: { ar: 'اللوح المسطح يناسب الفتحة البارزة والجلد المستوي، واللوح المحدّب يضغط بلطف على الجلد حول الفتحة فيجعلها تبرز ليقل التسرب.', en: 'A flat wafer suits a protruding stoma on level skin; a convex wafer presses gently on the skin around the stoma so it protrudes and leaks less.' },
+        partsH: { ar: 'الأنواع', en: 'Types' },
+        parts: { ar: ['مسطح', 'محدّب خفيف أو عميق، صلب أو مرن', 'جاهز القص أو يُقص حسب المقاس أو قابل للتشكيل'], en: ['Flat', 'Light or deep convexity, firm or soft', 'Pre-cut, cut-to-fit or mouldable'] },
+        uses: { ar: ['المحدّب: الفتحة المستوية مع الجلد أو المنسحبة، أو الثنيات حولها، بتوصية المختص'], en: ['Convex: a flush or retracted stoma, or creases around it, as advised by a specialist'] },
+        note: { ar: 'اللوح المحدّب قد يسبب جروح ضغط إذا لم يكن مناسبًا، لذلك يُختار ويُتابع مع ممرض أو أخصائي الفتحات.', en: 'A convex wafer can cause pressure wounds if unsuitable, so it is chosen and followed up with a stoma specialist.' },
+      },
+      {
+        id: 'stoma-accessories', term: 'Ostomy accessories', tags: ['stoma'],
+        name: { ar: 'مستلزمات مساعدة للفتحة', en: 'Ostomy accessories' },
+        what: { ar: 'منتجات تُستخدم مع الكيس لتحسين الإغلاق وحماية الجلد حول الفتحة.', en: 'Products used with the bag to improve the seal and protect the skin around the stoma.' },
+        partsH: { ar: 'أمثلة', en: 'Examples' },
+        parts: {
+          ar: ['معجون أو حلقات قابلة للتشكيل لملء الثنيات', 'بودرة امتصاص للجلد المتقرح الرطب', 'غشاء واقٍ للجلد بلا كحول', 'مزيل لاصق طبي', 'حزام داعم أو حزام للوقاية من الفتق', 'مثبتات حواف اللوح'],
+          en: ['Paste or mouldable rings to fill creases', 'Absorbent powder for moist, sore skin', 'Alcohol-free skin barrier film', 'Medical adhesive remover', 'Support belt or hernia support garment', 'Wafer edge extenders'],
+        },
+        uses: { ar: ['التسرب المتكرر', 'تهيّج الجلد حول الفتحة', 'الفتق حول الفتحة'], en: ['Repeated leaks', 'Sore skin around the stoma', 'Parastomal hernia'] },
+      },
+      {
+        id: 'irrigation', term: 'Irrigation and stoma cap', tags: ['stoma'],
+        name: { ar: 'ري الكولوستومي وغطاء الفتحة', en: 'Colostomy irrigation and stoma caps' },
+        what: { ar: 'الري: إدخال ماء دافئ عبر الفتحة بأداة خاصة لتفريغ القولون في وقت محدد، فيُكتفى بعدها بغطاء صغير للفتحة بدل الكيس معظم اليوم.', en: 'Irrigation: running warm water into the stoma with a special set to empty the colon at a planned time, after which a small stoma cap can replace the bag for much of the day.' },
+        partsH: { ar: 'المكونات', en: 'Parts' },
+        parts: { ar: ['كيس ماء وأنبوب ومخروط', 'كم تصريف', 'غطاء صغير للفتحة (Stoma cap)'], en: ['Water bag, tubing and cone', 'Drainage sleeve', 'Small stoma cap'] },
+        uses: { ar: ['الكولوستومي السينية أو النازلة ذات الإخراج المتماسك، بعد تدريب وبموافقة الطبيب'], en: ['Sigmoid or descending colostomy with formed output, after training and with medical approval'] },
+        notFor: { ar: 'الإليوستومي، والإخراج السائل، والفتق أو التدلّي، وبعض الحالات أثناء العلاج الكيميائي أو الإشعاعي', en: 'Ileostomy, liquid output, hernia or prolapse, and some situations during chemotherapy or radiotherapy' },
       },
     ],
   },
