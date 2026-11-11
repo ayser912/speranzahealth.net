@@ -597,6 +597,12 @@ html[dir='rtl'] .founder-line { border-radius: var(--radius-s) 0 0 var(--radius-
 #colostomy .dress-card::before { background: linear-gradient(90deg, var(--gold), var(--teal-deep)); }
 .dc-art { display: block; width: calc(100% + 2.5rem); max-width: none; height: auto; margin: -1.25rem -1.25rem 0.6rem; aspect-ratio: 16 / 9; background: var(--mint); border-radius: var(--radius-l) var(--radius-l) 0 0; }
 .dg-links { margin: 0.5rem 0 0; padding-inline-start: 1.2rem; }
+/* dressing photos (11 Nov 2026): same frame as the drawings; several photos sit side by side */
+.dc-photos { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; width: calc(100% + 2.5rem); margin: -1.25rem -1.25rem 0.6rem; aspect-ratio: 16 / 9; background: var(--line); border-radius: var(--radius-l) var(--radius-l) 0 0; overflow: hidden; }
+.dc-photos figure { position: relative; margin: 0; background: #fff; min-width: 0; }
+.dc-photos img { display: block; width: 100%; height: 100%; object-fit: contain; padding: 0.5rem; }
+.dc-photos figure.cover img { object-fit: cover; padding: 0; }
+.dc-photos figcaption { position: absolute; inset-block-end: 0.4rem; inset-inline-start: 0.4rem; background: rgba(6, 79, 61, 0.85); color: #fff; font-size: 0.75rem; font-weight: 600; padding: 0.1rem 0.55rem; border-radius: 999px; }
 .refs-details { margin: 0.5rem 0 1rem; border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--paper); padding: 0.75rem 1rem; }
 .refs-details > summary { cursor: pointer; font-weight: 700; color: var(--teal); }
 .refs-details[open] > summary { margin-bottom: 0.5rem; }

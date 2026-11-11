@@ -32,6 +32,49 @@ export interface Dressing {
 
 export interface DressingGroup { id: string; h: L; p: L; items: Dressing[] }
 
+/**
+ * Photos for each dressing type (supplied by Aissar, 11 Nov 2026, folder «صور انواع الضمادات الحديثه»).
+ * Files in public/images/dressings/: re-encoded as WebP (no metadata), max 800px, and any visible brand
+ * names blurred (NPWT device, ostomy accessories, multi-layer bandage, pneumatic compression, irrigation kit).
+ * Types without a photo keep their generic drawing (DressingArt). fit: 'cover' fills the frame (scene photos);
+ * otherwise the whole product is shown on white.
+ */
+export interface DressingPhoto { src: string; w: number; h: number; alt: L; label?: L; fit?: 'cover' }
+const ph = (file: string, w: number, h: number, alt: L, extra: Partial<DressingPhoto> = {}): DressingPhoto => ({ src: `/images/dressings/${file}.webp`, w, h, alt, ...extra });
+export const photos: Record<string, DressingPhoto[]> = {
+  antimicrobial: [
+    ph('antimicrobial-silver', 800, 800, { ar: 'ضماد مضاد للميكروبات بالفضة', en: 'Silver antimicrobial dressing' }, { label: { ar: 'فضة', en: 'Silver' } }),
+    ph('antimicrobial-iodine', 447, 447, { ar: 'ضماد مضاد للميكروبات باليود', en: 'Iodine antimicrobial dressing' }, { label: { ar: 'يود', en: 'Iodine' }, fit: 'cover' }),
+    ph('antimicrobial-honey', 554, 554, { ar: 'ضماد بالعسل الطبي', en: 'Medical-grade honey dressing' }, { label: { ar: 'عسل طبي', en: 'Honey' }, fit: 'cover' }),
+  ],
+  alginate: [ph('alginate', 800, 726, { ar: 'ضمادات الألجينات', en: 'Alginate dressings' })],
+  hydrocolloid: [ph('hydrocolloid', 500, 500, { ar: 'ضماد هيدروكولويد', en: 'Hydrocolloid dressing' })],
+  foam: [ph('foam', 538, 569, { ar: 'ضماد إسفنجي (فوم) بطبقاته', en: 'Foam dressing and its layers' })],
+  hydrogel: [ph('hydrogel', 678, 452, { ar: 'صفيحة هيدروجل توضع على الجلد', en: 'Hydrogel sheet applied to the skin' }, { fit: 'cover' })],
+  collagen: [ph('collagen', 700, 800, { ar: 'ضماد كولاجين', en: 'Collagen dressing' }, { fit: 'cover' })],
+  superabsorbent: [ph('superabsorbent', 547, 365, { ar: 'ضماد فائق الامتصاص', en: 'Superabsorbent dressing' })],
+  film: [ph('film', 556, 418, { ar: 'غشاء شفاف لاصق', en: 'Transparent film dressing' }, { fit: 'cover' })],
+  charcoal: [ph('charcoal', 447, 447, { ar: 'ضماد بطبقة فحم نشط', en: 'Dressing with an activated charcoal layer' })],
+  'skin-substitutes': [
+    ph('skin-substitutes', 554, 554, { ar: 'تصنيع بديل جلد في المختبر', en: 'A skin substitute being made in the laboratory' }, { fit: 'cover' }),
+    ph('skin-substitutes-2', 738, 414, { ar: 'رقعة بديل جلد مرنة', en: 'A flexible skin substitute sheet' }, { fit: 'cover' }),
+  ],
+  'contact-layer': [ph('contact-layer', 646, 309, { ar: 'طبقة تماس شبكية', en: 'Mesh contact layer' })],
+  npwt: [ph('npwt', 475, 500, { ar: 'جهاز العلاج بالضغط السلبي مع عبوة التجميع', en: 'Negative pressure therapy unit with its canister' })],
+  'short-stretch': [ph('short-stretch', 533, 375, { ar: 'رباط قصير المطاطية', en: 'Short-stretch bandages' })],
+  'long-stretch': [ph('long-stretch', 450, 444, { ar: 'رباط طويل المطاطية ملفوف على الساق', en: 'Long-stretch bandage applied to the leg' })],
+  multilayer: [ph('multilayer', 554, 554, { ar: 'طبقات نظام الضغط متعدد الطبقات', en: 'The layers of a multi-layer compression system' })],
+  stockings: [ph('stockings', 594, 792, { ar: 'جوارب ضاغطة طبية', en: 'Medical compression stockings' })],
+  wraps: [ph('wraps', 365, 547, { ar: 'أربطة ضاغطة قابلة للتعديل على الساق', en: 'Adjustable compression wraps on the leg' })],
+  ipc: [
+    ph('ipc', 552, 362, { ar: 'أكمام الضغط الهوائي على ساقي مريض في السرير', en: 'Pneumatic compression sleeves on a patient’s legs in bed' }, { fit: 'cover' }),
+    ph('ipc-2', 800, 800, { ar: 'جهاز ضغط هوائي متقطع مع أكمام الساقين', en: 'Intermittent pneumatic compression pump with leg sleeves' }),
+  ],
+  'two-piece': [ph('two-piece', 547, 365, { ar: 'تركيب لوح الكولوستومي حول الفتحة', en: 'Fitting a colostomy wafer around the stoma' }, { fit: 'cover' })],
+  irrigation: [ph('irrigation', 447, 447, { ar: 'أدوات ري الكولوستومي', en: 'Colostomy irrigation set' })],
+  'stoma-accessories': [ph('stoma-accessories', 730, 288, { ar: 'مستلزمات مساعدة للفتحة: ألواح وحلقات ومعاجين ومزيلات لاصق وأكياس', en: 'Ostomy accessories: wafers, rings, pastes, removers and pouches' })],
+};
+
 export const published = '2026-10-15';
 export const reviewed = '2026-11-11';
 

@@ -16,7 +16,7 @@ import { type Lang } from '../../config/site';
 import { path, langs } from '../../lib/routes';
 import { pageGraph } from '../../lib/schema';
 import { t } from '../../lib/i18n';
-import { groups, refs, published, reviewed, tagLabels, tagOrder, usesIn } from '../../content/dressings';
+import { groups, refs, published, reviewed, tagLabels, tagOrder, usesIn, photos } from '../../content/dressings';
 
 export function getStaticPaths() {
   return langs.map((lang) => ({ params: { lang } }));
@@ -62,10 +62,10 @@ const copy = {
     warnH: 'قبل أن تستخدم أي ضماد',
     warn: [
       'لا تختر نوع الضماد أو تغيّره أو تغيّر عدد مرات تغييره دون استشارة الفريق المعالج، حتى لو نجح مع شخص آخر.',
-      'الأسماء والرسوم هنا لفئات علمية عامة، ولا يوصي هذا الدليل بأي علامة تجارية.',
+      'الأسماء والصور هنا لفئات علمية عامة، ولا يوصي هذا الدليل بأي علامة تجارية.',
       'لا تستخدم أي رباط أو جورب ضاغط قبل تقييم الشرايين (مثل قياس ABPI)، وانزعه واطلب المساعدة فورًا عند ألم شديد أو تنميل أو تغيّر لون الأصابع.',
     ],
-    artNote: 'رسوم توضيحية عامة لكل نوع، وليست صورًا لمنتجات أو علامات تجارية.',
+    artNote: 'الصور للتوضيح فقط، وأُخفيت أسماء العلامات التجارية الظاهرة فيها. الدليل لا يوصي بأي منتج أو علامة تجارية.',
     compLinks: [['/ar/articles/varicose-veins-and-venous-ulcers/', 'دوالي الساقين والقرح الوريدية'], ['/ar/articles/venous-vs-arterial-leg-ulcers/', 'لماذا يجب تقييم الشرايين قبل الرباط الضاغط']],
     stomaLinks: [['/ar/articles/colostomy-types-and-peristomal-skin/', 'أنواع الكولوستومي وجروح الجلد حولها'], ['/ar/articles/how-to-change-a-colostomy-bag/', 'كيف تغيّر كيس الكولوستومي خطوة بخطوة'], ['/ar/articles/living-with-a-colostomy/', 'الحياة اليومية مع الكولوستومي'], ['/ar/articles/stoma-complications/', 'مضاعفات الفتحة الجانبية']],
     contactH: 'للتدريب والاستفسارات المهنية',
@@ -104,10 +104,10 @@ const copy = {
     warnH: 'Before using any dressing',
     warn: [
       'Don’t choose or change a dressing, or how often it is changed, without advice from the treating team, even if it worked for someone else.',
-      'The names and drawings here show generic categories. This guide does not recommend any brand.',
+      'The names and photos here show generic categories. This guide does not recommend any brand.',
       'Never use a compression bandage or stocking before the arteries have been assessed (for example with ABPI). Remove it and get help immediately if there is severe pain, numbness or a change in toe colour.',
     ],
-    artNote: 'Generic illustrations of each type, not pictures of products or brands.',
+    artNote: 'Photos are for illustration only, with any visible brand names blurred. This guide does not recommend any product or brand.',
     compLinks: [['/en/articles/varicose-veins-and-venous-ulcers/', 'Varicose veins and venous ulcers'], ['/en/articles/venous-vs-arterial-leg-ulcers/', 'Why the arteries are checked before compression']],
     stomaLinks: [['/en/articles/colostomy-types-and-peristomal-skin/', 'Colostomy types and peristomal skin'], ['/en/articles/how-to-change-a-colostomy-bag/', 'How to change a colostomy bag, step by step'], ['/en/articles/living-with-a-colostomy/', 'Daily life with a colostomy'], ['/en/articles/stoma-complications/', 'Stoma complications']],
     contactH: 'Training and professional enquiries',
@@ -170,7 +170,16 @@ const counts = Object.fromEntries(tagOrder.map((tg) => [tg, groups.flatMap((g) =
         <ul class="dress-grid" role="list">
           {g.items.map((d) => (
             <li class="dress-card" id={d.id} data-tags={d.tags.join(' ')}>
-              <DressingArt id={d.id} label={d.name[lang]} lang={lang} />
+              {photos[d.id] ? (
+                <div class={`dc-photos n${photos[d.id].length}`}>
+                  {photos[d.id].map((p) => (
+                    <figure class={p.fit === 'cover' ? 'cover' : undefined}>
+                      <img src={p.src} width={p.w} height={p.h} alt={p.alt[lang]} loading="lazy" decoding="async" />
+                      {p.label && <figcaption>{p.label[lang]}</figcaption>}
+                    </figure>
+                  ))}
+                </div>
+              ) : <DressingArt id={d.id} label={d.name[lang]} lang={lang} />}
               <p class="dc-term" lang="en" dir="ltr">{d.term}</p>
               <h3>{d.name[lang]}</h3>
               <p class="dc-what" set:html={bidi(d.what[lang])} />
