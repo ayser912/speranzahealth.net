@@ -489,26 +489,30 @@ html[lang^='ar'] .sub-toggle { font-weight: 600; }
 
 /* ---------- Speranza Health front page ---------- */
 .muted { color: var(--ink-soft); font-size: var(--step--1); }
-.brand-hero {
-  background:
-    radial-gradient(40rem 22rem at 100% 0%, rgba(201, 163, 95, 0.13), transparent 70%),
-    radial-gradient(36rem 24rem at 0% 100%, rgba(10, 92, 71, 0.08), transparent 70%),
-    #fdfcf7;
+/* Colours "D" (Aissar, 11 Nov 2026): mint and gold mist from the brand kit. The blobs live on a pseudo-element
+   that only moves (transform), so the slow drift in motion.css stays cheap. */
+:root {
+  --mist:
+    radial-gradient(closest-side, rgba(179, 211, 194, 0.9), rgba(179, 211, 194, 0)) 2% 0% / 48% 70% no-repeat,
+    radial-gradient(closest-side, rgba(236, 217, 173, 0.85), rgba(236, 217, 173, 0)) 88% 35% / 42% 65% no-repeat,
+    radial-gradient(closest-side, rgba(217, 233, 224, 0.95), rgba(217, 233, 224, 0)) 35% 100% / 56% 70% no-repeat,
+    radial-gradient(closest-side, rgba(245, 236, 214, 0.9), rgba(245, 236, 214, 0)) 100% 0% / 34% 50% no-repeat,
+    #f8f8f4;
 }
-html[dir='rtl'] .brand-hero {
-  background:
-    radial-gradient(40rem 22rem at 0% 0%, rgba(201, 163, 95, 0.13), transparent 70%),
-    radial-gradient(36rem 24rem at 100% 100%, rgba(10, 92, 71, 0.08), transparent 70%),
-    #fdfcf7;
-}
+.brand-hero { position: relative; isolation: isolate; overflow: hidden; background: #f8f8f4; }
+.brand-hero::before { content: ''; position: absolute; inset: -12%; z-index: -1; background: var(--mist); }
+/* every other page: a soft band of the same mist behind the page title, fading into the page */
+main#main { position: relative; isolation: isolate; overflow-x: clip; }
+main#main::before { content: ''; position: absolute; inset: -4rem -10% auto; height: 30rem; z-index: -1; background: var(--mist); -webkit-mask-image: linear-gradient(#000 45%, transparent); mask-image: linear-gradient(#000 45%, transparent); pointer-events: none; }
 .brand-eyebrow { display: inline-flex; align-items: center; gap: 0.3rem; margin: 0 0 1rem; padding: 0.3rem 0.9rem; border: 1px solid rgba(201, 163, 95, 0.55); border-radius: 999px; color: var(--gold-ink); font-weight: 600; font-size: var(--step--1); background: rgba(255, 255, 255, 0.7); }
 .brand-hero h1 .h1-name { color: var(--teal-deep); }
 .brand-hero h1 .h1-title { max-width: 30rem; }
 .brand-logo-hero { display: grid; place-items: center; }
-.brand-logo-hero img { width: min(100%, 24rem); height: auto; filter: drop-shadow(0 18px 30px rgba(6, 79, 61, 0.12)); }
+.brand-logo-hero svg { width: min(100%, 24rem); height: auto; overflow: visible; filter: drop-shadow(0 18px 30px rgba(6, 79, 61, 0.12)); }
+.brand-logo { overflow: visible; }
 @media (max-width: 56rem) {
   .brand-logo-hero { order: -1; }
-  .brand-logo-hero img { width: min(70%, 15rem); }
+  .brand-logo-hero svg { width: min(70%, 15rem); }
 }
 
 .meaning-grid { display: grid; gap: clamp(2rem, 5vw, 4rem); grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); align-items: center; }

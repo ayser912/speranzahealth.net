@@ -1,0 +1,20 @@
+---
+/**
+ * The original Speranza Health logo drawn inline (exact path data from public/brand/), so it can carry
+ * the chosen motion (Aissar, 11 Nov 2026: "motion 5", 2D): the mark floats gently and the wings breathe.
+ * Motion lives in src/styles/motion.css and switches off for visitors who prefer reduced motion.
+ */
+import { logoArt } from '../lib/logo-art.mjs';
+interface Props { which: 'horizontal' | 'stacked'; label: string; class?: string; width: number; height: number }
+const { which, label, class: cls = '', width, height } = Astro.props;
+const art = logoArt(which);
+---
+<svg class={`logo-art logo-${which} ${cls}`} viewBox={art.viewBox} width={width} height={height} role="img" aria-label={label} focusable="false"
+  style={`--ox:${art.ox}px;--oy:${art.oy}px`} xmlns="http://www.w3.org/2000/svg">
+  <g class="lm">
+    {art.layers.filter((l) => l.mark).map((l) => l.paths.map((p) => (
+      <path d={p.d} fill={l.fill} class={p.wing ? 'lw' : undefined} style={p.wing ? `--s:${p.side}` : undefined} />
+    )))}
+  </g>
+  {art.layers.filter((l) => !l.mark).map((l) => <path d={l.paths.map((p) => p.d).join('')} fill={l.fill} />)}
+</svg>

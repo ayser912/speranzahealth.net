@@ -18,6 +18,19 @@
 
   html { scroll-behavior: smooth; }
 
+  /* ---------- Logo: motion 5 (Aissar, 11 Nov 2026) — the mark floats gently and the wings breathe ---------- */
+  /* Distances are in the logo's own units: about 1.5px in the header, about 9px on the homepage. */
+  .logo-art .lm { animation: logo-float 6s ease-in-out infinite; }
+  .logo-art .lw { transform-origin: var(--ox) var(--oy); animation: logo-wing 3.2s ease-in-out infinite alternate; }
+  .logo-horizontal { --lf: -11px; --la: -3deg; }
+  .logo-stacked { --lf: -22px; --la: -4deg; }
+  @keyframes logo-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(var(--lf)); } }
+  @keyframes logo-wing { from { transform: rotate(0deg); } to { transform: rotate(calc(var(--s) * var(--la))); } }
+
+  /* ---------- Colours D: the mint and gold mist drifts very slowly ---------- */
+  .brand-hero::before, main#main::before { animation: mist-drift 26s ease-in-out infinite alternate; }
+  @keyframes mist-drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(3%, -4%) scale(1.06); } }
+
   /* ---------- Page-to-page transition (browsers that support it) ---------- */
   @view-transition { navigation: auto; }
   .site-header { view-transition-name: site-header; }
