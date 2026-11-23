@@ -1,0 +1,210 @@
+---
+/**
+ * ABWM exam preparation (Aissar, item 10, 23 Nov 2026): why the certification matters, who may apply, and a
+ * contact box. Every eligibility fact below was checked on abwmcertified.org on 23 Nov 2026:
+ *   /abwm-cws/ (professions, NCCA), /eligibility/ (degrees, 3 years, candidate route), FAQ (international,
+ *   exam format, Pearson VUE), /certification-resources/10-year-recertification/ (renewal).
+ * Re-check before changing any of it; never add facts that are not on the ABWM site.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import QuickContact from '../../components/QuickContact.astro';
+import TopicIcon from '../../components/TopicIcon.astro';
+import { person, credentials, type Lang } from '../../config/site';
+import { path, langs, credentialsHref } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+import { formatDate } from '../../lib/i18n';
+import { track } from '../../lib/links';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const ar = lang === 'ar';
+const checked = '2026-11-23';
+const cws = credentials.find((c) => c.id === 'cws')!;
+const copy = {
+  ar: {
+    title: 'التحضير لامتحان البورد الأمريكي للجروح ABWM | سبيرانزا',
+    description: 'برنامج تحضيري لامتحان أخصائي الجروح المعتمد CWS® وشهادات البورد الأمريكي لإدارة الجروح: أهمية الشهادة، ومن يحق له التقدّم، وشكل الامتحان، والتسجيل.',
+    eyebrow: 'للكوادر الصحية · ABWM',
+    h1: 'التحضير لامتحان البورد الأمريكي لإدارة الجروح (ABWM)',
+    lead: `برنامج تدريبي يساعد الكوادر الصحية حول العالم على الاستعداد لامتحان أخصائي الجروح المعتمد CWS® وغيره من شهادات البورد الأمريكي لإدارة الجروح، يقدّمه ${person.name.ar}، الحاصل على CWS®.`,
+    register: 'سجّل في البرنامج',
+    eligibility: 'من يحق له التقدّم؟',
+    whyH: 'لماذا شهادة البورد الأمريكي للجروح؟',
+    why: [
+      ['award', 'شهادة معتمدة', 'يذكر البورد الأمريكي لإدارة الجروح أن شهادة CWS® حاصلة على اعتماد اللجنة الوطنية الأمريكية لجهات منح الشهادات (NCCA).'],
+      ['team', 'لغة مشتركة للفريق', 'يتقدّم لها الأطباء والممرضون وأخصائيو العلاج الطبيعي والوظيفي والصيادلة وأخصائيو التغذية، فتعزّز العمل بروح الفريق وتبادل الخبرات بين التخصصات.'],
+      ['shield', 'معيار عالٍ للممارسة', 'تُظهر التزامك بمعايير عالية في العناية بالجروح، وتعتمد على امتحان يقيس المعرفة السريرية.'],
+      ['search', 'قابلة للتحقق', 'يمكن للمرضى وجهات العمل التحقق من الحاصلين على الشهادة عبر دليل البحث العام على موقع ABWM.'],
+      ['clock', 'تعلّم مستمر', 'تُجدَّد الشهادة سنويًا مع 6 ساعات تعليم مستمر، ويُعاد الامتحان كل 10 سنوات، فتبقى معرفتك محدّثة.'],
+    ],
+    certsH: 'شهادات ABWM ومن يحق له التقدّم',
+    certs: [
+      { code: 'CWS®', full: 'Certified Wound Specialist · أخصائي جروح معتمد', who: 'ممارس صحي مرخّص يحمل درجة البكالوريوس أو الماجستير أو الدكتوراه، أو ممرض قانوني (RN) يحمل درجة الدبلوم المشارك، مع 3 سنوات أو أكثر من الخبرة السريرية في العناية بالجروح.', list: ['الأطباء (MD، DO) وأطباء القدم (DPM)', 'الممرضون القانونيون (RN) والممرضون الممارسون (NP)', 'مساعدو الأطباء (PA)', 'أخصائيو العلاج الطبيعي (PT) والعلاج الوظيفي (OT)', 'الصيادلة (PharmD) وأخصائيو التغذية المسجّلون (RD)', 'الأطباء البيطريون (DVM)'] },
+      { code: 'CWCA®', full: 'Certified Wound Care Associate · مشارك معتمد في العناية بالجروح', who: 'للعاملين في العناية بالجروح مع 3 سنوات أو أكثر من الخبرة، ممن لا تنطبق عليهم شروط CWS®، مثل:', list: ['الممرضين العمليين (LPN / LVN) من حملة الدبلوم', 'مساعدي أخصائيي العلاج الطبيعي (PTA)', 'مساعدي الرعاية الصحية المعتمدين', 'إداريي الرعاية الصحية وأخصائيي التغذية', 'الباحثين الأكاديميين ومتخصصي المبيعات والتسويق في المجال'] },
+      { code: 'CWSP®', full: 'Certified Wound Specialist Physician · طبيب أخصائي جروح معتمد', who: 'للأطباء المرخّصين مع 3 سنوات أو أكثر من الخبرة في العناية بالجروح:', list: ['الأطباء (MD، DO)', 'أطباء القدم (DPM)'] },
+    ],
+    candidate: 'خبرتك أقل من 3 سنوات؟ يتيح ABWM مسار «المرشّح» (Candidate) لكل شهادة من الشهادات الثلاث، ويمكن الاحتفاظ بصفة المرشّح حتى 3 سنوات إلى أن تكتمل الخبرة المطلوبة.',
+    detailsH: 'تفاصيل مهمة قبل التقديم',
+    details: [
+      ['الخبرة', 'مجموع 3 سنوات في أدوار مرتبطة بالعناية بالجروح. لا يُشترط أن تكون السنوات متتالية، ولا أن تكون العناية بالجروح مهمتك الأساسية.'],
+      ['الترخيص', 'ترخيص مهني كامل وغير مقيّد لمزاولة المهنة.'],
+      ['من خارج الولايات المتحدة', 'يذكر ABWM أنه يقدّم الامتحانات لأي ممارس صحي لديه الخبرة المطلوبة. لتقديم الامتحان خارج الولايات المتحدة يُتواصل مع ABWM لترتيبه ودفع رسوم الاختبار الدولي.'],
+      ['شكل امتحان CWS®', '150 سؤال اختيار من متعدد على الحاسوب خلال 3 ساعات: 125 سؤالًا محتسبًا و25 سؤالًا تجريبيًا غير محتسب، عبر مراكز Pearson VUE.'],
+      ['المحافظة على الشهادة', 'تجديد سنوي مع 6 ساعات تعليم مستمر، وإعادة الامتحان بعد 10 سنوات من تاريخ الحصول على الشهادة.'],
+    ],
+    source: 'المصدر: الموقع الرسمي للبورد الأمريكي لإدارة الجروح (abwmcertified.org)، تمت مراجعته في',
+    sourceTail: 'قد تتغير الشروط والرسوم، فتحقّق منها على موقع ABWM قبل التقديم.',
+    sourceLink: 'شروط الأهلية على موقع ABWM',
+    progH: 'ماذا يقدّم برنامج التحضير؟',
+    prog: [
+      'خطة مراجعة منظّمة لموضوعات العناية بالجروح التي يحتاجها الامتحان.',
+      'أسئلة تدريبية بأسلوب الاختيار من متعدد مع شرح الإجابات.',
+      'حالات عملية تربط المعرفة بالتطبيق السريري اليومي.',
+      'إرشاد في التحقق من الأهلية وخطوات التقديم وحجز موعد الامتحان.',
+    ],
+    progBy: `يقدّم البرنامج ${person.name.ar}، أخصائي جروح معتمد من البورد الأمريكي CWS® منذ ${cws.year}.`,
+    verify: 'تحقق من الشهادة',
+    stepsH: 'خطوات الانضمام',
+    steps: [
+      ['سجّل اهتمامك', 'عبر النموذج في هذه الصفحة أو WhatsApp.'],
+      ['تحقّق الأهلية', 'نراجع معك الشهادة الأنسب لمهنتك وخبرتك.'],
+      ['تفاصيل الدفعة', 'يصلك موعد الدفعة القادمة ومدتها ورسومها وطريقة الحضور.'],
+      ['ابدأ التحضير', 'خطة واضحة حتى يوم الامتحان.'],
+    ],
+    regH: 'سجّل في برنامج التحضير',
+    regP: 'اترك اسمك ومهنتك وطريقة التواصل المفضلة، وسيتواصل معك الفريق بتفاصيل الدفعة القادمة.',
+    topic: 'الموضوع: التسجيل في برنامج التحضير لامتحان البورد الأمريكي للجروح ABWM',
+    submit: 'سجّل اهتمامي',
+    independent: 'برنامج تحضيري مستقل، غير تابع للبورد الأمريكي لإدارة الجروح (ABWM) ولا معتمد منه. CWS® وCWCA® وCWSP® علامات مسجّلة لـ ABWM. لا يضمن أي برنامج تحضيري النجاح في الامتحان.',
+  },
+  en: {
+    title: 'ABWM Wound Certification Exam Preparation | Speranza Health',
+    description: 'Preparation for the Certified Wound Specialist (CWS®) and other ABWM exams: why the certification matters, who can apply, the exam format and how to register.',
+    eyebrow: 'For healthcare professionals · ABWM',
+    h1: 'Preparing for the American Board of Wound Management (ABWM) exam',
+    lead: `A training programme that helps healthcare professionals worldwide prepare for the Certified Wound Specialist (CWS®) exam and the other ABWM certifications, led by ${person.name.en}, CWS®.`,
+    register: 'Register for the programme',
+    eligibility: 'Who can apply?',
+    whyH: 'Why an American Board wound certification?',
+    why: [
+      ['award', 'An accredited credential', 'The American Board of Wound Management states that the CWS® is accredited by the National Commission for Certifying Agencies (NCCA).'],
+      ['team', 'A shared language for the team', 'Physicians, nurses, physical and occupational therapists, pharmacists and dietitians all sit the same exam, which supports teamwork and the exchange of expertise across disciplines.'],
+      ['shield', 'A high standard of practice', 'It shows commitment to high standards in wound care, based on an exam of clinical knowledge.'],
+      ['search', 'Verifiable', 'Patients and employers can check certified professionals in the public directory on the ABWM website.'],
+      ['clock', 'Continuous learning', 'The credential is renewed each year with 6 hours of continuing education, and the exam is retaken every 10 years, so knowledge stays current.'],
+    ],
+    certsH: 'ABWM certifications and who can apply',
+    certs: [
+      { code: 'CWS®', full: 'Certified Wound Specialist', who: 'A licensed healthcare professional with a bachelor’s, master’s or doctoral degree, or a licensed RN with an associate degree, with 3 or more years of clinical wound-care experience.', list: ['Physicians (MD, DO) and podiatrists (DPM)', 'Registered nurses (RN) and nurse practitioners (NP)', 'Physician assistants (PA)', 'Physical (PT) and occupational therapists (OT)', 'Pharmacists (PharmD) and registered dietitians (RD)', 'Veterinarians (DVM)'] },
+      { code: 'CWCA®', full: 'Certified Wound Care Associate', who: 'For people working in wound care with 3 or more years of experience who do not meet the CWS® requirements, such as:', list: ['Associate-degree LPNs / LVNs', 'Physical therapist assistants (PTA)', 'Certified healthcare assistants', 'Healthcare administrators and dietitians', 'Academic researchers and sales and marketing professionals in the field'] },
+      { code: 'CWSP®', full: 'Certified Wound Specialist Physician', who: 'For licensed physicians with 3 or more years of wound-care experience:', list: ['Physicians (MD, DO)', 'Podiatrists (DPM)'] },
+    ],
+    candidate: 'Less than 3 years of experience? ABWM offers a “Candidate” route for each of the three certifications, and candidate status can be kept for up to 3 years while you complete the required experience.',
+    detailsH: 'Important details before you apply',
+    details: [
+      ['Experience', 'A cumulative 3 years in wound-care-related roles. The years do not need to be consecutive, and wound care does not need to have been your primary responsibility.'],
+      ['Licence', 'A full and unrestricted professional licence to practise.'],
+      ['Outside the United States', 'ABWM states that it offers its exams to any healthcare professional with the required experience. To sit an exam outside the United States, contact ABWM to arrange it and pay the international testing fee.'],
+      ['CWS® exam format', '150 computer-based multiple-choice questions in 3 hours: 125 scored and 25 unscored pre-test questions, delivered through Pearson VUE test centres.'],
+      ['Keeping the credential', 'Annual renewal with 6 hours of continuing education, and recertification by exam 10 years after the initial certification date.'],
+    ],
+    source: 'Source: the official American Board of Wound Management website (abwmcertified.org), checked on',
+    sourceTail: 'Requirements and fees can change; confirm them on the ABWM website before applying.',
+    sourceLink: 'Eligibility on the ABWM website',
+    progH: 'What the preparation programme offers',
+    prog: [
+      'A structured review plan for the wound-care topics the exam requires.',
+      'Multiple-choice practice questions with explained answers.',
+      'Practical cases that connect knowledge to everyday clinical work.',
+      'Guidance on checking eligibility, applying and booking the exam.',
+    ],
+    progBy: `Led by ${person.name.en}, American Board–Certified Wound Specialist (CWS®) since ${cws.year}.`,
+    verify: 'Verify the credential',
+    stepsH: 'How to join',
+    steps: [
+      ['Register your interest', 'Through the form on this page or WhatsApp.'],
+      ['Check eligibility', 'We confirm the right certification for your profession and experience.'],
+      ['Cohort details', 'You receive the next cohort’s dates, duration, fees and format.'],
+      ['Start preparing', 'A clear plan up to exam day.'],
+    ],
+    regH: 'Register for the preparation programme',
+    regP: 'Leave your name, profession and preferred contact method, and the team will contact you with the details of the next cohort.',
+    topic: 'Topic: registering for the ABWM exam preparation programme',
+    submit: 'Register my interest',
+    independent: 'An independent preparation programme, not affiliated with or endorsed by the American Board of Wound Management (ABWM). CWS®, CWCA® and CWSP® are registered marks of ABWM. No preparation programme can guarantee an exam result.',
+  },
+}[lang];
+const schema = pageGraph({ lang, key: 'abwm', type: 'WebPage', title: copy.title, description: copy.description, dateModified: checked, aboutTopic: 'American Board of Wound Management certification exam preparation' });
+---
+<BaseLayout lang={lang} pageKey="abwm" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="abwm" />
+    <header class="page-head prose">
+      <p class="eyebrow-pill"><TopicIcon name="award" />{copy.eyebrow}</p>
+      <h1>{copy.h1}</h1>
+      <p class="lead">{copy.lead}</p>
+      <div class="actions">
+        <a class="btn btn-gold" href="#register" {...track('cta_click', { lang, page: 'abwm', placement: 'hero-register' })}>{copy.register}</a>
+        <a class="btn btn-secondary" href="#eligibility">{copy.eligibility}</a>
+      </div>
+    </header>
+
+    <section aria-labelledby="why-h">
+      <h2 id="why-h" class="flush">{copy.whyH}</h2>
+      <ul class="pro-links" role="list">
+        {copy.why.map(([icon, h, p]) => (
+          <li><span class="vlib-icon" aria-hidden="true"><TopicIcon name={icon} /></span><h3>{h}</h3><p>{p}</p></li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="eligibility" aria-labelledby="certs-h">
+      <h2 id="certs-h">{copy.certsH}</h2>
+      <ul class="cert-grid" role="list">
+        {copy.certs.map((c) => (
+          <li>
+            <h3><span class="ltr">{c.code}</span></h3>
+            <p class="cert-full">{c.full}</p>
+            <p>{c.who}</p>
+            <ul>{c.list.map((x) => <li>{x}</li>)}</ul>
+          </li>
+        ))}
+      </ul>
+      <p class="callout prose">{copy.candidate}</p>
+    </section>
+
+    <section aria-labelledby="details-h">
+      <h2 id="details-h">{copy.detailsH}</h2>
+      <table class="fact-table">
+        <tbody>
+          {copy.details.map(([k, v]) => <tr><th scope="row">{k}</th><td>{v}</td></tr>)}
+        </tbody>
+      </table>
+      <p class="source-note">{copy.source} <time datetime={checked}>{formatDate(checked, lang)}</time>. {copy.sourceTail} <a href="https://abwmcertified.org/eligibility/" rel="noopener">{copy.sourceLink}</a></p>
+    </section>
+
+    <div class="grid-2">
+      <section class="prose" aria-labelledby="prog-h">
+        <h2 id="prog-h">{copy.progH}</h2>
+        <ul>{copy.prog.map((x) => <li>{x}</li>)}</ul>
+        <p>{copy.progBy} <a href={credentialsHref(lang)}>{copy.verify}</a></p>
+      </section>
+      <section aria-labelledby="steps-h">
+        <h2 id="steps-h">{copy.stepsH}</h2>
+        <ol class="steps" role="list">
+          {copy.steps.map(([h, p]) => <li><strong>{h}</strong>{p}</li>)}
+        </ol>
+      </section>
+    </div>
+
+    <section id="register" aria-labelledby="reg-h" class="contact-split section-gap">
+      <div class="prose">
+        <h2 id="reg-h" class="flush">{copy.regH}</h2>
+        <p>{copy.regP}</p>
+        <p class="muted">{copy.independent}</p>
+      </div>
+      <QuickContact lang={lang} id="abwm-reg" page="abwm" topic={copy.topic} submit={copy.submit} askProfession />
+    </section>
+  </div>
+</BaseLayout>

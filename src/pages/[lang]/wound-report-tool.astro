@@ -1,0 +1,343 @@
+---
+/**
+ * Wound report tool for healthcare professionals (Aissar, item 12, 23 Nov 2026).
+ * Everything happens inside the page: the form builds a structured assessment report that can be printed,
+ * saved as PDF from the print dialog, or copied as text. Nothing is sent anywhere and nothing is kept after
+ * the page is closed. Per Aissar: no wording about where data is stored, and no data-protection law.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import TopicIcon from '../../components/TopicIcon.astro';
+import { site, type Lang } from '../../config/site';
+import { path, langs } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const ar = lang === 'ar';
+
+type Opt = { ar: string[]; en: string[] };
+type Field = { id: string; type: 'text' | 'number' | 'date' | 'select' | 'checks' | 'textarea' | 'file'; label: { ar: string; en: string }; hint?: { ar: string; en: string }; options?: Opt; unit?: { ar: string; en: string }; min?: number; max?: number; step?: string; span?: boolean };
+type Sec = { id: string; title: { ar: string; en: string }; calc?: 'area' | 'tissue'; fields: Field[] };
+const L2 = (a: string, e: string) => ({ ar: a, en: e });
+
+const sections: Sec[] = [
+  { id: 'who', title: L2('بيانات التقييم', 'Assessment details'), fields: [
+    { id: 'pcode', type: 'text', label: L2('رمز المريض أو الأحرف الأولى', 'Patient code or initials'), hint: L2('استخدم رمزًا بدل الاسم الكامل.', 'Use a code instead of the full name.') },
+    { id: 'age', type: 'number', label: L2('العمر', 'Age'), min: 0, max: 120 },
+    { id: 'sex', type: 'select', label: L2('الجنس', 'Sex'), options: { ar: ['ذكر', 'أنثى'], en: ['Male', 'Female'] } },
+    { id: 'date', type: 'date', label: L2('تاريخ التقييم', 'Assessment date') },
+    { id: 'clinician', type: 'text', label: L2('اسم المُقيِّم', 'Assessed by') },
+    { id: 'role', type: 'text', label: L2('المهنة', 'Profession') },
+    { id: 'setting', type: 'select', label: L2('مكان التقييم', 'Setting'), options: { ar: ['مستشفى', 'عيادة أو مركز', 'زيارة منزلية', 'استشارة عن بعد', 'أخرى'], en: ['Hospital', 'Clinic or centre', 'Home visit', 'Remote consultation', 'Other'] } },
+  ] },
+  { id: 'wound', title: L2('الجرح والتاريخ الصحي', 'Wound and health history'), fields: [
+    { id: 'location', type: 'text', label: L2('موقع الجرح', 'Wound location'), hint: L2('مثال: الكعب الأيمن', 'e.g. right heel') },
+    { id: 'etiology', type: 'select', label: L2('نوع الجرح', 'Wound type'), options: { ar: ['قرحة ضغط', 'قرحة قدم سكري', 'قرحة وريدية', 'قرحة شريانية', 'قرحة مختلطة', 'جرح جراحي', 'جرح رضّي', 'حرق', 'التهاب جلد مرتبط بالرطوبة', 'أخرى'], en: ['Pressure injury', 'Diabetic foot ulcer', 'Venous leg ulcer', 'Arterial ulcer', 'Mixed ulcer', 'Surgical wound', 'Traumatic wound', 'Burn', 'Moisture-associated skin damage', 'Other'] } },
+    { id: 'stage', type: 'text', label: L2('الدرجة أو التصنيف', 'Stage or classification'), hint: L2('مثال: Stage 3 أو Wagner 2', 'e.g. Stage 3 or Wagner 2') },
+    { id: 'duration', type: 'text', label: L2('مدة وجود الجرح', 'Wound duration') },
+    { id: 'abpi', type: 'number', label: L2('مؤشر الكاحل والعضد ABPI (إن وُجد)', 'ABPI (if measured)'), step: '0.01', min: 0, max: 2 },
+    { id: 'comorb', type: 'checks', span: true, label: L2('عوامل مؤثرة', 'Contributing factors'), options: { ar: ['سكري', 'مرض الشرايين الطرفية', 'قصور وريدي', 'مرض كلوي', 'قصور القلب', 'سوء تغذية', 'تدخين', 'قلة الحركة', 'سلس'], en: ['Diabetes', 'Peripheral arterial disease', 'Venous insufficiency', 'Kidney disease', 'Heart failure', 'Malnutrition', 'Smoking', 'Reduced mobility', 'Incontinence'] } },
+  ] },
+  { id: 'size', title: L2('القياسات', 'Measurements'), calc: 'area', fields: [
+    { id: 'length', type: 'number', label: L2('الطول', 'Length'), unit: L2('سم', 'cm'), step: '0.1', min: 0 },
+    { id: 'width', type: 'number', label: L2('العرض', 'Width'), unit: L2('سم', 'cm'), step: '0.1', min: 0 },
+    { id: 'depth', type: 'number', label: L2('العمق', 'Depth'), unit: L2('سم', 'cm'), step: '0.1', min: 0 },
+    { id: 'prevArea', type: 'number', label: L2('المساحة في التقييم السابق', 'Area at previous assessment'), unit: L2('سم²', 'cm²'), step: '0.1', min: 0 },
+    { id: 'tunnel', type: 'text', span: true, label: L2('التجويف أو النفق', 'Undermining or tunnelling'), hint: L2('مثال: 1.5 سم عند الساعة 12', 'e.g. 1.5 cm at 12 o’clock') },
+  ] },
+  { id: 'bed', title: L2('قاع الجرح (نسبة كل نسيج)', 'Wound bed (percentage of each tissue)'), calc: 'tissue', fields: [
+    { id: 'gran', type: 'number', label: L2('نسيج حبيبي', 'Granulation'), unit: L2('%', '%'), min: 0, max: 100 },
+    { id: 'epi', type: 'number', label: L2('نسيج ظهاري', 'Epithelial'), unit: L2('%', '%'), min: 0, max: 100 },
+    { id: 'slough', type: 'number', label: L2('نسيج متليّف (Slough)', 'Slough'), unit: L2('%', '%'), min: 0, max: 100 },
+    { id: 'necrotic', type: 'number', label: L2('نسيج نخري', 'Necrotic'), unit: L2('%', '%'), min: 0, max: 100 },
+    { id: 'exposed', type: 'checks', span: true, label: L2('بُنى مكشوفة', 'Exposed structures'), options: { ar: ['عظم', 'وتر', 'لا يوجد'], en: ['Bone', 'Tendon', 'None'] } },
+  ] },
+  { id: 'exudate', title: L2('الإفرازات والرائحة', 'Exudate and odour'), fields: [
+    { id: 'exAmount', type: 'select', label: L2('كمية الإفرازات', 'Exudate amount'), options: { ar: ['لا يوجد', 'قليلة', 'متوسطة', 'غزيرة'], en: ['None', 'Low', 'Moderate', 'High'] } },
+    { id: 'exType', type: 'select', label: L2('نوع الإفرازات', 'Exudate type'), options: { ar: ['مصلية', 'مصلية مدمّاة', 'دموية', 'قيحية', 'أخرى'], en: ['Serous', 'Serosanguineous', 'Sanguineous', 'Purulent', 'Other'] } },
+    { id: 'odour', type: 'select', label: L2('الرائحة', 'Odour'), options: { ar: ['لا توجد', 'خفيفة', 'واضحة'], en: ['None', 'Mild', 'Strong'] } },
+  ] },
+  { id: 'edge', title: L2('الحواف والجلد المحيط', 'Edges and surrounding skin'), fields: [
+    { id: 'edges', type: 'checks', span: true, label: L2('الحواف', 'Edges'), options: { ar: ['ملتصقة بالقاع', 'غير ملتصقة', 'متدحرجة (Epibole)', 'متقرّنة', 'متعطّنة'], en: ['Attached', 'Not attached', 'Rolled (epibole)', 'Callused', 'Macerated'] } },
+    { id: 'peri', type: 'checks', span: true, label: L2('الجلد المحيط', 'Surrounding skin'), options: { ar: ['سليم', 'احمرار', 'تعطّن', 'جفاف أو تقشّر', 'تصلّب', 'وذمة', 'التهاب جلد', 'تصبّغ'], en: ['Intact', 'Erythema', 'Maceration', 'Dry or scaly', 'Induration', 'Oedema', 'Dermatitis', 'Pigmentation'] } },
+  ] },
+  { id: 'infect', title: L2('علامات العدوى والألم', 'Signs of infection and pain'), fields: [
+    { id: 'signs', type: 'checks', span: true, label: L2('علامات العدوى', 'Signs of infection'), options: { ar: ['احمرار ممتد', 'حرارة موضعية', 'تورّم', 'ألم متزايد', 'إفرازات قيحية', 'رائحة كريهة', 'تأخر الالتئام', 'نسيج حبيبي هش ينزف بسهولة', 'ارتفاع حرارة الجسم', 'لا توجد'], en: ['Spreading redness', 'Local warmth', 'Swelling', 'Increasing pain', 'Purulent exudate', 'Malodour', 'Delayed healing', 'Friable granulation', 'Fever', 'None'] } },
+    { id: 'pain', type: 'number', label: L2('شدة الألم (0–10)', 'Pain score (0–10)'), min: 0, max: 10 },
+  ] },
+  { id: 'plan', title: L2('خطة العناية', 'Care plan'), fields: [
+    { id: 'cleanse', type: 'text', label: L2('التنظيف', 'Cleansing') },
+    { id: 'debride', type: 'select', label: L2('الإنضار', 'Debridement'), options: { ar: ['لا يلزم', 'ذاتي', 'إنزيمي', 'ميكانيكي', 'حاد محافظ', 'جراحي (بالإحالة)'], en: ['Not needed', 'Autolytic', 'Enzymatic', 'Mechanical', 'Conservative sharp', 'Surgical (referral)'] } },
+    { id: 'primary', type: 'text', label: L2('الضماد الأولي', 'Primary dressing') },
+    { id: 'secondary', type: 'text', label: L2('الضماد الثانوي', 'Secondary dressing') },
+    { id: 'freq', type: 'text', label: L2('عدد مرات التغيير', 'Change frequency'), hint: L2('مثال: كل 3 أيام', 'e.g. every 3 days') },
+    { id: 'next', type: 'date', label: L2('موعد التقييم القادم', 'Next assessment') },
+    { id: 'adj', type: 'checks', span: true, label: L2('إجراءات مساندة', 'Supporting measures'), options: { ar: ['تخفيف الضغط', 'تغيير الوضعية', 'ضغط علاجي', 'علاج بالضغط السلبي', 'دعم غذائي', 'ضبط السكر', 'رفع الطرف'], en: ['Offloading', 'Repositioning', 'Compression therapy', 'Negative pressure therapy', 'Nutritional support', 'Glucose control', 'Limb elevation'] } },
+    { id: 'referral', type: 'text', span: true, label: L2('الإحالات', 'Referrals') },
+    { id: 'edu', type: 'text', span: true, label: L2('تثقيف المريض والأسرة', 'Patient and family education') },
+    { id: 'notes', type: 'textarea', span: true, label: L2('ملاحظات', 'Notes') },
+  ] },
+  { id: 'photo', title: L2('صورة الجرح (اختياري)', 'Wound photo (optional)'), fields: [
+    { id: 'img', type: 'file', span: true, label: L2('أضف صورة لتظهر في التقرير', 'Add a photo to show in the report'), hint: L2('صوّر الجرح فقط، دون الوجه أو أي علامة تكشف الهوية.', 'Photograph the wound only, without the face or anything identifying.') },
+  ] },
+];
+
+const copy = ar
+  ? {
+      title: 'أداة تقارير الجروح للكوادر الصحية | سبيرانزا هيلث',
+      description: 'أداة مجانية للكوادر الصحية لإنشاء تقرير تقييم جرح منظّم: القياسات والمساحة ونسب الأنسجة والإفرازات وعلامات العدوى وخطة العناية، جاهز للطباعة أو الحفظ PDF.',
+      eyebrow: 'للكوادر الصحية',
+      h1: 'أداة تقارير الجروح',
+      lead: 'أنشئ تقرير تقييم جرح منظّمًا خلال دقائق: القياسات مع حساب المساحة ونسبة التغيّر، ونسب أنسجة قاع الجرح، والإفرازات، وعلامات العدوى، وخطة العناية. اطبع التقرير أو احفظه PDF أو انسخه نصًّا.',
+      howH: 'طريقة الاستخدام',
+      how: [['املأ ما يلزم', 'كل الحقول اختيارية، والفارغ منها لا يظهر في التقرير.'], ['أنشئ التقرير', 'يظهر التقرير أسفل النموذج مرتّبًا حسب الأقسام.'], ['اطبع أو احفظ', 'اختر «حفظ كملف PDF» من نافذة الطباعة، أو انسخ النص.']],
+      generate: 'أنشئ التقرير', print: 'طباعة / حفظ PDF', copy: 'نسخ النص', clear: 'مسح النموذج', copied: 'تم نسخ نص التقرير.', confirmClear: 'مسح كل الحقول والتقرير؟',
+      reportH: 'تقرير تقييم جرح', area: 'المساحة التقريبية (الطول × العرض)', change: 'التغيّر عن التقييم السابق', down: 'انخفاض', up: 'زيادة', same: 'دون تغيير', tissueSum: 'مجموع النسب', tissueWarn: 'يُفضّل أن يكون مجموع النسب 100%.', empty: 'املأ حقلًا واحدًا على الأقل لإنشاء التقرير.',
+      signature: 'التوقيع', stamp: 'الختم / جهة العمل', foot: 'أُنشئ باستخدام أداة تقارير الجروح من سبيرانزا هيلث (speranzahealth.net). أداة مساعدة للتوثيق لا تغني عن الحكم السريري ولا عن سياسات المنشأة الصحية.',
+      noteH: 'ملاحظة مهنية', note: 'الأداة مساعدة للتوثيق المنظّم، ولا تغني عن الحكم السريري ولا عن بروتوكولات منشأتك. كل قرار علاجي يبقى ضمن نطاق ممارسة مهنتك وبالتنسيق مع الفريق المعالج.',
+      communityH: 'انضم إلى مجتمع العناية بالجروح', communityP: 'ناقش الحالات بعد إخفاء هويتها وتبادل الخبرة مع كوادر صحية من تخصصات مختلفة.', community: 'شروط الانتساب',
+      noscript: 'تحتاج الأداة إلى تفعيل JavaScript في المتصفح.',
+    }
+  : {
+      title: 'Wound Report Tool for Healthcare Professionals | Speranza',
+      description: 'A free tool for healthcare professionals to create a structured wound assessment report: size, tissue, exudate, infection signs and care plan, ready to print.',
+      eyebrow: 'For healthcare professionals',
+      h1: 'Wound report tool',
+      lead: 'Create a structured wound assessment report in minutes: measurements with area and percentage change, wound-bed tissue, exudate, signs of infection and the care plan. Print it, save it as PDF or copy it as text.',
+      howH: 'How to use it',
+      how: [['Fill in what you need', 'Every field is optional; empty fields are left out of the report.'], ['Create the report', 'The report appears below the form, organised by section.'], ['Print or save', 'Choose “Save as PDF” in the print dialog, or copy the text.']],
+      generate: 'Create report', print: 'Print / save PDF', copy: 'Copy text', clear: 'Clear form', copied: 'Report text copied.', confirmClear: 'Clear every field and the report?',
+      reportH: 'Wound assessment report', area: 'Approximate area (length × width)', change: 'Change since previous assessment', down: 'decrease', up: 'increase', same: 'no change', tissueSum: 'Total', tissueWarn: 'The percentages should add up to 100%.', empty: 'Fill in at least one field to create the report.',
+      signature: 'Signature', stamp: 'Stamp / facility', foot: 'Created with the Speranza Health wound report tool (speranzahealth.net). A documentation aid; it does not replace clinical judgement or your facility’s policies.',
+      noteH: 'Professional note', note: 'This tool supports structured documentation. It does not replace clinical judgement or your facility’s protocols; every treatment decision stays within your scope of practice and is coordinated with the treating team.',
+      communityH: 'Join the wound-care community', communityP: 'Discuss de-identified cases and share experience with healthcare professionals from different specialties.', community: 'Membership terms',
+      noscript: 'This tool needs JavaScript to be enabled in your browser.',
+    };
+const clientCfg = {
+  lang, sections: sections.map((s) => ({ id: s.id, title: s.title[lang], calc: s.calc ?? null, fields: s.fields.map((f) => ({ id: f.id, type: f.type, label: f.label[lang], unit: f.unit?.[lang] ?? '' })) })),
+  t: { cm2: ar ? 'سم²' : 'cm²', area: copy.area, change: copy.change, down: copy.down, up: copy.up, same: copy.same, tissueSum: copy.tissueSum, tissueWarn: copy.tissueWarn, empty: copy.empty, copied: copy.copied, confirmClear: copy.confirmClear, reportH: copy.reportH, signature: copy.signature, stamp: copy.stamp, foot: copy.foot },
+  logo: site.logo.horizontal,
+};
+const schema = pageGraph({ lang, key: 'reportTool', type: 'WebPage', title: copy.title, description: copy.description, dateModified: '2026-11-23', aboutTopic: ar ? 'توثيق تقييم الجروح' : 'Wound assessment documentation' });
+const fid = (id: string) => `wr-${id}`;
+---
+<BaseLayout lang={lang} pageKey="reportTool" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap wr-print-root">
+    <Breadcrumbs lang={lang} pageKey="reportTool" />
+    <header class="page-head prose">
+      <p class="eyebrow-pill"><TopicIcon name="doc" />{copy.eyebrow}</p>
+      <h1>{copy.h1}</h1>
+      <p class="lead">{copy.lead}</p>
+    </header>
+
+    <section aria-labelledby="how-h">
+      <h2 id="how-h" class="flush">{copy.howH}</h2>
+      <ol class="steps" role="list">{copy.how.map(([h, p]) => <li><strong>{h}</strong>{p}</li>)}</ol>
+    </section>
+
+    <noscript><p class="callout">{copy.noscript}</p></noscript>
+
+    <div class="wr section-gap js-only" data-cfg={JSON.stringify(clientCfg)}>
+      <form class="wr-form" id="wr-form" novalidate>
+        {sections.map((s) => (
+          <fieldset id={`wr-sec-${s.id}`}>
+            <legend>{s.title[lang]}</legend>
+            <div class="wr-grid">
+              {s.fields.map((f) => (
+                f.type === 'checks' ? (
+                  <div class={`field${f.span ? ' span-2' : ''}`} role="group" aria-labelledby={`${fid(f.id)}-l`}>
+                    <span class="wr-lbl" id={`${fid(f.id)}-l`}><strong>{f.label[lang]}</strong></span>
+                    <div class="wr-checks">
+                      {f.options![lang].map((o, i) => (
+                        <div class="choice"><input type="checkbox" id={`${fid(f.id)}-${i}`} name={f.id} value={o} /><label for={`${fid(f.id)}-${i}`}>{o}</label></div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div class={`field${f.span ? ' span-2' : ''}`}>
+                    <label for={fid(f.id)}>{f.label[lang]}{f.unit && <span class="muted"> ({f.unit[lang]})</span>}</label>
+                    {f.hint && <span class="hint" id={`${fid(f.id)}-h`}>{f.hint[lang]}</span>}
+                    {f.type === 'select' ? (
+                      <select id={fid(f.id)} name={f.id}><option value="">—</option>{f.options![lang].map((o) => <option value={o}>{o}</option>)}</select>
+                    ) : f.type === 'textarea' ? (
+                      <textarea id={fid(f.id)} name={f.id} rows="3"></textarea>
+                    ) : f.type === 'file' ? (
+                      <input type="file" id={fid(f.id)} name={f.id} accept="image/*" aria-describedby={f.hint ? `${fid(f.id)}-h` : undefined} />
+                    ) : (
+                      <input type={f.type} id={fid(f.id)} name={f.id} inputmode={f.type === 'number' ? 'decimal' : undefined} min={f.min} max={f.max} step={f.step} aria-describedby={f.hint ? `${fid(f.id)}-h` : undefined} />
+                    )}
+                  </div>
+                )
+              ))}
+            </div>
+            {s.calc && <p class="wr-calc" data-calc={s.calc} aria-live="polite" hidden></p>}
+            {s.id === 'photo' && <img class="wr-photo-prev" alt="" hidden />}
+          </fieldset>
+        ))}
+        <div class="wr-actions">
+          <button type="submit" class="btn btn-primary">{copy.generate}</button>
+          <button type="button" class="btn btn-secondary" data-act="print" disabled>{copy.print}</button>
+          <button type="button" class="btn btn-secondary" data-act="copy" disabled>{copy.copy}</button>
+          <button type="button" class="btn btn-secondary" data-act="clear">{copy.clear}</button>
+          <p class="form-status" role="status" aria-live="polite" style="margin:0;align-self:center"></p>
+        </div>
+      </form>
+      <section class="wr-report" id="wr-report" aria-live="polite" hidden tabindex="-1"></section>
+    </div>
+
+    <div class="callout prose" role="note">
+      <p><strong>{copy.noteH}:</strong> {copy.note}</p>
+    </div>
+
+    <section class="cta-band" aria-labelledby="comm-h">
+      <div>
+        <h2 id="comm-h">{copy.communityH}</h2>
+        <p>{copy.communityP}</p>
+      </div>
+      <a class="btn btn-gold" href={`${path(lang, 'community')}#terms`}>{copy.community}</a>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  type F = { id: string; type: string; label: string; unit: string };
+  type S = { id: string; title: string; calc: 'area' | 'tissue' | null; fields: F[] };
+  const root = document.querySelector<HTMLElement>('.wr');
+  if (root) {
+    const cfg = JSON.parse(root.dataset.cfg!) as { lang: string; sections: S[]; t: Record<string, string>; logo: string };
+    const form = root.querySelector<HTMLFormElement>('#wr-form')!;
+    const report = root.querySelector<HTMLElement>('#wr-report')!;
+    const status = form.querySelector<HTMLElement>('.form-status')!;
+    const btnPrint = form.querySelector<HTMLButtonElement>('[data-act="print"]')!;
+    const btnCopy = form.querySelector<HTMLButtonElement>('[data-act="copy"]')!;
+    const preview = form.querySelector<HTMLImageElement>('.wr-photo-prev');
+    const fileInput = form.querySelector<HTMLInputElement>('#wr-img');
+    const dateInput = form.querySelector<HTMLInputElement>('#wr-date');
+    const fmt = new Intl.NumberFormat(cfg.lang === 'ar' ? 'ar-u-nu-latn' : 'en', { maximumFractionDigits: 2 });
+    let photoUrl = '';
+    let plainText = '';
+    const today = () => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); };
+    if (dateInput && !dateInput.value) dateInput.value = today();
+    const num = (id: string) => { const el = form.elements.namedItem(id) as HTMLInputElement | null; const v = el && el.value.trim() !== '' ? Number(el.value) : NaN; return Number.isFinite(v) ? v : NaN; };
+    const valueOf = (f: F): string => {
+      if (f.type === 'checks') return [...form.querySelectorAll<HTMLInputElement>(`input[name="${f.id}"]:checked`)].map((c) => c.value).join(cfg.lang === 'ar' ? '، ' : ', ');
+      if (f.type === 'file') return '';
+      const el = form.elements.namedItem(f.id) as HTMLInputElement | null;
+      const v = el?.value.trim() ?? '';
+      return v && f.unit ? (f.unit === '%' ? `${v}%` : `${v} ${f.unit}`) : v;
+    };
+    const areaInfo = () => {
+      const l = num('length'), w = num('width'), prev = num('prevArea');
+      if (!(l > 0 && w > 0)) return null;
+      const area = Math.round(l * w * 100) / 100;
+      let change = '';
+      if (prev > 0) {
+        const pct = Math.round(((area - prev) / prev) * 1000) / 10;
+        change = pct === 0 ? cfg.t.same : `${pct < 0 ? cfg.t.down : cfg.t.up} ${fmt.format(Math.abs(pct))}%`;
+      }
+      return { area, change };
+    };
+    const tissueSum = () => ['gran', 'epi', 'slough', 'necrotic'].map(num).filter(Number.isFinite).reduce((a, b) => a + b, 0);
+    const tissueAny = () => ['gran', 'epi', 'slough', 'necrotic'].some((id) => Number.isFinite(num(id)));
+    const updateCalcs = () => {
+      form.querySelectorAll<HTMLElement>('.wr-calc').forEach((p) => {
+        if (p.dataset.calc === 'area') {
+          const a = areaInfo();
+          p.hidden = !a;
+          if (a) p.textContent = `${cfg.t.area}: ${fmt.format(a.area)} ${cfg.t.cm2}${a.change ? ` · ${cfg.t.change}: ${a.change}` : ''}`;
+        } else {
+          const any = tissueAny(); const sum = tissueSum();
+          p.hidden = !any;
+          p.classList.toggle('warn', any && sum !== 100);
+          if (any) p.textContent = `${cfg.t.tissueSum}: ${fmt.format(sum)}%${sum !== 100 ? ` · ${cfg.t.tissueWarn}` : ''}`;
+        }
+      });
+    };
+    form.addEventListener('input', updateCalcs);
+    fileInput?.addEventListener('change', () => {
+      if (photoUrl) URL.revokeObjectURL(photoUrl);
+      const file = fileInput.files?.[0];
+      photoUrl = file && file.type.startsWith('image/') ? URL.createObjectURL(file) : '';
+      if (preview) { preview.hidden = !photoUrl; if (photoUrl) preview.src = photoUrl; else preview.removeAttribute('src'); }
+    });
+    const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls?: string, text?: string) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+    const build = () => {
+      const lines: string[] = [];
+      const frag = document.createDocumentFragment();
+      const head = el('div', 'wr-r-head');
+      const ht = el('div');
+      ht.append(el('h2', undefined, cfg.t.reportH));
+      const code = valueOf({ id: 'pcode', type: 'text', label: '', unit: '' });
+      const date = valueOf({ id: 'date', type: 'date', label: '', unit: '' });
+      const sub = [code, date].filter(Boolean).join(' · ');
+      if (sub) ht.append(el('p', undefined, sub));
+      const logo = el('img'); logo.src = cfg.logo; logo.alt = 'Speranza Health';
+      head.append(ht, logo);
+      frag.append(head);
+      lines.push(cfg.t.reportH + (sub ? ` — ${sub}` : ''), '');
+      let filled = 0;
+      for (const s of cfg.sections) {
+        const rows: Array<[string, string]> = [];
+        for (const f of s.fields) { const v = valueOf(f); if (v) rows.push([f.label, v]); }
+        if (s.calc === 'area') { const a = areaInfo(); if (a) { rows.push([cfg.t.area, `${fmt.format(a.area)} ${cfg.t.cm2}`]); if (a.change) rows.push([cfg.t.change, a.change]); } }
+        if (s.calc === 'tissue' && tissueAny()) rows.push([cfg.t.tissueSum, `${fmt.format(tissueSum())}%`]);
+        const hasPhoto = s.id === 'photo' && photoUrl;
+        if (!rows.length && !hasPhoto) continue;
+        filled += rows.length + (hasPhoto ? 1 : 0);
+        const sec = el('section', 'wr-r-sec');
+        sec.append(el('h3', undefined, s.title));
+        if (rows.length) {
+          const dl = el('dl');
+          for (const [k, v] of rows) { dl.append(el('dt', undefined, k), el('dd', undefined, v)); }
+          sec.append(dl);
+        }
+        if (hasPhoto) { const img = el('img', 'wr-r-photo'); img.src = photoUrl; img.alt = s.title; sec.append(img); }
+        frag.append(sec);
+        lines.push(s.title, ...rows.map(([k, v]) => `- ${k}: ${v}`), '');
+      }
+      const sign = el('div', 'wr-r-sign');
+      sign.append(el('span', undefined, cfg.t.signature), el('span', undefined, cfg.t.stamp));
+      frag.append(sign, el('p', 'wr-r-foot', cfg.t.foot));
+      lines.push(cfg.t.foot);
+      return { frag, filled, text: lines.join('\n') };
+    };
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const { frag, filled, text } = build();
+      if (filled <= 1) { status.textContent = cfg.t.empty; return; }
+      status.textContent = '';
+      report.replaceChildren(frag);
+      report.hidden = false;
+      plainText = text;
+      btnPrint.disabled = false; btnCopy.disabled = false;
+      report.focus({ preventScroll: true });
+      report.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      (window as any).siteTrack?.('cta_click', { ref: `${cfg.lang}-reportTool-generate` });
+    });
+    btnPrint.addEventListener('click', () => {
+      if (report.hidden) return;
+      document.body.classList.add('wr-printing');
+      const done = () => { document.body.classList.remove('wr-printing'); window.removeEventListener('afterprint', done); };
+      window.addEventListener('afterprint', done);
+      window.print();
+      setTimeout(done, 1000);
+    });
+    btnCopy.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(plainText); status.textContent = cfg.t.copied; }
+      catch { const ta = document.createElement('textarea'); ta.value = plainText; document.body.append(ta); ta.select(); document.execCommand('copy'); ta.remove(); status.textContent = cfg.t.copied; }
+    });
+    form.querySelector('[data-act="clear"]')?.addEventListener('click', () => {
+      if (!confirm(cfg.t.confirmClear)) return;
+      form.reset();
+      if (dateInput) dateInput.value = today();
+      if (photoUrl) URL.revokeObjectURL(photoUrl);
+      photoUrl = ''; plainText = '';
+      if (preview) { preview.hidden = true; preview.removeAttribute('src'); }
+      report.replaceChildren(); report.hidden = true;
+      btnPrint.disabled = true; btnCopy.disabled = true; status.textContent = '';
+      updateCalcs();
+    });
+    window.addEventListener('pagehide', () => { if (photoUrl) URL.revokeObjectURL(photoUrl); });
+  }
+</script>

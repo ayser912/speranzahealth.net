@@ -40,6 +40,16 @@ npm test             # build + internal link check + SEO/structured-data check
 | `organizationConfirmed` | `false` | Speranza Health is a registered organisation. Emits `Organization` schema and makes it the publisher. |
 | `brandNeutralNote` | `true` | Shows the short "educational, independent, brand-neutral" note on clinical pages. |
 
+### Launch switches (`src/config/launch.ts`)
+
+| Switch | Page | While `false` |
+| --- | --- | --- |
+| `shop` | `/{lang}/wound-care-shop/` (products in `src/content/shop.ts`) | Built and working at its URL, but never linked, `noindex`, and left out of the sitemap, site search and llms.txt. |
+| `policies` | `/{lang}/payment-delivery-exchange/` (values in `policy`, `src/content/shop.ts`) | Same. Publish together with `shop`. |
+| `courses` | `/{lang}/wound-care-courses/` (data in `src/content/courses.ts`) | Same. Until it is public, "Book the professional course" buttons go to a booking form instead. |
+
+Set a switch to `true`, run `npm test` and push: the menu, footer, sitemap and search include the page automatically.
+
 ### Profiles
 
 In `profiles`, only entries with `verified: true` appear on the site and in schema `sameAs`. Set YouTube to `verified: true` once the channel exists.
@@ -75,7 +85,7 @@ Clinical pages and articles are **data files**: Arabic and English copy sit side
 - **Illustrations:** original diagrams in `src/components/Illustration.astro` (team, TIME, pressure points, foot check, NPWT parts, surgical wound). Each topic page picks one with `illustration:` in its data file. No wound or patient photos are used.
 - **Professional photo:** save it in `public/images/` and set `person.photo` in `src/config/site.ts`. It appears at the top of the founder page.
 - **Team:** the multidisciplinary specialties are listed in `team` in `src/config/site.ts`.
-- **Videos:** add entries to `videos` in `src/config/site.ts` (YouTube id or Instagram reel URL, the page it belongs to and titles in both languages). Until there are entries, every video section links to the Instagram profile.
+- **Videos:** add entries to `videos` in `src/content/videos.ts` (Instagram reel code or YouTube id, audience, topic card and titles in both languages). They appear on the Videos page (patients) or the Videos for professionals page, grouped by topic; topics without videos show "coming soon".
 
 ### Adding a video to a single page
 

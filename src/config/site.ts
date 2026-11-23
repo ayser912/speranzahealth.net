@@ -214,6 +214,8 @@ export const team = [
   { id: 'general', ar: 'الجراحة العامة', en: 'General surgery' },
   { id: 'plastic', ar: 'الجراحة التجميلية والترميمية', en: 'Plastic and reconstructive surgery' },
   { id: 'podiatry', ar: 'طب وجراحة القدم (Podiatry)', en: 'Podiatry' },
+  /** Added 23 Nov 2026 (Aissar, item 9). */
+  { id: 'derm', ar: 'الأمراض الجلدية', en: 'Dermatology' },
   { id: 'id', ar: 'الأمراض المعدية', en: 'Infectious diseases' },
   { id: 'endocrine', ar: 'الغدد الصماء والسكري', en: 'Endocrinology and diabetes' },
   { id: 'nephrology', ar: 'أمراض الكلى', en: 'Nephrology (kidney disease)' },
@@ -221,23 +223,8 @@ export const team = [
   { id: 'other', ar: 'وغيرهم من الكوادر الصحية حسب حاجة كل حالة', en: 'Other healthcare professionals as each case requires' },
 ] as const;
 
-/**
- * Educational videos. Add entries as they are published (YouTube id or Instagram reel URL).
- * Until the list has entries, video sections link to the Instagram profile instead.
- * Never include patient footage without documented written consent.
- */
-export const videos: Array<{
-  id: string;
-  /** 'youtube' → embedded with a privacy-friendly player; 'instagram' → linked */
-  platform: 'youtube' | 'instagram';
-  /** YouTube video id, or full Instagram reel URL */
-  ref: string;
-  title: { ar: string; en: string };
-  /** registry key of the page this video belongs to; 'home' shows on the homepage */
-  page: string;
-  uploadDate?: string;
-  duration?: string;
-}> = [];
+/* Educational videos (patients' awareness videos and videos for professionals) live in
+   src/content/videos.ts since 23 Nov 2026, grouped by topic. */
 
 /**
  * Featured video on the homepage: Radio Al-Balad 92.5 interview (file supplied by Aissar, 10 Oct 2026;

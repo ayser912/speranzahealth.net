@@ -1,0 +1,99 @@
+---
+/**
+ * Course store (Aissar, item 11, 23 Nov 2026): duration, price and format (online / in person) for each course,
+ * with a booking cart. HIDDEN until launch.courses = true (src/config/launch.ts). Data: src/content/courses.ts.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import StoreCart from '../../components/StoreCart.astro';
+import TopicIcon from '../../components/TopicIcon.astro';
+import type { Lang } from '../../config/site';
+import { path, langs, isPublic } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+import { formatDate } from '../../lib/i18n';
+import { formatPrice } from '../../content/shop';
+import { courses, modes, exampleData, type Mode } from '../../content/courses';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const ar = lang === 'ar';
+const policiesHref = isPublic('policies') || !isPublic('courses') ? path(lang, 'policies') : null;
+const copy = ar
+  ? {
+      title: 'الدورات والكورسات في العناية بالجروح | سبيرانزا هيلث',
+      description: 'دورات في العناية بالجروح للكوادر الصحية: المدة والسعر ونوع الحضور أونلاين أو وجاهي، مع حجز المقعد وتأكيده قبل الدفع.',
+      h1: 'الدورات والكورسات',
+      lead: 'دورات عملية في العناية بالجروح للأطباء والممرضين والصيادلة وأخصائيي العلاج الطبيعي. لكل دورة مدتها وسعرها وطريقة حضورها. اختر الدورات، ثم أرسل طلب الحجز ليتم تأكيد المقعد والموعد معك قبل الدفع.',
+      draft: 'نسخة تجريبية غير منشورة: المدد والأسعار والمواعيد المعروضة أمثلة.',
+      all: 'الكل', duration: 'المدة', price: 'السعر', mode: 'الحضور', where: 'المكان', start: 'الموعد القادم', seats: 'المقاعد المتبقية', lang: 'اللغة', audience: 'لمن',
+      tba: 'يُعلن لاحقًا', venueTba: 'يُحدَّد عند التسجيل', online: 'عبر الإنترنت', full: 'اكتمل العدد', book: 'احجز مقعدك',
+      policies: 'سياسة الدفع والإلغاء',
+    }
+  : {
+      title: 'Wound-Care Courses | Speranza Health',
+      description: 'Wound-care courses for healthcare professionals: duration, price and format (online or in person), with booking confirmed before payment.',
+      h1: 'Courses',
+      lead: 'Practical wound-care courses for physicians, nurses, pharmacists and physiotherapists. Each course shows its duration, price and format. Choose your courses, then send the booking request so your place and the date are confirmed with you before payment.',
+      draft: 'Unpublished draft: the durations, prices and dates shown are examples.',
+      all: 'All', duration: 'Duration', price: 'Price', mode: 'Format', where: 'Venue', start: 'Next run', seats: 'Places left', lang: 'Language', audience: 'For',
+      tba: 'To be announced', venueTba: 'Confirmed on registration', online: 'Online', full: 'Fully booked', book: 'Book your place',
+      policies: 'Payment and cancellation policy',
+    };
+const modeIcon: Record<Mode, string> = { online: 'globe', onsite: 'pin', hybrid: 'layers' };
+const cartItems = courses.map((c) => ({ id: c.id, name: c.title[lang], meta: `${c.duration[lang]} · ${modes[c.mode][lang]}`, price: c.price, max: c.seats === null ? 20 : c.seats }));
+const schema = pageGraph({ lang, key: 'courses', type: 'CollectionPage', title: copy.title, description: copy.description, dateModified: '2026-11-23', aboutTopic: ar ? 'دورات العناية بالجروح' : 'Wound-care courses' });
+---
+<BaseLayout lang={lang} pageKey="courses" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="courses" />
+    <header class="page-head prose">
+      <h1>{copy.h1}</h1>
+      <p class="lead">{copy.lead}</p>
+      {exampleData && <p class="draft-banner">{copy.draft}</p>}
+    </header>
+
+    <div class="store-tools js-only">
+      <ul class="filter-chips" role="list" data-mode-filter>
+        <li><button type="button" data-mode="all" aria-pressed="true">{copy.all}</button></li>
+        {(Object.keys(modes) as Mode[]).map((m) => <li><button type="button" data-mode={m} aria-pressed="false">{modes[m][lang]}</button></li>)}
+      </ul>
+    </div>
+
+    <ul class="prod-grid" role="list">
+      {courses.map((c) => (
+        <li class="prod" data-mode={c.mode}>
+          <ul class="course-meta" role="list">
+            <li class={`mode-${c.mode}`}><TopicIcon name={modeIcon[c.mode]} />{modes[c.mode][lang]}</li>
+            <li><TopicIcon name="clock" />{c.duration[lang]}</li>
+          </ul>
+          <h2 style="font-size:1.12rem;margin:0.2rem 0 0">{c.title[lang]}</h2>
+          <p style="margin:0;color:var(--ink-soft);font-size:0.95rem">{c.desc[lang]}</p>
+          <dl>
+            <dt>{copy.audience}</dt><dd>{c.audience[lang]}</dd>
+            <dt>{copy.where}</dt><dd>{c.mode === 'online' ? copy.online : c.venue ? c.venue[lang] : copy.venueTba}</dd>
+            <dt>{copy.start}</dt><dd>{c.start ? <time datetime={c.start}>{formatDate(c.start, lang)}</time> : copy.tba}</dd>
+            <dt>{copy.lang}</dt><dd>{c.language[lang]}</dd>
+            {c.seats !== null && <Fragment><dt>{copy.seats}</dt><dd class={c.seats === 0 ? 'stock-out' : c.seats <= 5 ? 'stock-low' : 'stock-ok'}>{c.seats === 0 ? copy.full : c.seats}</dd></Fragment>}
+          </dl>
+          <p class="price" style="margin:0">{formatPrice(c.price, lang)}</p>
+          <div class="prod-buy js-only">
+            <button type="button" class="btn btn-primary" data-add={c.id} disabled={c.seats === 0}>{c.seats === 0 ? copy.full : copy.book}</button>
+          </div>
+        </li>
+      ))}
+    </ul>
+    {policiesHref && <p style="margin-top:2rem"><a href={policiesHref}>{copy.policies}</a></p>}
+  </div>
+  <StoreCart lang={lang} store="courses" page="courses" items={cartItems} policiesHref={policiesHref} />
+</BaseLayout>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-mode-filter]');
+  if (bar) {
+    const chips = [...bar.querySelectorAll<HTMLButtonElement>('[data-mode]')];
+    chips.forEach((c) => c.addEventListener('click', () => {
+      chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+      document.querySelectorAll<HTMLElement>('.prod[data-mode]').forEach((li) => { li.hidden = c.dataset.mode !== 'all' && li.dataset.mode !== c.dataset.mode; });
+    }));
+  }
+</script>

@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { pages, langs, path, type PageKey } from '../lib/routes';
+import { pages, langs, path, isPublic, type PageKey } from '../lib/routes';
 import { articles, articlePath } from '../content/articles/index';
 import type { Lang } from '../config/site';
 
@@ -8,7 +8,8 @@ export const GET: APIRoute = ({ site }) => {
   const base = (site?.toString() ?? 'https://speranzahealth.net/').replace(/\/$/, '');
   const today = new Date().toISOString().slice(0, 10);
   const entries: Array<{ paths: Record<Lang, string>; lastmod: string; priority: number }> = [
-    ...(Object.keys(pages) as PageKey[]).filter((k) => pages[k].built)
+    // Only public pages: hidden pages (src/config/launch.ts) stay out of the sitemap.
+    ...(Object.keys(pages) as PageKey[]).filter(isPublic)
       .map((k) => ({ paths: { ar: path('ar', k), en: path('en', k) }, lastmod: today, priority: pages[k].priority })),
     ...articles.map((a) => ({ paths: { ar: articlePath('ar', a.slug), en: articlePath('en', a.slug) }, lastmod: a.reviewed, priority: 0.6 })),
   ];

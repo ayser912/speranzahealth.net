@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { site, brand, flags, person, credentials, contact, profiles, team, media, featuredVideo } from '../config/site';
-import { pages, path, type PageKey } from '../lib/routes';
+import { pages, path, isPublic, type PageKey } from '../lib/routes';
 import { articles, articlePath } from '../content/articles/index';
 import { abs } from '../lib/schema';
 import chronic from '../content/pages/chronic';
@@ -61,7 +61,12 @@ export const GET: APIRoute = () => {
     L.push(`- [${pages.about.nav[lang]}](${abs(path(lang, 'about'))}): ${lang === 'en' ? 'the founder: profile, interview, credentials and verification, press, FAQ' : 'المؤسس: نبذة، مقابلة، المؤهلات والتحقق، الإعلام، أسئلة شائعة'}`);
     for (const [k, d] of topics) L.push(`- [${d[lang].title}](${abs(path(lang, k))}): ${d[lang].description}`);
     L.push(`- [${pages.dressings.nav[lang]}](${abs(path(lang, 'dressings'))}): ${lang === 'en' ? 'advanced wound dressing types (antimicrobial, alginate, hydrocolloid, foam, hydrogel, collagen, superabsorbent, film, silicone, charcoal, skin substitutes, contact layers, NPWT) and their typical uses' : 'أنواع ضمادات الجروح الحديثة واستخداماتها'}`);
+    L.push(`- [${pages.videos.nav[lang]}](${abs(path(lang, 'videos'))}): ${lang === 'en' ? 'short awareness videos in Arabic for patients and families, sorted by topic' : 'فيديوهات تثقيفية قصيرة للمرضى والأسر حسب الموضوع'}`);
     L.push(`- [${pages.education.nav[lang]}](${abs(path(lang, 'education'))})`);
+    // Professionals' pages; hidden pages (src/config/launch.ts) are listed only once they are public.
+    for (const k of ['proVideos', 'abwm', 'courses', 'community', 'reportTool', 'shop', 'policies'] as PageKey[]) {
+      if (isPublic(k)) L.push(`- [${pages[k].nav[lang]}](${abs(path(lang, k))})`);
+    }
     L.push(`- [${pages.contact.nav[lang]}](${abs(path(lang, 'contact'))})`);
     L.push('');
     L.push(lang === 'en' ? '## Articles (English)' : '## المقالات (العربية)');

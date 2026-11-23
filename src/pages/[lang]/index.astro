@@ -9,6 +9,7 @@ import ContactActions from '../../components/ContactActions.astro';
 import TeamSection from '../../components/TeamSection.astro';
 import ArticleCards from '../../components/ArticleCards.astro';
 import VideoSection from '../../components/VideoSection.astro';
+import AbwmPromo from '../../components/AbwmPromo.astro';
 import LogoArt from '../../components/LogoArt.astro';
 import Icon from '../../components/Icon.astro';
 import { site, person, team, flags, type Lang } from '../../config/site';
@@ -266,6 +267,10 @@ const specialties = team.filter((m) => m.id !== 'other');
   <section class="section section-alt">
     <div class="wrap"><TeamSection lang={lang} /></div>
   </section>
+
+  <div class="section">
+    <div class="wrap"><AbwmPromo lang={lang} page="home" /></div>
+  </div>
 
   <section class="section" aria-labelledby="approach-h">
     <div class="wrap">

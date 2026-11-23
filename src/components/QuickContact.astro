@@ -1,0 +1,119 @@
+---
+/**
+ * Compact contact box (23 Nov 2026) for the ABWM announcement, the community, course booking and the
+ * professionals' pages. Same rules as the contact page: first name, (profession), preferred contact method
+ * and consent only. On send it opens a ready-made WhatsApp or email message that the visitor reviews first.
+ */
+import { contact, type Lang } from '../config/site';
+import { path } from '../lib/routes';
+import { t } from '../lib/i18n';
+import { greeting, sourceLine, whatsappUrl, track } from '../lib/links';
+
+interface Props {
+  lang: Lang;
+  /** unique id prefix */
+  id: string;
+  /** page key or tracking name, used for the source line and analytics ref */
+  page: string;
+  /** the topic line added to the message, e.g. "Topic: ABWM exam preparation" */
+  topic: string;
+  title?: string;
+  intro?: string;
+  submit?: string;
+  askProfession?: boolean;
+}
+const { lang, id, page, topic, title, intro, submit, askProfession = false } = Astro.props;
+const s = t(lang);
+const ar = lang === 'ar';
+const L = ar
+  ? { firstName: 'الاسم الأول', profession: 'المهنة', choose: 'اختر…', method: 'طريقة التواصل المفضلة', methods: { whatsapp: 'WhatsApp', phone: 'مكالمة هاتفية', email: 'البريد الإلكتروني' }, consent: 'أوافق على أن يتم التواصل معي بخصوص طلبي، وقد قرأت', submit: 'إرسال', intro: 'عند الإرسال تُفتح رسالة جاهزة في WhatsApp أو البريد الإلكتروني لتراجعها قبل إرسالها.', ok: 'تم تجهيز رسالتك. راجعها في التطبيق الذي فُتح ثم اضغط إرسال.', errName: 'اكتب اسمك الأول (حرفان على الأقل، دون أرقام).', errProf: 'اختر مهنتك.', errMethod: 'اختر طريقة التواصل المفضلة.', errConsent: 'يلزم الموافقة على التواصل لإرسال الطلب.', name: 'الاسم', subject: 'طلب لفريق سبيرانزا هيلث' }
+  : { firstName: 'First name', profession: 'Profession', choose: 'Choose…', method: 'Preferred contact method', methods: { whatsapp: 'WhatsApp', phone: 'Phone call', email: 'Email' }, consent: 'I agree to be contacted about my request, and I have read the', submit: 'Send', intro: 'When you send, a ready-made message opens in WhatsApp or your email app so you can review it first.', ok: 'Your message is ready. Review it in the app that opened, then press send.', errName: 'Enter your first name (at least 2 letters, no numbers).', errProf: 'Choose your profession.', errMethod: 'Choose how you would like to be contacted.', errConsent: 'Consent to be contacted is required to send the request.', name: 'Name', subject: 'Request for the Speranza Health team' };
+const professions = ar
+  ? ['طبيب/ة', 'ممرض/ة', 'صيدلاني/ة', 'أخصائي/ة علاج طبيعي', 'أخصائي/ة تغذية', 'طالب/ة مهن صحية', 'مهنة صحية أخرى']
+  : ['Physician', 'Nurse', 'Pharmacist', 'Physiotherapist', 'Dietitian', 'Health-professions student', 'Other health profession'];
+const cfg = {
+  wa: contact.whatsappE164, email: contact.email, hello: greeting[lang], source: sourceLine({ lang, page, placement: 'quick-contact' }),
+  topic, subject: L.subject, nameL: L.name, profL: L.profession, methodL: L.method, methods: L.methods, ok: L.ok, ref: `${lang}-${page}-${id}`,
+  errors: { name: L.errName, prof: L.errProf, method: L.errMethod, consent: L.errConsent },
+};
+---
+<form class="form qc js-only" id={id} novalidate data-cfg={JSON.stringify(cfg)} aria-labelledby={title ? `${id}-h` : undefined}>
+  {title && <p class="qc-title" id={`${id}-h`}>{title}</p>}
+  <p class="hint qc-intro">{intro ?? L.intro}</p>
+  <div class="field">
+    <label for={`${id}-name`}>{L.firstName}</label>
+    <input type="text" id={`${id}-name`} name="firstName" autocomplete="given-name" maxlength="40" required aria-describedby={`${id}-name-err`} />
+    <p class="error" id={`${id}-name-err`}></p>
+  </div>
+  {askProfession && (
+    <div class="field">
+      <label for={`${id}-prof`}>{L.profession}</label>
+      <select id={`${id}-prof`} name="profession" required aria-describedby={`${id}-prof-err`}>
+        <option value="">{L.choose}</option>
+        {professions.map((p) => <option value={p}>{p}</option>)}
+      </select>
+      <p class="error" id={`${id}-prof-err`}></p>
+    </div>
+  )}
+  <div class="field">
+    <fieldset aria-describedby={`${id}-method-err`}>
+      <legend>{L.method}</legend>
+      <div class="qc-methods">
+        {(['whatsapp', 'phone', 'email'] as const).map((m) => (
+          <div class="choice"><input type="radio" id={`${id}-m-${m}`} name="method" value={m} required /><label for={`${id}-m-${m}`}>{L.methods[m]}</label></div>
+        ))}
+      </div>
+    </fieldset>
+    <p class="error" id={`${id}-method-err`}></p>
+  </div>
+  <div class="field">
+    <div class="choice" style="align-items:flex-start">
+      <input type="checkbox" id={`${id}-consent`} name="consent" required aria-describedby={`${id}-consent-err`} style="margin-top:0.3rem" />
+      <label for={`${id}-consent`}>{L.consent} <a href={path(lang, 'legal')}>{s.privacyLink}</a></label>
+    </div>
+    <p class="error" id={`${id}-consent-err`}></p>
+  </div>
+  <button type="submit" class="btn btn-primary">{submit ?? L.submit}</button>
+  <p class="form-status" role="status" aria-live="polite"></p>
+</form>
+<p class="qc-direct">{ar ? 'أو راسلنا مباشرة عبر ' : 'Or message us directly on '}<a href={whatsappUrl({ lang, page, placement: id }, `${greeting[lang]}\n${topic}`)} rel="noopener" {...track('whatsapp_click', { lang, page, placement: id })}>WhatsApp</a></p>
+
+<script>
+  const nameRe = /^[\p{L}][\p{L}\p{M}' \-]{1,39}$/u;
+  document.querySelectorAll<HTMLFormElement>('form.qc').forEach((form) => {
+    if (form.dataset.ready) return;
+    form.dataset.ready = '1';
+    const cfg = JSON.parse(form.dataset.cfg!);
+    const id = form.id;
+    const setErr = (key: string, field: Element | null, msg: string) => {
+      const el = document.getElementById(`${id}-${key}-err`);
+      if (el) el.textContent = msg;
+      field?.setAttribute('aria-invalid', msg ? 'true' : 'false');
+      return !msg;
+    };
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = (form.elements.namedItem('firstName') as HTMLInputElement).value.trim();
+      const profEl = form.elements.namedItem('profession') as HTMLSelectElement | null;
+      const method = (form.querySelector('input[name="method"]:checked') as HTMLInputElement | null)?.value;
+      const consent = form.elements.namedItem('consent') as HTMLInputElement;
+      const ok = [
+        setErr('name', form.elements.namedItem('firstName') as Element, nameRe.test(name) ? '' : cfg.errors.name),
+        profEl ? setErr('prof', profEl, profEl.value ? '' : cfg.errors.prof) : true,
+        setErr('method', null, method ? '' : cfg.errors.method),
+        setErr('consent', consent, consent.checked ? '' : cfg.errors.consent),
+      ].every(Boolean);
+      if (!ok) { (form.querySelector('[aria-invalid="true"]') as HTMLElement | null ?? form.querySelector<HTMLElement>('input[name="method"]'))?.focus(); return; }
+      const lines = [cfg.hello, cfg.topic, `${cfg.nameL}: ${name}`];
+      if (profEl) lines.push(`${cfg.profL}: ${profEl.value}`);
+      lines.push(`${cfg.methodL}: ${cfg.methods[method!]}`, cfg.source);
+      const text = lines.join('\n');
+      const url = method === 'email'
+        ? `mailto:${cfg.email}?subject=${encodeURIComponent(`${cfg.subject} ${cfg.source}`)}&body=${encodeURIComponent(text)}`
+        : `https://wa.me/${cfg.wa}?text=${encodeURIComponent(text)}`;
+      (window as any).siteTrack?.('generate_lead', { method, ref: cfg.ref });
+      const st = form.querySelector('.form-status'); if (st) st.textContent = cfg.ok;
+      if (method === 'email') location.href = url; else window.open(url, '_blank', 'noopener');
+    });
+  });
+</script>

@@ -5,7 +5,8 @@ import Disclosure from '../../components/Disclosure.astro';
 import ArticleCards from '../../components/ArticleCards.astro';
 import Illustration from '../../components/Illustration.astro';
 import { profiles, type Lang } from '../../config/site';
-import { path, langs, credentialsHref } from '../../lib/routes';
+import TopicIcon from '../../components/TopicIcon.astro';
+import { path, langs, credentialsHref, isPublic, pages } from '../../lib/routes';
 import { pageGraph } from '../../lib/schema';
 import { t, formatDate } from '../../lib/i18n';
 import { track } from '../../lib/links';
@@ -83,6 +84,14 @@ const copy = {
     updated: 'Last updated',
   },
 }[lang];
+/** Professionals' section (23 Nov 2026). Hidden pages (src/config/launch.ts) drop out automatically. */
+const prosCopy = lang === 'ar'
+  ? { h: 'للكوادر الصحية على سبيرانزا', p: { proVideos: 'مكتبة فيديوهات تعليمية حسب الموضوع، مع حجز الكورس المحترف.', abwm: 'أهمية شهادة البورد الأمريكي للجروح، ومن يحق له التقدّم، والتسجيل في برنامج التحضير.', courses: 'الدورات المتاحة ومدتها وسعرها، أونلاين أو وجاهيًا.', community: 'مساحة مهنية لتبادل المعرفة والحالات بعد إخفاء هويتها، مع شروط الانتساب.', reportTool: 'أنشئ تقرير تقييم جرح منظّمًا وجاهزًا للطباعة خلال دقائق.' } }
+  : { h: 'For healthcare professionals on Speranza', p: { proVideos: 'A library of educational videos by topic, with booking for the professional course.', abwm: 'Why the American Board wound certification matters, who can apply, and the preparation programme.', courses: 'Available courses with duration, price and format, online or in person.', community: 'A professional space to share knowledge and de-identified cases, with membership terms.', reportTool: 'Create a structured, print-ready wound assessment report in minutes.' } };
+const prosIcons = { proVideos: 'play', abwm: 'award', courses: 'teach', community: 'team', reportTool: 'doc' } as const;
+const prosLinks = (['proVideos', 'abwm', 'courses', 'community', 'reportTool'] as const)
+  .filter((k) => isPublic(k))
+  .map((k) => ({ key: k, icon: prosIcons[k] === 'teach' ? 'award' : prosIcons[k], p: prosCopy.p[k] }));
 const starter = articles.filter((a) => ['when-to-see-a-wound-care-specialist', 'wound-infection-warning-signs', 'venous-vs-arterial-leg-ulcers'].includes(a.slug));
 const schema = pageGraph({ lang, key: 'education', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated, aboutTopic: lang === 'ar' ? 'التدريب في العناية بالجروح' : 'Wound-care education' });
 ---
@@ -99,6 +108,19 @@ const schema = pageGraph({ lang, key: 'education', type: 'WebPage', title: copy.
         {youtube?.verified && <a class="btn btn-secondary" href={youtube.url} rel="noopener" {...track('outbound_profile', { lang, page: 'education', placement: 'youtube' })}>{copy.videos}</a>}
       </div>
     </header>
+
+    <section aria-labelledby="pros-h">
+      <h2 id="pros-h" class="flush">{prosCopy.h}</h2>
+      <ul class="pro-links" role="list">
+        {prosLinks.map((x) => (
+          <li>
+            <span class="vlib-icon" aria-hidden="true"><TopicIcon name={x.icon} /></span>
+            <h3><a href={path(lang, x.key)}>{pages[x.key].nav[lang]}</a></h3>
+            <p>{x.p}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
 
     <section aria-labelledby="topics-h">
       <h2 id="topics-h">{copy.topicsH}</h2>

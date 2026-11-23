@@ -23,8 +23,12 @@ npm test           # build + internal link check + schema/SEO check — must pas
 ## Single sources of truth (never duplicate these facts elsewhere)
 | What | File |
 | --- | --- |
-| Name, titles, phone/WhatsApp/email, profiles, credentials, team, videos, media, flags | `src/config/site.ts` |
+| Name, titles, phone/WhatsApp/email, profiles, credentials, team, media, flags | `src/config/site.ts` |
 | Remote consultation: specialty profiles, providers (doctors), their hours, booking settings | `src/config/consult.ts` |
+| Videos (patients' awareness reels + professionals' videos, grouped by topic) | `src/content/videos.ts` |
+| Launch switches for the hidden shop / policies / course store | `src/config/launch.ts` |
+| Shop products (name, size, type, price, stock) and policy values | `src/content/shop.ts` |
+| Courses (duration, price, online / in person) | `src/content/courses.ts` |
 | URLs, nav order, redirects | `src/lib/routes.ts` |
 | Shared UI strings | `src/lib/i18n.ts` |
 | JSON-LD (pages call `pageGraph()`; never hand-write JSON-LD) | `src/lib/schema.ts` |
@@ -46,7 +50,14 @@ npm test           # build + internal link check + schema/SEO check — must pas
 - Storage (23 Nov 2026): public pages never say where data or images are stored (no hosting provider, cloud or region names).
 - Training is for physicians, nurses, pharmacists and physiotherapists, anywhere in the world.
 - Logo motion and colours (chosen 11 Nov 2026: "motion 5 + colours D", 2D only, NOT 3D): the header and homepage logos are drawn inline from the original files by `src/components/LogoArt.astro` + `src/lib/logo-art.mjs` (exact path data, never edit the shapes); the mark floats gently and the gold wings breathe (`motion.css`). Background = mint and gold mist (`--mist` in `global.css`) on the homepage hero and behind every page title. All motion is off with prefers-reduced-motion.
-- Instagram videos are "educational/awareness" («تثقيفية», not «تعليمية») and live on the homepage.
+- Instagram videos are "educational/awareness" («تثقيفية», not «تعليمية»). Since 23 Nov 2026 they have their own page in the main menu («فيديوهات تثقيفية», `/ar/wound-care-videos/`): one card per topic, reels open in a click-to-load player, plus a search box; the homepage shows the newest four. Videos for professionals («فيديوهات تعليمية») are a separate page under «للكوادر الصحية».
+- Professionals' section (23 Nov 2026), menu group «للكوادر الصحية»: Education and training, Videos for professionals (with "book the professional course now" CTAs), ABWM exam preparation (eligibility facts checked on abwmcertified.org on 23 Nov 2026; re-check before editing; the programme is independent, never imply ABWM affiliation or guaranteed passing), Wound-care community (membership terms = Aissar's draft to approve), Wound report tool (works entirely in the page, nothing is sent; never add wording about where data is stored). The ABWM announcement (`AbwmPromo`) appears on the homepage and the professionals' videos page.
+
+## Hidden sections (built, not public) — how to show them
+The **shop** (`/ar/wound-care-shop/`, item 7), the **payment, delivery and exchange policy** (`/ar/payment-delivery-exchange/`, item 8) and the **course store** (`/ar/wound-care-courses/`, item 11) are built and working, but hidden: no link anywhere, `noindex`, not in the sitemap, site search or llms.txt. They open only by typing the URL (for Aissar's review).
+- To publish one when Aissar asks: set its switch to `true` in `src/config/launch.ts` (`shop`, `policies`, `courses`), run `npm test`, commit, push. Menus, footer, sitemap and search pick it up automatically. Publish `shop` and `policies` together.
+- Before publishing the shop: replace the example products in `src/content/shop.ts` and set `exampleData = false`; confirm the currency; fill `policy` (payment methods, delivery areas/time/fee, exchange days, course cancellation). Before publishing courses: real data in `src/content/courses.ts`, `exampleData = false`.
+- Orders and bookings are sent for confirmation by WhatsApp/email; nothing is paid on the site (no payment gateway yet).
 - Site search (11 Nov 2026): header box on every page + `/ar/search/`, `/en/search/` (noindex). The index is built from the final HTML by `src/lib/search-integration.mjs` into `dist/{lang}/search-index.json`, so new pages are searchable automatically; it only exists after `npm run build` (use `npm run preview`, not `npm run dev`, to test search).
 - Contact form: first name, preferred contact method, consent only. Booking form: name, email, WhatsApp, chosen time, consent only. Never ask for wound photos, diagnoses or documents. Emergencies are not handled through the site or WhatsApp.
 - Patient images only with written consent + de-identification. Wound photos on public pages stay behind the "عرض الصور" veil (see `healing-journeys.astro`); strip EXIF, watermark `speranzahealth.net`.

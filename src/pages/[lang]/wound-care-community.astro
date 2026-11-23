@@ -1,0 +1,155 @@
+---
+/**
+ * Wound-care community for healthcare professionals (Aissar, item 12, 23 Nov 2026), with membership terms
+ * and a join request. The membership terms below are a first draft for Aissar to approve.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import QuickContact from '../../components/QuickContact.astro';
+import TopicIcon from '../../components/TopicIcon.astro';
+import type { Lang } from '../../config/site';
+import { path, langs } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+import { track } from '../../lib/links';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const updated = '2026-11-23';
+const copy = {
+  ar: {
+    title: 'مجتمع العناية بالجروح للكوادر الصحية | سبيرانزا هيلث',
+    description: 'مجتمع مهني عربي للأطباء والممرضين والصيادلة وأخصائيي العلاج الطبيعي لتبادل المعرفة في العناية بالجروح: ماذا يقدّم، وشروط الانتساب، وطريقة الانضمام.',
+    eyebrow: 'للكوادر الصحية',
+    h1: 'مجتمع العناية بالجروح',
+    lead: 'مساحة مهنية عربية تجمع الكوادر الصحية المهتمة بالعناية بالجروح من مختلف التخصصات والبلدان، لتبادل المعرفة والخبرة، ومناقشة الحالات بعد إخفاء هويتها، ومتابعة الجديد في الممارسة المبنية على الدليل.',
+    join: 'اطلب الانتساب',
+    rulesCta: 'شروط الانتساب',
+    offerH: 'ماذا يقدّم المجتمع؟',
+    offer: [
+      ['chat', 'نقاشات مهنية', 'أسئلة وحالات تعليمية بعد إخفاء الهوية، وآراء من تخصصات مختلفة.'],
+      ['layers', 'ملخصات عملية', 'ملخصات للإرشادات الدولية وأدوات تقييم وقوائم مراجعة قابلة للتطبيق.'],
+      ['award', 'إعلانات التدريب أولًا', 'مواعيد الكورسات والورش وبرنامج التحضير لامتحان البورد الأمريكي ABWM.'],
+      ['doc', 'أدوات للعمل اليومي', 'منها أداة تقارير الجروح لتوثيق التقييم بشكل منظّم.'],
+    ],
+    rulesH: 'شروط الانتساب',
+    rulesLead: 'الانتساب للمجتمع بطلب، ويخضع للشروط التالية:',
+    rules: [
+      ['أن تكون من الكوادر الصحية', 'طبيبًا أو ممرضًا أو صيدلانيًا أو أخصائي علاج طبيعي أو تغذية، أو من مهنة صحية أخرى، أو طالبًا في إحدى المهن الصحية.'],
+      ['تقديم ما يثبت المهنة عند الطلب', 'مثل ترخيص مزاولة المهنة أو بطاقة جهة العمل أو الجامعة، للتأكد من أن المجتمع مهني.'],
+      ['حماية خصوصية المرضى', 'لا تُشارك أسماء المرضى أو وجوههم أو أي بيانات تكشف هويتهم. تُعرض الحالات التعليمية بعد إخفاء الهوية وبموافقة المريض.'],
+      ['النقاش تعليمي', 'الآراء في المجتمع لا تحلّ محل التقييم السريري ولا قرار الفريق المعالج، ويلتزم كل عضو بنطاق ممارسة مهنته وأنظمة بلده.'],
+      ['الاستناد إلى الدليل العلمي', 'تُذكر المصادر عند مشاركة معلومة علمية، ويُفرَّق بوضوح بين الدليل والرأي الشخصي.'],
+      ['الاحترام والمهنية', 'نقاش محترم بين التخصصات، دون إساءة أو تقليل من أي مهنة.'],
+      ['لا إعلانات تجارية', 'لا ترويج لمنتجات أو خدمات أو علامات تجارية دون موافقة مسبقة من إدارة المجتمع، مع الإفصاح عن أي تضارب في المصالح.'],
+      ['حق الإدارة', 'لإدارة المجتمع قبول طلبات الانتساب أو الاعتذار عنها، وإنهاء العضوية عند مخالفة هذه الشروط.'],
+    ],
+    howH: 'كيف تنضم؟',
+    how: [
+      ['أرسل طلب الانتساب', 'عبر النموذج في هذه الصفحة، مع مهنتك وطريقة التواصل المفضلة.'],
+      ['مراجعة الطلب', 'نتواصل معك للتعارف وقد نطلب ما يثبت المهنة.'],
+      ['رابط الانضمام', 'يصلك رابط الانضمام بعد قبول الطلب والموافقة على الشروط.'],
+    ],
+    formH: 'طلب الانتساب',
+    formP: 'بإرسال الطلب تؤكد أنك قرأت شروط الانتساب وتوافق عليها.',
+    topic: 'الموضوع: طلب انتساب إلى مجتمع العناية بالجروح للكوادر الصحية',
+    submit: 'أرسل طلب الانتساب',
+    toolH: 'جرّب أداة تقارير الجروح',
+    toolP: 'أنشئ تقرير تقييم جرح منظّمًا وجاهزًا للطباعة أو الحفظ PDF خلال دقائق.',
+    tool: 'افتح الأداة',
+  },
+  en: {
+    title: 'Wound-Care Community for Healthcare Professionals | Speranza',
+    description: 'An Arabic professional community for physicians, nurses, pharmacists and physiotherapists to share wound-care knowledge: what it offers, membership terms and how to join.',
+    eyebrow: 'For healthcare professionals',
+    h1: 'Wound-care community',
+    lead: 'An Arabic professional space that brings together healthcare professionals interested in wound care from different specialties and countries, to share knowledge and experience, discuss de-identified cases and keep up with evidence-based practice.',
+    join: 'Apply to join',
+    rulesCta: 'Membership terms',
+    offerH: 'What the community offers',
+    offer: [
+      ['chat', 'Professional discussion', 'Educational questions and de-identified cases, with views from different specialties.'],
+      ['layers', 'Practical summaries', 'Summaries of international guidelines, assessment tools and checklists you can apply.'],
+      ['award', 'Training news first', 'Dates of courses, workshops and the ABWM exam preparation programme.'],
+      ['doc', 'Tools for daily work', 'Including the wound report tool for structured assessment documentation.'],
+    ],
+    rulesH: 'Membership terms',
+    rulesLead: 'Membership is by application and is subject to these terms:',
+    rules: [
+      ['You work in healthcare', 'A physician, nurse, pharmacist, physiotherapist, dietitian or other health professional, or a student of a health profession.'],
+      ['Proof of profession on request', 'Such as a practising licence or an employer or university card, so the community stays professional.'],
+      ['Protect patient privacy', 'Never share patients’ names, faces or anything that identifies them. Educational cases are shared de-identified and with the patient’s consent.'],
+      ['Discussion is educational', 'Views shared in the community do not replace clinical assessment or the treating team’s decision; every member works within their own scope of practice and local regulations.'],
+      ['Base it on evidence', 'Cite sources when sharing scientific information, and keep evidence and personal opinion clearly apart.'],
+      ['Respect and professionalism', 'Respectful discussion across professions, without disparaging any of them.'],
+      ['No commercial promotion', 'No promotion of products, services or brands without prior approval from the community team, and disclose any conflict of interest.'],
+      ['The team’s discretion', 'The community team may accept or decline applications and may end a membership if these terms are broken.'],
+    ],
+    howH: 'How to join',
+    how: [
+      ['Send your application', 'Through the form on this page, with your profession and preferred contact method.'],
+      ['Application review', 'We get in touch to introduce ourselves and may ask for proof of profession.'],
+      ['Joining link', 'Once accepted and the terms are agreed, you receive the joining link.'],
+    ],
+    formH: 'Membership application',
+    formP: 'By sending the application you confirm that you have read and accept the membership terms.',
+    topic: 'Topic: application to join the wound-care community for healthcare professionals',
+    submit: 'Send my application',
+    toolH: 'Try the wound report tool',
+    toolP: 'Create a structured wound assessment report, ready to print or save as PDF, in minutes.',
+    tool: 'Open the tool',
+  },
+}[lang];
+const schema = pageGraph({ lang, key: 'community', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated, aboutTopic: lang === 'ar' ? 'مجتمع مهني للعناية بالجروح' : 'Professional wound-care community' });
+---
+<BaseLayout lang={lang} pageKey="community" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="community" />
+    <header class="page-head prose">
+      <p class="eyebrow-pill"><TopicIcon name="team" />{copy.eyebrow}</p>
+      <h1>{copy.h1}</h1>
+      <p class="lead">{copy.lead}</p>
+      <div class="actions">
+        <a class="btn btn-gold" href="#join" {...track('cta_click', { lang, page: 'community', placement: 'hero-join' })}>{copy.join}</a>
+        <a class="btn btn-secondary" href="#terms">{copy.rulesCta}</a>
+      </div>
+    </header>
+
+    <section aria-labelledby="offer-h">
+      <h2 id="offer-h" class="flush">{copy.offerH}</h2>
+      <ul class="pro-links" role="list">
+        {copy.offer.map(([icon, h, p]) => <li><span class="vlib-icon" aria-hidden="true"><TopicIcon name={icon} /></span><h3>{h}</h3><p>{p}</p></li>)}
+      </ul>
+    </section>
+
+    <section id="terms" aria-labelledby="terms-h">
+      <h2 id="terms-h">{copy.rulesH}</h2>
+      <p>{copy.rulesLead}</p>
+      <ol class="rules" role="list">
+        {copy.rules.map(([h, p]) => <li><strong>{h}</strong>{p}</li>)}
+      </ol>
+    </section>
+
+    <section aria-labelledby="how-h">
+      <h2 id="how-h">{copy.howH}</h2>
+      <ol class="steps" role="list">
+        {copy.how.map(([h, p]) => <li><strong>{h}</strong>{p}</li>)}
+      </ol>
+    </section>
+
+    <section id="join" aria-labelledby="join-h" class="contact-split section-gap">
+      <div class="prose">
+        <h2 id="join-h" class="flush">{copy.formH}</h2>
+        <p>{copy.formP}</p>
+      </div>
+      <QuickContact lang={lang} id="community-join" page="community" topic={copy.topic} submit={copy.submit} askProfession />
+    </section>
+
+    <section class="cta-band" aria-labelledby="tool-h">
+      <div>
+        <h2 id="tool-h">{copy.toolH}</h2>
+        <p>{copy.toolP}</p>
+      </div>
+      <a class="btn btn-gold" href={path(lang, 'reportTool')}>{copy.tool}</a>
+    </section>
+  </div>
+</BaseLayout>

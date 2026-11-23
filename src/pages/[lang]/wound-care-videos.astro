@@ -1,0 +1,90 @@
+---
+/**
+ * Patients' awareness videos (Aissar, item 6, 23 Nov 2026): in the main menu, one visible card per topic,
+ * the Instagram reels inside each card, and a search box. Data: src/content/videos.ts.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import VideoLibrary from '../../components/VideoLibrary.astro';
+import TopicIcon from '../../components/TopicIcon.astro';
+import { profiles, type Lang } from '../../config/site';
+import { path, langs } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+import { t } from '../../lib/i18n';
+import { track } from '../../lib/links';
+import { patientTopics, videos } from '../../content/videos';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const s = t(lang);
+const list = videos.filter((v) => v.audience === 'patients');
+const withVideos = patientTopics.filter((tp) => list.some((v) => v.topic === tp.id)).length;
+const ig = profiles.find((p) => p.id === 'instagram');
+const copy = {
+  ar: {
+    title: 'فيديوهات تثقيفية عن العناية بالجروح | سبيرانزا هيلث',
+    description: 'فيديوهات قصيرة بالعربية للمرضى والأسر عن القدم السكري وقرح الضغط والدورة الدموية والعناية بالجلد والجروح البسيطة، مقسّمة حسب الموضوع مع خانة بحث.',
+    eyebrow: 'للمرضى والأسر',
+    h1: 'فيديوهات تثقيفية عن العناية بالجروح',
+    lead: 'فيديوهات قصيرة بالعربية تساعدك على فهم الجرح والوقاية منه ومعرفة متى تطلب المساعدة. اختر الموضوع الذي يهمك، أو ابحث عن فيديو، وشاهده هنا أو على Instagram.',
+    stat: `${list.length} فيديو في ${withVideos} موضوعات، وتُضاف فيديوهات جديدة باستمرار.`,
+    browseH: 'تصفّح حسب الموضوع',
+    follow: 'تابع سبيرانزا هيلث على Instagram',
+    followSub: 'ليصلك كل فيديو تثقيفي جديد',
+    askH: 'لديك سؤال عن جرح؟',
+    askP: 'الفيديوهات تثقيفية عامة. لتقييم حالتك، اطلب استشارة عن بعد مع المختص المعني.',
+    ask: 'اطلب استشارة',
+  },
+  en: {
+    title: 'Wound-Care Awareness Videos | Speranza Health',
+    description: 'Short videos in Arabic for patients and families on the diabetic foot, pressure injuries, circulation, skin care and minor wounds, sorted by topic with a search box.',
+    eyebrow: 'For patients and families',
+    h1: 'Wound-care awareness videos',
+    lead: 'Short videos in Arabic that help you understand a wound, prevent problems and know when to ask for help. Choose a topic or search for a video, then watch it here or on Instagram.',
+    stat: `${list.length} videos across ${withVideos} topics, with new videos added regularly.`,
+    browseH: 'Browse by topic',
+    follow: 'Follow Speranza Health on Instagram',
+    followSub: 'to see every new awareness video',
+    askH: 'A question about a wound?',
+    askP: 'These videos are general education. For your own situation, request a remote consultation with the relevant specialist.',
+    ask: 'Request a consultation',
+  },
+}[lang];
+const schema = pageGraph({ lang, key: 'videos', type: 'CollectionPage', title: copy.title, description: copy.description, dateModified: '2026-11-23', aboutTopic: lang === 'ar' ? 'فيديوهات تثقيفية عن العناية بالجروح' : 'Wound-care awareness videos' });
+---
+<BaseLayout lang={lang} pageKey="videos" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="videos" />
+    <header class="page-head prose">
+      <p class="eyebrow-pill"><TopicIcon name="play" />{copy.eyebrow}</p>
+      <h1>{copy.h1}</h1>
+      <p class="lead">{copy.lead}</p>
+      <p class="muted">{copy.stat}</p>
+    </header>
+
+    <section aria-labelledby="browse-h">
+      <h2 id="browse-h" class="visually-hidden">{copy.browseH}</h2>
+      <VideoLibrary lang={lang} id="pv" topics={patientTopics} videos={list} />
+    </section>
+
+    {ig && (
+      <a class="video-cta" href={ig.url} rel="noopener" {...track('outbound_profile', { lang, page: 'videos', placement: 'follow' })}>
+        <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></span>
+        <span><strong>{copy.follow}</strong><span>{copy.followSub}</span></span>
+      </a>
+    )}
+
+    <section class="cta-band" aria-labelledby="ask-h">
+      <div>
+        <h2 id="ask-h">{copy.askH}</h2>
+        <p>{copy.askP}</p>
+      </div>
+      <a class="btn btn-gold" href={`${path(lang, 'contact')}?reason=remote`} {...track('cta_click', { lang, page: 'videos', placement: 'ask' })}>{copy.ask}</a>
+    </section>
+
+    <div class="callout prose" role="note">
+      <p>{s.educationalNote}</p>
+      <p><strong>{s.emergencyShort}</strong></p>
+    </div>
+  </div>
+</BaseLayout>

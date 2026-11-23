@@ -1,0 +1,233 @@
+---
+/**
+ * Cart for the shop and the course store (23 Nov 2026). The visitor collects items, reviews quantities and the
+ * total, then sends the order for confirmation by WhatsApp or email. Payment is agreed only after the team
+ * confirms availability and the final total, so nothing is paid on the site.
+ * Product cards on the page add items with: <button data-add="<id>"> and an optional <input data-qty-for="<id>">.
+ */
+import { contact, type Lang } from '../config/site';
+import { greeting, sourceLine } from '../lib/links';
+import { currency } from '../content/shop';
+import TopicIcon from './TopicIcon.astro';
+
+interface Props {
+  lang: Lang;
+  store: 'shop' | 'courses';
+  page: string;
+  items: Array<{ id: string; name: string; meta: string; price: number; max: number }>;
+  policiesHref: string | null;
+}
+const { lang, store, page, items, policiesHref } = Astro.props;
+const ar = lang === 'ar';
+const isShop = store === 'shop';
+const L = ar
+  ? {
+      fab: isShop ? 'السلة' : 'حجوزاتي', title: isShop ? 'سلة المشتريات' : 'الدورات المختارة', close: 'إغلاق',
+      empty: isShop ? 'السلة فارغة. أضف منتجًا للبدء.' : 'لم تختر أي دورة بعد.', remove: 'حذف', dec: 'إنقاص الكمية', inc: 'زيادة الكمية', qty: 'الكمية',
+      total: 'المجموع', note: isShop ? 'المجموع لا يشمل رسوم التوصيل. يتم تأكيد التوفر والمجموع النهائي معك قبل الدفع.' : 'يتم تأكيد المقعد والموعد والمجموع النهائي معك قبل الدفع.',
+      formH: isShop ? 'أرسل الطلب للتأكيد' : 'أرسل طلب الحجز', firstName: 'الاسم الأول', method: 'طريقة التواصل المفضلة', methods: { whatsapp: 'WhatsApp', phone: 'مكالمة هاتفية', email: 'البريد الإلكتروني' },
+      consentA: 'قرأت', consentLink: 'سياسة الدفع والتوصيل والاستبدال', consentB: 'وأوافق على أن يتم التواصل معي بخصوص طلبي.', consentPlain: 'أوافق على أن يتم التواصل معي بخصوص طلبي.',
+      send: isShop ? 'أرسل الطلب للتأكيد' : 'أرسل طلب الحجز', clear: 'إفراغ السلة', ok: 'تم تجهيز طلبك. راجعه في التطبيق الذي فُتح ثم اضغط إرسال. لن يُطلب منك الدفع قبل تأكيد الطلب.',
+      added: 'أُضيف إلى السلة', max: 'وصلت إلى الكمية المتوفرة', errName: 'اكتب اسمك الأول (حرفان على الأقل، دون أرقام).', errMethod: 'اختر طريقة التواصل المفضلة.', errConsent: 'يلزم الموافقة لإرسال الطلب.', errEmpty: 'السلة فارغة.',
+      intro: isShop ? 'مرحبًا، أرغب بتأكيد طلب من متجر سبيرانزا هيلث (قبل الدفع):' : 'مرحبًا، أرغب بحجز الدورات التالية من سبيرانزا هيلث (قبل الدفع):',
+      totalLine: isShop ? 'المجموع (دون رسوم التوصيل)' : 'المجموع', name: 'الاسم', subject: isShop ? 'طلب من متجر سبيرانزا هيلث' : 'طلب حجز دورات من سبيرانزا هيلث', items: 'عنصر',
+    }
+  : {
+      fab: isShop ? 'Cart' : 'My bookings', title: isShop ? 'Your cart' : 'Selected courses', close: 'Close',
+      empty: isShop ? 'Your cart is empty. Add a product to start.' : 'You have not chosen a course yet.', remove: 'Remove', dec: 'Decrease quantity', inc: 'Increase quantity', qty: 'Quantity',
+      total: 'Total', note: isShop ? 'The total does not include delivery. Availability and the final total are confirmed with you before payment.' : 'Your place, the date and the final total are confirmed with you before payment.',
+      formH: isShop ? 'Send the order for confirmation' : 'Send the booking request', firstName: 'First name', method: 'Preferred contact method', methods: { whatsapp: 'WhatsApp', phone: 'Phone call', email: 'Email' },
+      consentA: 'I have read the', consentLink: 'payment, delivery and exchange policy', consentB: 'and agree to be contacted about my order.', consentPlain: 'I agree to be contacted about my order.',
+      send: isShop ? 'Send the order for confirmation' : 'Send the booking request', clear: 'Empty the cart', ok: 'Your order is ready. Review it in the app that opened, then press send. You will not be asked to pay before the order is confirmed.',
+      added: 'Added to the cart', max: 'You have reached the quantity available', errName: 'Enter your first name (at least 2 letters, no numbers).', errMethod: 'Choose how you would like to be contacted.', errConsent: 'Your agreement is required to send the order.', errEmpty: 'The cart is empty.',
+      intro: isShop ? 'Hello, I would like to confirm an order from the Speranza Health shop (before payment):' : 'Hello, I would like to book the following Speranza Health courses (before payment):',
+      totalLine: isShop ? 'Total (excluding delivery)' : 'Total', name: 'Name', subject: isShop ? 'Order from the Speranza Health shop' : 'Course booking request, Speranza Health', items: 'items',
+    };
+const cfg = {
+  store, lang, wa: contact.whatsappE164, email: contact.email, hello: greeting[lang], source: sourceLine({ lang, page, placement: 'cart' }),
+  cur: currency[lang], dec: currency.decimals, items: Object.fromEntries(items.map((i) => [i.id, i])), L,
+};
+---
+<div class="store-cart js-only" data-cfg={JSON.stringify(cfg)}>
+  <button type="button" class="cart-fab" aria-haspopup="dialog">
+    <TopicIcon name="cart" /><span>{L.fab}</span><span class="cart-badge" aria-live="polite">0</span>
+  </button>
+  <p class="visually-hidden cart-live" role="status" aria-live="polite"></p>
+  <dialog class="cart-dialog" aria-labelledby={`cart-h-${store}`}>
+    <div class="cart-inner">
+      <div class="cart-top">
+        <h2 id={`cart-h-${store}`}>{L.title}</h2>
+        <button type="button" class="vlib-close cart-close" aria-label={L.close}>✕</button>
+      </div>
+      <div class="cart-body">
+        <ul class="cart-items" role="list"></ul>
+        <p class="cart-empty">{L.empty}</p>
+        <div class="cart-sum"><span>{L.total}</span><span class="amount">0</span></div>
+        <p class="cart-note">{L.note}</p>
+        <form class="form cart-form" novalidate>
+          <p class="qc-title">{L.formH}</p>
+          <div class="field">
+            <label for={`cart-name-${store}`}>{L.firstName}</label>
+            <input type="text" id={`cart-name-${store}`} name="firstName" autocomplete="given-name" maxlength="40" aria-describedby={`cart-name-${store}-err`} />
+            <p class="error" id={`cart-name-${store}-err`}></p>
+          </div>
+          <div class="field">
+            <fieldset aria-describedby={`cart-method-${store}-err`}>
+              <legend>{L.method}</legend>
+              <div class="qc-methods">
+                {(['whatsapp', 'phone', 'email'] as const).map((m) => (
+                  <div class="choice"><input type="radio" id={`cart-m-${store}-${m}`} name="method" value={m} /><label for={`cart-m-${store}-${m}`}>{L.methods[m]}</label></div>
+                ))}
+              </div>
+            </fieldset>
+            <p class="error" id={`cart-method-${store}-err`}></p>
+          </div>
+          <div class="field">
+            <div class="choice" style="align-items:flex-start">
+              <input type="checkbox" id={`cart-consent-${store}`} name="consent" aria-describedby={`cart-consent-${store}-err`} style="margin-top:0.3rem" />
+              <label for={`cart-consent-${store}`}>{policiesHref ? <Fragment>{L.consentA} <a href={policiesHref}>{L.consentLink}</a> {L.consentB}</Fragment> : L.consentPlain}</label>
+            </div>
+            <p class="error" id={`cart-consent-${store}-err`}></p>
+          </div>
+          <div class="actions" style="margin:0">
+            <button type="submit" class="btn btn-primary">{L.send}</button>
+            <button type="button" class="btn btn-secondary cart-clear">{L.clear}</button>
+          </div>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<script>
+  type Item = { id: string; name: string; meta: string; price: number; max: number };
+  const nameRe = /^[\p{L}][\p{L}\p{M}' \-]{1,39}$/u;
+  document.querySelectorAll<HTMLElement>('.store-cart').forEach((root) => {
+    const cfg = JSON.parse(root.dataset.cfg!) as { store: string; lang: string; wa: string; email: string; hello: string; source: string; cur: string; dec: number; items: Record<string, Item>; L: Record<string, any> };
+    const L = cfg.L;
+    const key = `speranza-cart-${cfg.store}`;
+    const money = (v: number) => `${v.toFixed(cfg.dec)} ${cfg.cur}`;
+    let cart: Record<string, number> = {};
+    try { cart = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch { cart = {}; }
+    for (const id of Object.keys(cart)) { const it = cfg.items[id]; if (!it || it.max <= 0) delete cart[id]; else cart[id] = Math.max(1, Math.min(it.max, Math.floor(cart[id]) || 1)); }
+    const save = () => { try { localStorage.setItem(key, JSON.stringify(cart)); } catch { /* private mode: cart lives for this visit only */ } };
+
+    const fab = root.querySelector<HTMLButtonElement>('.cart-fab')!;
+    const badge = root.querySelector<HTMLElement>('.cart-badge')!;
+    const live = root.querySelector<HTMLElement>('.cart-live')!;
+    const dlg = root.querySelector<HTMLDialogElement>('.cart-dialog')!;
+    const list = root.querySelector<HTMLElement>('.cart-items')!;
+    const empty = root.querySelector<HTMLElement>('.cart-empty')!;
+    const amount = root.querySelector<HTMLElement>('.cart-sum .amount')!;
+    const form = root.querySelector<HTMLFormElement>('.cart-form')!;
+    const status = form.querySelector<HTMLElement>('.form-status')!;
+
+    const count = () => Object.values(cart).reduce((a, b) => a + b, 0);
+    const total = () => Object.entries(cart).reduce((s, [id, q]) => s + (cfg.items[id]?.price ?? 0) * q, 0);
+    const mk = (tag: string, cls?: string, text?: string) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+
+    const render = () => {
+      badge.textContent = String(count());
+      list.replaceChildren();
+      for (const [id, q] of Object.entries(cart)) {
+        const it = cfg.items[id];
+        const li = mk('li');
+        const info = mk('div');
+        info.append(mk('div', 'ci-name', it.name), mk('div', 'ci-meta', `${it.meta} · ${money(it.price)}`));
+        const lineTotal = mk('div', 'ci-total', money(it.price * q));
+        const row = mk('div', 'ci-row');
+        const qty = mk('div', 'qty');
+        const dec = mk('button', undefined, '−') as HTMLButtonElement; dec.type = 'button'; dec.setAttribute('aria-label', `${L.dec}: ${it.name}`); dec.disabled = q <= 1;
+        const inp = mk('input') as HTMLInputElement; inp.type = 'number'; inp.min = '1'; inp.max = String(it.max); inp.value = String(q); inp.setAttribute('aria-label', `${L.qty}: ${it.name}`); inp.inputMode = 'numeric';
+        const inc = mk('button', undefined, '+') as HTMLButtonElement; inc.type = 'button'; inc.setAttribute('aria-label', `${L.inc}: ${it.name}`); inc.disabled = q >= it.max;
+        dec.addEventListener('click', () => set(id, q - 1, true));
+        inc.addEventListener('click', () => set(id, q + 1, true));
+        inp.addEventListener('change', () => set(id, Number(inp.value), true));
+        qty.append(dec, inp, inc);
+        const rm = mk('button', 'ci-remove', L.remove) as HTMLButtonElement; rm.type = 'button'; rm.setAttribute('aria-label', `${L.remove}: ${it.name}`);
+        rm.addEventListener('click', () => { delete cart[id]; save(); render(); fab.focus(); });
+        row.append(qty, rm);
+        li.append(info, lineTotal, row);
+        list.append(li);
+      }
+      const n = count();
+      empty.hidden = n > 0; list.hidden = n === 0;
+      amount.textContent = money(total());
+    };
+    const set = (id: string, q: number, refocus = false) => {
+      const it = cfg.items[id]; if (!it) return;
+      const v = Math.max(0, Math.min(it.max, Math.floor(q) || 0));
+      if (v === 0) delete cart[id]; else cart[id] = v;
+      save(); render();
+      if (refocus) list.querySelector<HTMLElement>('input')?.blur();
+    };
+    const add = (id: string, n: number) => {
+      const it = cfg.items[id]; if (!it || it.max <= 0) return;
+      const before = cart[id] ?? 0;
+      const next = Math.min(it.max, before + Math.max(1, n));
+      cart[id] = next; save(); render();
+      live.textContent = next === before ? `${L.max}: ${it.name}` : `${L.added}: ${it.name} (${next})`;
+      fab.classList.remove('bump'); void fab.offsetWidth; fab.classList.add('bump');
+    };
+    // Products with sizes: <select data-variant-for="<id>"> holds the cart id of the chosen size.
+    document.querySelectorAll<HTMLSelectElement>('select[data-variant-for]').forEach((sel) => sel.addEventListener('change', () => {
+      const pid = sel.dataset.variantFor!;
+      const stock = Number(sel.selectedOptions[0]?.dataset.stock ?? 0);
+      const q = document.querySelector<HTMLInputElement>(`[data-qty-for="${pid}"]`);
+      if (q) { q.max = String(Math.max(1, stock)); q.dispatchEvent(new Event('change')); }
+      const dd = document.querySelector<HTMLElement>(`[data-stock-for="${pid}"]`);
+      if (dd) {
+        const lab = JSON.parse(dd.dataset.labels ?? '{}');
+        dd.textContent = stock === 0 ? lab.out : (stock <= 5 ? lab.low : lab.ok).replace('#', String(stock));
+        dd.className = stock === 0 ? 'stock-out' : stock <= 5 ? 'stock-low' : 'stock-ok';
+      }
+    }));
+    document.querySelectorAll<HTMLButtonElement>('[data-add]').forEach((b) => b.addEventListener('click', () => {
+      const q = document.querySelector<HTMLInputElement>(`[data-qty-for="${b.dataset.add}"]`);
+      const sel = document.querySelector<HTMLSelectElement>(`select[data-variant-for="${b.dataset.add}"]`);
+      add(sel ? sel.value : b.dataset.add!, q ? Number(q.value) || 1 : 1);
+      const t = b.textContent; b.textContent = `✓ ${L.added}`; setTimeout(() => { b.textContent = t; }, 1400);
+    }));
+    document.querySelectorAll<HTMLElement>('.qty[data-stepper]').forEach((q) => {
+      const inp = q.querySelector('input')!;
+      const [dec, inc] = q.querySelectorAll('button');
+      const sync = () => { const max = Number(inp.max) || 1; const v = Math.max(1, Math.min(max, Math.floor(Number(inp.value)) || 1)); inp.value = String(v); dec.disabled = v <= 1; inc.disabled = v >= max; };
+      dec.addEventListener('click', () => { inp.value = String(Number(inp.value) - 1); sync(); });
+      inc.addEventListener('click', () => { inp.value = String(Number(inp.value) + 1); sync(); });
+      inp.addEventListener('change', sync); sync();
+    });
+    fab.addEventListener('click', () => { status.textContent = ''; if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', ''); });
+    root.querySelector('.cart-close')!.addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('close', () => fab.focus());
+    root.querySelector('.cart-clear')!.addEventListener('click', () => { cart = {}; save(); render(); status.textContent = ''; });
+
+    const err = (name: string, field: Element | null, msg: string) => {
+      const el = form.querySelector(`#cart-${name}-${cfg.store}-err`); if (el) el.textContent = msg;
+      field?.setAttribute('aria-invalid', msg ? 'true' : 'false'); return !msg;
+    };
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!count()) { status.textContent = L.errEmpty; return; }
+      const nameEl = form.elements.namedItem('firstName') as HTMLInputElement;
+      const consent = form.elements.namedItem('consent') as HTMLInputElement;
+      const method = (form.querySelector('input[name="method"]:checked') as HTMLInputElement | null)?.value as 'whatsapp' | 'phone' | 'email' | undefined;
+      const name = nameEl.value.trim();
+      const ok = [err('name', nameEl, nameRe.test(name) ? '' : L.errName), err('method', null, method ? '' : L.errMethod), err('consent', consent, consent.checked ? '' : L.errConsent)].every(Boolean);
+      if (!ok) { (form.querySelector('[aria-invalid="true"]') as HTMLElement | null ?? form.querySelector<HTMLElement>('input[name="method"]'))?.focus(); return; }
+      const lines = [L.intro];
+      let i = 1;
+      for (const [id, q] of Object.entries(cart)) { const it = cfg.items[id]; lines.push(`${i++}) ${it.name} — ${it.meta} × ${q} = ${money(it.price * q)}`); }
+      lines.push(`${L.totalLine}: ${money(total())}`, '', `${L.name}: ${name}`, `${L.method}: ${L.methods[method!]}`, cfg.source);
+      const text = lines.join('\n');
+      const url = method === 'email'
+        ? `mailto:${cfg.email}?subject=${encodeURIComponent(`${L.subject} ${cfg.source}`)}&body=${encodeURIComponent(text)}`
+        : `https://wa.me/${cfg.wa}?text=${encodeURIComponent(text)}`;
+      (window as any).siteTrack?.('generate_lead', { method, ref: `${cfg.lang}-${cfg.store}-cart` });
+      status.textContent = L.ok;
+      if (method === 'email') location.href = url; else window.open(url, '_blank', 'noopener');
+    });
+    render();
+  });
+</script>

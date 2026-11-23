@@ -1,0 +1,137 @@
+---
+/**
+ * Educational videos for healthcare professionals (Aissar, item 10, 23 Nov 2026): topic cards + search,
+ * promotional calls to book the professional course, and the ABWM exam-preparation announcement.
+ * While the course store is hidden (src/config/launch.ts), "book" goes to the booking box on this page.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import VideoLibrary from '../../components/VideoLibrary.astro';
+import AbwmPromo from '../../components/AbwmPromo.astro';
+import QuickContact from '../../components/QuickContact.astro';
+import TopicIcon from '../../components/TopicIcon.astro';
+import { person, type Lang } from '../../config/site';
+import { path, langs, isPublic } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+import { track } from '../../lib/links';
+import { proTopics, videos } from '../../content/videos';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const ar = lang === 'ar';
+const courseHref = isPublic('courses') ? path(lang, 'courses') : '#book-course';
+const list = videos.filter((v) => v.audience === 'professionals');
+const copy = {
+  ar: {
+    title: 'فيديوهات تعليمية للكوادر الصحية في العناية بالجروح | سبيرانزا',
+    description: 'مكتبة فيديوهات تعليمية للأطباء والممرضين والصيادلة وأخصائيي العلاج الطبيعي في تقييم الجروح والضمادات والقدم السكري والضغط السلبي، مع حجز الكورس المحترف.',
+    eyebrow: 'للكوادر الصحية',
+    h1: 'فيديوهات تعليمية للكوادر الصحية',
+    lead: 'مكتبة فيديوهات تعليمية للأطباء والممرضين والصيادلة وأخصائيي العلاج الطبيعي، مرتّبة حسب موضوعات العناية بالجروح. ابحث عن الموضوع الذي تحتاجه، واحجز الكورس الكامل لتتقن التطبيق العملي خطوة بخطوة.',
+    book: 'احجز الكورس المحترف الآن',
+    abwm: 'التحضير لامتحان ABWM',
+    pitch: [
+      ['award', `تعلّم مع ${person.name.ar}، أخصائي جروح معتمد من البورد الأمريكي CWS®`],
+      ['shield', 'محتوى مبني على الإرشادات الدولية في العناية بالجروح'],
+      ['globe', 'بالعربية أو الإنجليزية، أونلاين أو وجاهيًا، من أي مكان في العالم'],
+    ],
+    libH: 'المكتبة حسب الموضوع',
+    libP: 'الفيديوهات الأولى قيد الإعداد. كل موضوع هنا هو أيضًا وحدة في الكورس المحترف، فلا تنتظر: احجز مكانك وتعلّم الآن.',
+    bandH: 'من المعرفة إلى المهارة',
+    bandP: 'الفيديو يعطيك الفكرة، والكورس المحترف يعطيك التطبيق: حالات عملية، وتقييم، واختيار ضمادات، ومتابعة.',
+    bookH: 'احجز مكانك في الكورس المحترف',
+    bookP: 'سجّل اسمك وطريقة التواصل المفضلة، وسيتواصل معك فريق سبيرانزا هيلث بتفاصيل الكورس القادم: الموضوعات، والمدة، والموعد، والرسوم، ومكان الانعقاد أو رابط الحضور أونلاين.',
+    bookTopic: 'الموضوع: حجز الكورس المحترف في العناية بالجروح',
+    bookSubmit: 'احجز مكاني',
+    moreH: 'أدوات ومساحات أخرى للكوادر الصحية',
+  },
+  en: {
+    title: 'Wound-Care Videos for Healthcare Professionals | Speranza',
+    description: 'Educational videos for physicians, nurses, pharmacists and physiotherapists on wound assessment, dressings, diabetic foot and NPWT, plus the professional course.',
+    eyebrow: 'For healthcare professionals',
+    h1: 'Educational videos for healthcare professionals',
+    lead: 'A library of educational videos for physicians, nurses, pharmacists and physiotherapists, organised by wound-care topic. Find the topic you need, and book the full course to master the practical side step by step.',
+    book: 'Book the professional course now',
+    abwm: 'ABWM exam preparation',
+    pitch: [
+      ['award', `Learn with ${person.name.en}, American Board–Certified Wound Specialist (CWS®)`],
+      ['shield', 'Content based on international wound-care guidelines'],
+      ['globe', 'In Arabic or English, online or in person, from anywhere in the world'],
+    ],
+    libH: 'The library by topic',
+    libP: 'The first videos are in production. Every topic here is also a module of the professional course, so there is no need to wait: book your place and start learning now.',
+    bandH: 'From knowledge to skill',
+    bandP: 'A video gives you the idea; the professional course gives you the practice: real cases, assessment, dressing choice and follow-up.',
+    bookH: 'Book your place on the professional course',
+    bookP: 'Leave your name and preferred contact method, and the Speranza Health team will send you the details of the next course: topics, duration, dates, fees, and the venue or online link.',
+    bookTopic: 'Topic: booking the professional wound-care course',
+    bookSubmit: 'Book my place',
+    moreH: 'More for healthcare professionals',
+  },
+}[lang];
+const more = (['community', 'reportTool', 'education'] as const).map((k) => ({
+  k,
+  icon: k === 'community' ? 'team' : k === 'reportTool' ? 'doc' : 'award',
+  p: {
+    community: ar ? 'مساحة مهنية لتبادل الخبرات والحالات بعد إخفاء الهوية، مع شروط انتساب واضحة.' : 'A professional space to share experience and de-identified cases, with clear membership terms.',
+    reportTool: ar ? 'أنشئ تقرير تقييم جرح منظّمًا وجاهزًا للطباعة خلال دقائق.' : 'Create a structured, print-ready wound assessment report in minutes.',
+    education: ar ? 'محاضرات وورش عمل وتدريب داخل المنشآت الصحية.' : 'Lectures, workshops and on-site training for healthcare facilities.',
+  }[k],
+}));
+const schema = pageGraph({ lang, key: 'proVideos', type: 'CollectionPage', title: copy.title, description: copy.description, dateModified: '2026-11-23', aboutTopic: ar ? 'تعليم الكوادر الصحية في العناية بالجروح' : 'Wound-care education for healthcare professionals' });
+---
+<BaseLayout lang={lang} pageKey="proVideos" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="proVideos" />
+    <header class="page-head prose">
+      <p class="eyebrow-pill"><TopicIcon name="award" />{copy.eyebrow}</p>
+      <h1>{copy.h1}</h1>
+      <p class="lead">{copy.lead}</p>
+      <div class="actions">
+        <a class="btn btn-gold" href={courseHref} {...track('cta_click', { lang, page: 'proVideos', placement: 'hero-book' })}>{copy.book}</a>
+        <a class="btn btn-secondary" href={path(lang, 'abwm')}>{copy.abwm}</a>
+      </div>
+    </header>
+
+    <ul class="ap-facts pro-pitch" role="list">
+      {copy.pitch.map(([icon, text]) => <li><span aria-hidden="true"><TopicIcon name={icon} /></span>{text}</li>)}
+    </ul>
+
+    <section aria-labelledby="lib-h">
+      <div class="section-head"><h2 id="lib-h">{copy.libH}</h2></div>
+      <p class="prose">{copy.libP}</p>
+      <VideoLibrary lang={lang} id="prv" topics={proTopics} videos={list} emptyCta={{ label: copy.book, href: courseHref }} />
+    </section>
+
+    <section class="cta-band" aria-labelledby="band-h">
+      <div>
+        <h2 id="band-h">{copy.bandH}</h2>
+        <p>{copy.bandP}</p>
+      </div>
+      <a class="btn btn-gold" href={courseHref} {...track('cta_click', { lang, page: 'proVideos', placement: 'band-book' })}>{copy.book}</a>
+    </section>
+
+    <div class="section-gap"><AbwmPromo lang={lang} page="proVideos" /></div>
+
+    <section id="book-course" aria-labelledby="book-h" class="contact-split">
+      <div class="prose">
+        <h2 id="book-h" class="flush">{copy.bookH}</h2>
+        <p>{copy.bookP}</p>
+      </div>
+      <QuickContact lang={lang} id="book-qc" page="proVideos" topic={copy.bookTopic} submit={copy.bookSubmit} askProfession />
+    </section>
+
+    <section aria-labelledby="more-h">
+      <h2 id="more-h">{copy.moreH}</h2>
+      <ul class="pro-links" role="list">
+        {more.map((m) => (
+          <li>
+            <span class="vlib-icon" aria-hidden="true"><TopicIcon name={m.icon} /></span>
+            <h3><a href={path(lang, m.k)}>{m.k === 'education' ? (ar ? 'التدريب لفرق العمل' : 'Training for teams') : (m.k === 'community' ? (ar ? 'مجتمع العناية بالجروح' : 'Wound-care community') : (ar ? 'أداة تقارير الجروح' : 'Wound report tool'))}</a></h3>
+            <p>{m.p}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

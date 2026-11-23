@@ -1,0 +1,65 @@
+---
+/**
+ * Announcement: training to prepare for the American Board of Wound Management (ABWM) exams (Aissar, item 10,
+ * 23 Nov 2026). Shown on the homepage and on the professionals' videos page, with a contact box.
+ * Eligibility facts come from abwmcertified.org (checked 23 Nov 2026); the full detail is on the ABWM page.
+ */
+import { person, type Lang } from '../config/site';
+import { path } from '../lib/routes';
+import { track } from '../lib/links';
+import QuickContact from './QuickContact.astro';
+import TopicIcon from './TopicIcon.astro';
+interface Props { lang: Lang; page: string }
+const { lang, page } = Astro.props;
+const ar = lang === 'ar';
+const L = ar
+  ? {
+      eyebrow: 'إعلان · للكوادر الصحية',
+      h: 'استعد لامتحان البورد الأمريكي للجروح (ABWM)',
+      p: `برنامج تدريبي يساعدك على الاستعداد لامتحان أخصائي الجروح المعتمد CWS® وغيره من شهادات البورد الأمريكي لإدارة الجروح، يقدّمه ${person.name.ar}، الحاصل على CWS®.`,
+      facts: [
+        ['award', 'شهادة CWS® معتمدة من اللجنة الوطنية الأمريكية لجهات منح الشهادات (NCCA)'],
+        ['team', 'متعددة التخصصات: للأطباء والممرضين والصيادلة وأخصائيي العلاج الطبيعي والتغذية وغيرهم'],
+        ['clock', 'تشترط 3 سنوات أو أكثر من الخبرة السريرية في العناية بالجروح'],
+        ['globe', 'يمكن تقديم الامتحان من خارج الولايات المتحدة بالتنسيق مع ABWM'],
+      ],
+      more: 'أهمية الشهادة ومن يحق له التقدّم',
+      formTitle: 'سجّل اهتمامك بالبرنامج',
+      topic: 'الموضوع: التسجيل في برنامج التحضير لامتحان البورد الأمريكي للجروح ABWM',
+      submit: 'سجّل اهتمامي',
+      note: 'برنامج تحضيري مستقل، غير تابع للبورد الأمريكي لإدارة الجروح (ABWM). يُعلن عن المواعيد والمدة والرسوم عند فتح التسجيل.',
+    }
+  : {
+      eyebrow: 'Announcement · For healthcare professionals',
+      h: 'Prepare for the American Board of Wound Management (ABWM) exam',
+      p: `A training programme to help you prepare for the Certified Wound Specialist (CWS®) exam and the other ABWM certifications, led by ${person.name.en}, CWS®.`,
+      facts: [
+        ['award', 'The CWS® is accredited by the National Commission for Certifying Agencies (NCCA)'],
+        ['team', 'Interdisciplinary: physicians, nurses, pharmacists, physiotherapists, dietitians and more'],
+        ['clock', 'Requires 3 or more years of clinical wound-care experience'],
+        ['globe', 'The exam can be taken outside the United States by arrangement with ABWM'],
+      ],
+      more: 'Why it matters and who can apply',
+      formTitle: 'Register your interest',
+      topic: 'Topic: registering for the ABWM exam preparation programme',
+      submit: 'Register my interest',
+      note: 'An independent preparation programme, not affiliated with the American Board of Wound Management (ABWM). Dates, duration and fees are announced when registration opens.',
+    };
+---
+<section class="abwm-promo" aria-labelledby={`abwm-h-${page}`}>
+  <div class="ap-main">
+    <p class="ap-eyebrow"><TopicIcon name="award" />{L.eyebrow}</p>
+    <h2 id={`abwm-h-${page}`}>{L.h}</h2>
+    <p class="ap-lead">{L.p}</p>
+    <ul class="ap-facts" role="list">
+      {L.facts.map(([icon, text]) => <li><span aria-hidden="true"><TopicIcon name={icon} /></span>{text}</li>)}
+    </ul>
+    <div class="actions">
+      <a class="btn btn-gold" href={path(lang, 'abwm')} {...track('cta_click', { lang, page, placement: 'abwm-promo' })}>{L.more}</a>
+    </div>
+    <p class="ap-note">{L.note}</p>
+  </div>
+  <div class="ap-form">
+    <QuickContact lang={lang} id={`abwm-qc-${page}`} page={page} topic={L.topic} title={L.formTitle} submit={L.submit} askProfession />
+  </div>
+</section>

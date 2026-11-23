@@ -1,0 +1,160 @@
+---
+/**
+ * Shop for wound dressings, NPWT (VAC) devices, colostomy supplies, ABPI devices and compression stockings
+ * (Aissar, item 7, 23 Nov 2026). HIDDEN until launch.shop = true (src/config/launch.ts): no links, noindex,
+ * not in the sitemap or the site search. All product data: src/content/shop.ts.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import StoreCart from '../../components/StoreCart.astro';
+import TopicIcon from '../../components/TopicIcon.astro';
+import type { Lang } from '../../config/site';
+import { path, langs, isPublic } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+import { categories, products, exampleData, formatPrice, stockOf, variantId } from '../../content/shop';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const ar = lang === 'ar';
+const policiesHref = isPublic('policies') || !isPublic('shop') ? path(lang, 'policies') : null;
+const copy = ar
+  ? {
+      title: 'متجر مستلزمات العناية بالجروح | سبيرانزا هيلث',
+      description: 'ضمادات الجروح بأنواعها، وأجهزة الضغط السلبي VAC، ومستلزمات الكولوستومي، وأجهزة قياس ABPI، والجوارب الضاغطة، مع سلة تجمع فيها طلبك قبل تأكيده.',
+      h1: 'متجر مستلزمات العناية بالجروح',
+      lead: 'ضمادات الجروح بأنواعها، وأجهزة الضغط السلبي (VAC)، ومستلزمات الكولوستومي، وأجهزة قياس ABPI، والجوارب الضاغطة. أضف ما تحتاجه إلى السلة، ثم أرسل الطلب ليتم تأكيد التوفر والمجموع معك قبل الدفع.',
+      draft: 'نسخة تجريبية غير منشورة: المنتجات والأسعار والكميات المعروضة أمثلة.',
+      all: 'الكل', search: 'ابحث عن منتج', ph: 'اسم المنتج أو نوعه أو مقاسه', inStock: 'المتوفر فقط',
+      size: 'الحجم', type: 'التصنيف', price: 'السعر', stock: 'المتوفر', unit: 'الوحدة', out: 'غير متوفر حاليًا', low: (n: number) => `${n} فقط`, avail: (n: number) => `${n}`,
+      add: 'أضف إلى السلة', qty: 'الكمية', chooseSize: 'اختر المقاس', none: 'لا توجد منتجات مطابقة.',
+      adviceH: 'قبل الشراء', advice: 'يُختار الضماد أو الجهاز أو درجة الضغط حسب تقييم الجرح والدورة الدموية. إذا لم تكن متأكدًا، اطلب استشارة قبل الشراء.', adviceCta: 'اطلب استشارة',
+      policies: 'سياسة الدفع والتوصيل والاستبدال',
+    }
+  : {
+      title: 'Wound-Care Supplies Shop | Speranza Health',
+      description: 'Wound dressings of every type, NPWT (VAC) devices, colostomy supplies, ABPI devices and compression stockings, with a cart to collect your order before confirming it.',
+      h1: 'Wound-care supplies shop',
+      lead: 'Wound dressings of every type, negative pressure (VAC) devices, colostomy supplies, ABPI devices and compression stockings. Add what you need to the cart, then send the order so availability and the total can be confirmed with you before payment.',
+      draft: 'Unpublished draft: the products, prices and quantities shown are examples.',
+      all: 'All', search: 'Search for a product', ph: 'Product name, type or size', inStock: 'In stock only',
+      size: 'Size', type: 'Type', price: 'Price', stock: 'Available', unit: 'Unit', out: 'Out of stock', low: (n: number) => `only ${n}`, avail: (n: number) => `${n}`,
+      add: 'Add to cart', qty: 'Quantity', chooseSize: 'Choose a size', none: 'No matching products.',
+      adviceH: 'Before you buy', advice: 'A dressing, device or compression class is chosen after assessing the wound and circulation. If you are not sure, ask for a consultation before buying.', adviceCta: 'Ask for a consultation',
+      policies: 'Payment, delivery and exchange policy',
+    };
+/** Size is wrapped in Unicode isolates (FSI…PDI) so "10 × 10 cm" keeps its order inside Arabic text. */
+const metaOf = (size: string, p: (typeof products)[number]) => [size !== '—' ? `⁨${size}⁩` : '', p.type[lang], p.unit?.[lang] ?? ''].filter(Boolean).join(' · ');
+const cartItems = products.flatMap((p) => p.sizes
+  ? p.sizes.map((v) => ({ id: variantId(p, v.size), name: p.name[lang], meta: metaOf(v.size, p), price: p.price, max: v.stock }))
+  : [{ id: p.id, name: p.name[lang], meta: metaOf(p.size, p), price: p.price, max: p.stock }]);
+const stockLabel = (n: number) => (n === 0 ? copy.out : n <= 5 ? copy.low(n) : copy.avail(n));
+const stockClass = (n: number) => (n === 0 ? 'stock-out' : n <= 5 ? 'stock-low' : 'stock-ok');
+const schema = pageGraph({ lang, key: 'shop', type: 'CollectionPage', title: copy.title, description: copy.description, dateModified: '2026-11-23', aboutTopic: ar ? 'مستلزمات العناية بالجروح' : 'Wound-care supplies' });
+---
+<BaseLayout lang={lang} pageKey="shop" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="shop" />
+    <header class="page-head prose">
+      <h1>{copy.h1}</h1>
+      <p class="lead">{copy.lead}</p>
+      {exampleData && <p class="draft-banner">{copy.draft}</p>}
+    </header>
+
+    <div class="store-tools js-only" data-store-filter>
+      <div class="vlib-input">
+        <TopicIcon name="search" />
+        <label class="visually-hidden" for="shop-q">{copy.search}</label>
+        <input id="shop-q" type="search" placeholder={copy.ph} autocomplete="off" />
+      </div>
+      <ul class="filter-chips" role="list">
+        <li><button type="button" data-cat="all" aria-pressed="true">{copy.all}</button></li>
+        {categories.map((c) => <li><button type="button" data-cat={c.id} aria-pressed="false">{c.name[lang]}</button></li>)}
+      </ul>
+      <div class="choice"><input type="checkbox" id="shop-instock" /><label for="shop-instock">{copy.inStock}</label></div>
+    </div>
+    <p class="search-status" data-store-status role="status" aria-live="polite" data-none={copy.none}></p>
+
+    {categories.map((c) => (
+      <section class="store-cat" data-cat={c.id} aria-labelledby={`cat-${c.id}`}>
+        <h2 id={`cat-${c.id}`}><span class="vlib-icon" aria-hidden="true"><TopicIcon name={c.icon} /></span>{c.name[lang]}</h2>
+        <p>{c.desc[lang]}</p>
+        <ul class="prod-grid" role="list">
+          {products.filter((p) => p.cat === c.id).map((p) => {
+            const total = stockOf(p);
+            const first = p.sizes?.find((v) => v.stock > 0) ?? p.sizes?.[0];
+            const shown = first ? first.stock : p.stock;
+            return (
+            <li class="prod" data-stock={total} data-text={`${p.name.ar} ${p.name.en} ${p.type.ar} ${p.type.en} ${p.size}`}>
+              <span class="prod-type">{p.type[lang]}</span>
+              <h3>{p.name[lang]}</h3>
+              <dl>
+                <dt>{copy.size}</dt><dd><span class="ltr">{p.size}</span></dd>
+                {p.unit && <Fragment><dt>{copy.unit}</dt><dd>{p.unit[lang]}</dd></Fragment>}
+                <dt>{copy.stock}</dt><dd class={stockClass(shown)} data-stock-for={p.id} data-labels={JSON.stringify({ out: copy.out, low: copy.low(0).replace('0', '#'), ok: '#' })}>{stockLabel(shown)}</dd>
+              </dl>
+              <p class="price" style="margin:0">{formatPrice(p.price, lang)}</p>
+              {p.sizes && (
+                <div class="field js-only" style="margin:0">
+                  <label for={`size-${p.id}`}>{copy.chooseSize}</label>
+                  <select id={`size-${p.id}`} data-variant-for={p.id}>
+                    {p.sizes.map((v) => <option value={variantId(p, v.size)} data-stock={v.stock} disabled={v.stock === 0} selected={v === first}>{v.size}{v.stock === 0 ? ` — ${copy.out}` : ''}</option>)}
+                  </select>
+                </div>
+              )}
+              <div class="prod-buy js-only">
+                <div class="qty" data-stepper>
+                  <button type="button" aria-label={`${copy.qty} −`}>−</button>
+                  <input type="number" min="1" max={Math.max(1, shown)} value="1" data-qty-for={p.id} aria-label={`${copy.qty}: ${p.name[lang]} ${p.size}`} disabled={total === 0} />
+                  <button type="button" aria-label={`${copy.qty} +`}>+</button>
+                </div>
+                <button type="button" class="btn btn-primary" data-add={p.id} disabled={total === 0}>{total === 0 ? copy.out : copy.add}</button>
+              </div>
+            </li>
+          ); })}
+        </ul>
+      </section>
+    ))}
+
+    <section class="cta-band" aria-labelledby="advice-h">
+      <div>
+        <h2 id="advice-h">{copy.adviceH}</h2>
+        <p>{copy.advice}</p>
+      </div>
+      <a class="btn btn-gold" href={`${path(lang, 'contact')}?reason=remote`}>{copy.adviceCta}</a>
+    </section>
+    {policiesHref && <p><a href={policiesHref}>{copy.policies}</a></p>}
+  </div>
+  <StoreCart lang={lang} store="shop" page="shop" items={cartItems} policiesHref={policiesHref} />
+</BaseLayout>
+
+<script>
+  import { fold } from '../../lib/search-client';
+  const tools = document.querySelector<HTMLElement>('[data-store-filter]');
+  if (tools) {
+    const q = tools.querySelector<HTMLInputElement>('input[type="search"]')!;
+    const stockOnly = tools.querySelector<HTMLInputElement>('input[type="checkbox"]');
+    const chips = [...tools.querySelectorAll<HTMLButtonElement>('[data-cat]')];
+    const status = document.querySelector<HTMLElement>('[data-store-status]');
+    const sections = [...document.querySelectorAll<HTMLElement>('section.store-cat')];
+    let cat = 'all';
+    const norm = (s: string) => fold(s).replace(/\s+/g, ' ').trim();
+    const apply = () => {
+      const terms = norm(q.value).split(' ').filter(Boolean);
+      let shown = 0;
+      for (const s of sections) {
+        let n = 0;
+        for (const li of s.querySelectorAll<HTMLElement>('.prod')) {
+          const text = norm(li.dataset.text ?? '');
+          const ok = terms.every((t) => text.includes(t)) && (!stockOnly?.checked || Number(li.dataset.stock) > 0);
+          li.hidden = !ok; if (ok) n++;
+        }
+        s.hidden = (cat !== 'all' && s.dataset.cat !== cat) || n === 0;
+        if (!s.hidden) shown += n;
+      }
+      if (status) status.textContent = shown ? '' : status.dataset.none!;
+    };
+    chips.forEach((c) => c.addEventListener('click', () => { cat = c.dataset.cat!; chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c))); apply(); }));
+    q.addEventListener('input', apply);
+    stockOnly?.addEventListener('change', apply);
+  }
+</script>

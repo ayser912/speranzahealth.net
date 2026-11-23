@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { path, mainNav, careNav, pages, type PageKey } from '../lib/routes';
-const keys: PageKey[] = ['home', ...careNav, ...mainNav.filter((k): k is PageKey => k !== 'care')];
+import { path, mainNav, careNav, navGroups, pages, isPublic, type PageKey } from '../lib/routes';
+const keys: PageKey[] = ['home', ...careNav, ...mainNav.filter((k): k is PageKey => !(k in navGroups))].filter(isPublic);
 ---
 <BaseLayout lang="ar" title="الصفحة غير موجودة | Page not found" description="الصفحة المطلوبة غير موجودة. The page you requested does not exist." noindex>
   <div class="wrap section">

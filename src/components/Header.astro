@@ -1,6 +1,6 @@
 ---
 import { site, type Lang } from '../config/site';
-import { path, mainNav, careNav, careLabel, pages, otherLang, type PageKey } from '../lib/routes';
+import { path, mainNav, navGroups, pages, otherLang, isPublic, type PageKey, type NavGroupKey } from '../lib/routes';
 import { t } from '../lib/i18n';
 import SiteSearch from './SiteSearch.astro';
 import LogoArt from './LogoArt.astro';
@@ -9,8 +9,9 @@ const { lang, pageKey, altHref } = Astro.props;
 const s = t(lang);
 const alt = otherLang(lang);
 const switchHref = altHref ?? path(alt, pageKey ?? 'home');
-const careActive = pageKey ? careNav.includes(pageKey) || pageKey === 'articles' : false;
-const hubLabel = lang === 'ar' ? 'كل الأدلة والمقالات' : 'All guides and articles';
+const isGroup = (k: string): k is NavGroupKey => k in navGroups;
+/** Menu entries; hidden pages (src/config/launch.ts) are dropped here, so they are never linked. */
+const entries = mainNav.filter((k) => isGroup(k) || isPublic(k));
 ---
 <header class="site-header">
   <div class="wrap">
@@ -21,23 +22,25 @@ const hubLabel = lang === 'ar' ? 'كل الأدلة والمقالات' : 'All g
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">{s.menu}</button>
     <nav id="site-nav" class="site-nav" aria-label={lang === 'ar' ? 'القائمة الرئيسية' : 'Main'}>
       <ul>
-        {mainNav.map((k) =>
-          k === 'care' ? (
+        {entries.map((k) => {
+          if (!isGroup(k)) return <li><a href={path(lang, k)} aria-current={k === pageKey ? 'page' : undefined}>{pages[k].nav[lang]}</a></li>;
+          const g = navGroups[k];
+          const items = g.items.filter(isPublic);
+          const active = !!pageKey && (items.includes(pageKey) || g.hub?.key === pageKey);
+          return (
             <li class="has-sub">
-              <button type="button" class="sub-toggle" aria-expanded="false" aria-controls="sub-care" data-active={careActive ? 'true' : undefined}>
-                {careLabel[lang]}<svg aria-hidden="true" viewBox="0 0 12 12" width="12" height="12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+              <button type="button" class="sub-toggle" aria-expanded="false" aria-controls={`sub-${k}`} data-active={active ? 'true' : undefined}>
+                {g.label[lang]}<svg aria-hidden="true" viewBox="0 0 12 12" width="12" height="12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
               </button>
-              <ul id="sub-care" class="sub">
-                <li class="sub-hub"><a href={path(lang, 'articles')} aria-current={pageKey === 'articles' ? 'page' : undefined}>{hubLabel}</a></li>
-                {careNav.map((c) => (
+              <ul id={`sub-${k}`} class="sub">
+                {g.hub && <li class="sub-hub"><a href={path(lang, g.hub.key)} aria-current={pageKey === g.hub.key ? 'page' : undefined}>{g.hub.label[lang]}</a></li>}
+                {items.map((c) => (
                   <li><a href={path(lang, c)} aria-current={c === pageKey ? 'page' : undefined}>{pages[c].nav[lang]}</a></li>
                 ))}
               </ul>
             </li>
-          ) : (
-            <li><a href={path(lang, k)} aria-current={k === pageKey ? 'page' : undefined}>{pages[k].nav[lang]}</a></li>
-          ),
-        )}
+          );
+        })}
       </ul>
     </nav>
     <SiteSearch lang={lang} />
@@ -47,9 +50,10 @@ const hubLabel = lang === 'ar' ? 'كل الأدلة والمقالات' : 'All g
 <script>
   const btn = document.querySelector<HTMLButtonElement>('.nav-toggle');
   const nav = document.getElementById('site-nav');
-  const subBtn = document.querySelector<HTMLButtonElement>('.sub-toggle');
-  const sub = document.getElementById('sub-care');
-  const setSub = (open: boolean) => { if (subBtn && sub) { subBtn.setAttribute('aria-expanded', String(open)); sub.classList.toggle('open', open); } };
+  const toggles = [...document.querySelectorAll<HTMLButtonElement>('.sub-toggle')];
+  const subOf = (b: HTMLButtonElement) => document.getElementById(b.getAttribute('aria-controls') ?? '');
+  const setSub = (b: HTMLButtonElement, open: boolean) => { b.setAttribute('aria-expanded', String(open)); subOf(b)?.classList.toggle('open', open); };
+  const closeAll = (except?: HTMLButtonElement) => toggles.forEach((b) => { if (b !== except) setSub(b, false); });
   if (btn && nav) {
     btn.addEventListener('click', () => {
       const open = btn.getAttribute('aria-expanded') === 'true';
@@ -57,14 +61,15 @@ const hubLabel = lang === 'ar' ? 'كل الأدلة والمقالات' : 'All g
       nav.classList.toggle('open', !open);
     });
   }
-  if (subBtn && sub) {
-    subBtn.addEventListener('click', (e) => { e.stopPropagation(); setSub(subBtn.getAttribute('aria-expanded') !== 'true'); });
-    document.addEventListener('click', (e) => { if (!subBtn.parentElement?.contains(e.target as Node)) setSub(false); });
-    sub.addEventListener('focusout', (e) => { if (!subBtn.parentElement?.contains(e.relatedTarget as Node)) setSub(false); });
-  }
+  toggles.forEach((b) => {
+    b.addEventListener('click', (e) => { e.stopPropagation(); const open = b.getAttribute('aria-expanded') !== 'true'; closeAll(b); setSub(b, open); });
+    subOf(b)?.addEventListener('focusout', (e) => { if (!b.parentElement?.contains(e.relatedTarget as Node)) setSub(b, false); });
+  });
+  document.addEventListener('click', (e) => { toggles.forEach((b) => { if (!b.parentElement?.contains(e.target as Node)) setSub(b, false); }); });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    if (sub?.classList.contains('open')) { setSub(false); subBtn?.focus(); return; }
+    const open = toggles.find((b) => b.getAttribute('aria-expanded') === 'true');
+    if (open) { setSub(open, false); open.focus(); return; }
     if (btn && nav?.classList.contains('open')) { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.focus(); }
   });
 </script>

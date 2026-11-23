@@ -1,0 +1,146 @@
+---
+/**
+ * Video library (23 Nov 2026): one visible card per topic, the topic's videos inside it, and a search box
+ * that filters topics and video titles as you type. Instagram/YouTube players load only after a click,
+ * inside a dialog; every video also has a direct "open on Instagram" link (works without JavaScript).
+ */
+import type { Lang } from '../config/site';
+import { path, isPublic } from '../lib/routes';
+import { articleBySlug, articlePath } from '../content/articles/index';
+import { videoUrl, embedUrl, type VideoTopic, type SiteVideo } from '../content/videos';
+import TopicIcon from './TopicIcon.astro';
+
+interface Props {
+  lang: Lang;
+  /** unique id prefix (one library per page) */
+  id: string;
+  topics: VideoTopic[];
+  videos: SiteVideo[];
+  /** shown on a card that has no videos yet */
+  emptyCta?: { label: string; href: string };
+}
+const { lang, id, topics, videos, emptyCta } = Astro.props;
+const ar = lang === 'ar';
+const L = ar
+  ? { search: 'ابحث عن فيديو أو موضوع', ph: 'مثال: القدم، الجوارب، قرحة الضغط', count: (n: number) => (n === 1 ? 'فيديو واحد' : n === 2 ? 'فيديوهان' : n <= 10 ? `${n} فيديوهات` : `${n} فيديو`), soon: 'فيديوهات هذا الموضوع قريبًا.', watch: 'شاهد', open: 'افتح في Instagram', openYt: 'افتح في YouTube', guide: 'اقرأ الدليل', none: 'لا توجد نتائج مطابقة. جرّب كلمة أخرى.', found: 'عدد المواضيع المطابقة', close: 'إغلاق', player: 'مشغّل الفيديو', newTab: '(يفتح في نافذة جديدة)' }
+  : { search: 'Search for a video or topic', ph: 'e.g. foot, stockings, pressure injury', count: (n: number) => (n === 1 ? '1 video' : `${n} videos`), soon: 'Videos on this topic are coming soon.', watch: 'Watch', open: 'Open on Instagram', openYt: 'Open on YouTube', guide: 'Read the guide', none: 'No matching results. Try another word.', found: 'Matching topics', close: 'Close', player: 'Video player', newTab: '(opens in a new tab)' };
+
+const relatedOf = (t: VideoTopic) => {
+  if (t.related?.page && isPublic(t.related.page)) return { href: path(lang, t.related.page), label: L.guide };
+  if (t.related?.article) {
+    const a = articleBySlug(t.related.article);
+    if (!a) throw new Error(`videos.ts: unknown article slug "${t.related.article}"`);
+    return { href: articlePath(lang, a.slug), label: L.guide };
+  }
+  return null;
+};
+const cards = topics.map((t) => ({ t, list: videos.filter((v) => v.topic === t.id), rel: relatedOf(t) }));
+---
+<div class="vlib" id={id} data-none={L.none} data-found={L.found}>
+  <div class="vlib-search js-only" role="search">
+    <label for={`${id}-q`}>{L.search}</label>
+    <div class="vlib-input">
+      <TopicIcon name="search" />
+      <input id={`${id}-q`} type="search" placeholder={L.ph} autocomplete="off" enterkeyhint="search" />
+    </div>
+    <p class="vlib-status" role="status" aria-live="polite"></p>
+  </div>
+
+  <ul class="vlib-grid" role="list">
+    {cards.map(({ t, list, rel }) => (
+      <li class="vlib-card" id={`${id}-${t.id}`} data-text={`${t.title[lang]} ${t.desc[lang]} ${t.title[ar ? 'en' : 'ar']}`}>
+        <div class="vlib-head">
+          <span class="vlib-icon" aria-hidden="true"><TopicIcon name={t.icon} /></span>
+          <div>
+            <h3>{t.title[lang]}</h3>
+            <span class="vlib-count">{list.length ? L.count(list.length) : (ar ? 'قريبًا' : 'Coming soon')}</span>
+          </div>
+        </div>
+        <p class="vlib-desc">{t.desc[lang]}</p>
+        {list.length > 0 ? (
+          <ul class="vlib-videos" role="list">
+            {list.map((v) => (
+              <li data-text={`${v.title[lang]} ${v.title[ar ? 'en' : 'ar']}`}>
+                <button type="button" class="vlib-play" data-embed={embedUrl(v)} data-url={videoUrl(v)} data-title={v.title[lang]} data-code={v.code}>
+                  <span class="vlib-dot" aria-hidden="true"><TopicIcon name="play" /></span>
+                  <span class="vlib-vt">{v.title[lang]}</span>
+                </button>
+                <a class="vlib-ext" href={videoUrl(v)} target="_blank" rel="noopener" title={v.platform === 'instagram' ? L.open : L.openYt} data-track="outbound_profile" data-track-ref={`${lang}-videos-${v.code}`}>
+                  <TopicIcon name="external" /><span class="visually-hidden">{v.platform === 'instagram' ? L.open : L.openYt}: {v.title[lang]} {L.newTab}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="vlib-soon">{L.soon}</p>
+        )}
+        <div class="vlib-foot">
+          {rel && <a href={rel.href}>{rel.label} <span aria-hidden="true">{ar ? '←' : '→'}</span></a>}
+          {list.length === 0 && emptyCta && <a class="vlib-cta" href={emptyCta.href}>{emptyCta.label}</a>}
+        </div>
+      </li>
+    ))}
+  </ul>
+
+  <dialog class="vlib-dialog" aria-label={L.player}>
+    <div class="vlib-dlg-bar">
+      <p class="vlib-dlg-title"></p>
+      <button type="button" class="vlib-close" aria-label={L.close}>✕</button>
+    </div>
+    <div class="vlib-frame"></div>
+    <p class="vlib-dlg-foot"><a class="vlib-dlg-ext" href="#" target="_blank" rel="noopener">{L.open} <span class="visually-hidden">{L.newTab}</span></a></p>
+  </dialog>
+</div>
+
+<script>
+  import { fold } from '../lib/search-client';
+  const norm = (s: string) => fold(s.replace(/[ً-ٰٟـ]/g, '')).replace(/[«»"“”'؟?!.,،؛:()]/g, ' ').replace(/\s+/g, ' ').trim();
+  document.querySelectorAll<HTMLElement>('.vlib').forEach((root) => {
+    const input = root.querySelector<HTMLInputElement>('.vlib-search input');
+    const status = root.querySelector<HTMLElement>('.vlib-status');
+    const cards = [...root.querySelectorAll<HTMLElement>('.vlib-card')];
+    const apply = () => {
+      const q = norm(input?.value ?? '');
+      const terms = q ? q.split(' ') : [];
+      let shown = 0;
+      for (const card of cards) {
+        const topicText = norm(card.dataset.text ?? '');
+        const items = [...card.querySelectorAll<HTMLElement>('.vlib-videos > li')];
+        const topicHit = terms.every((t) => topicText.includes(t));
+        let anyVideo = false;
+        for (const li of items) {
+          const hit = topicHit || terms.every((t) => norm(`${li.dataset.text} ${card.dataset.text}`).includes(t));
+          li.hidden = !hit; if (hit) anyVideo = true;
+        }
+        const visible = !terms.length || topicHit || anyVideo;
+        card.hidden = !visible; if (visible) shown++;
+      }
+      if (status) status.textContent = !terms.length ? '' : shown ? `${root.dataset.found}: ${shown}` : root.dataset.none!;
+    };
+    let timer = 0;
+    input?.addEventListener('input', () => { clearTimeout(timer); timer = window.setTimeout(apply, 120); });
+
+    const dlg = root.querySelector<HTMLDialogElement>('.vlib-dialog');
+    const frame = root.querySelector<HTMLElement>('.vlib-frame');
+    const title = root.querySelector<HTMLElement>('.vlib-dlg-title');
+    const ext = root.querySelector<HTMLAnchorElement>('.vlib-dlg-ext');
+    let opener: HTMLElement | null = null;
+    root.querySelectorAll<HTMLButtonElement>('.vlib-play').forEach((b) => b.addEventListener('click', () => {
+      if (!dlg || !frame || typeof dlg.showModal !== 'function') { window.open(b.dataset.url, '_blank', 'noopener'); return; }
+      opener = b;
+      const f = document.createElement('iframe');
+      f.src = b.dataset.embed!; f.title = b.dataset.title ?? ''; f.loading = 'eager';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; clipboard-write'; f.allowFullscreen = true;
+      f.setAttribute('scrolling', 'no');
+      frame.replaceChildren(f);
+      if (title) title.textContent = b.dataset.title ?? '';
+      if (ext) ext.href = b.dataset.url!;
+      dlg.showModal();
+      (window as any).siteTrack?.('video_play', { video_id: b.dataset.code });
+    }));
+    const close = () => dlg?.close();
+    root.querySelector('.vlib-close')?.addEventListener('click', close);
+    dlg?.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+    dlg?.addEventListener('close', () => { frame?.replaceChildren(); opener?.focus(); });
+  });
+</script>

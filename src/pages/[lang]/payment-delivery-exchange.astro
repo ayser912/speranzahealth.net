@@ -1,0 +1,172 @@
+---
+/**
+ * Payment, delivery and exchange policy (Aissar, item 8, 23 Nov 2026). HIDDEN until launch.policies = true
+ * (src/config/launch.ts). The values Aissar still has to decide (payment methods, delivery areas, time and fee,
+ * exchange period, course cancellation) live in `policy` in src/content/shop.ts and show as "to be decided"
+ * until filled in. Per Aissar: no wording about where data is stored and no data-protection law here.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import type { Lang } from '../../config/site';
+import { path, langs, isPublic } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+import { policy, currency } from '../../content/shop';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const ar = lang === 'ar';
+const tbd = ar ? 'يُحدَّد قبل الإطلاق' : 'to be decided before launch';
+const v = (x: { ar: string; en: string } | null) => (x ? x[lang] : null);
+const incomplete = Object.values(policy).some((x) => x === null);
+const shopHref = isPublic('shop') || !isPublic('policies') ? path(lang, 'shop') : null;
+const coursesHref = isPublic('courses') || !isPublic('policies') ? path(lang, 'courses') : null;
+const copy = ar
+  ? {
+      title: 'سياسة الدفع والتوصيل والاستبدال | سبيرانزا هيلث',
+      description: 'كيف يتم الطلب والدفع والتوصيل، وشروط الاستبدال والإرجاع، وحجز الدورات وإلغاؤها في سبيرانزا هيلث.',
+      h1: 'سياسة الدفع والتوصيل والاستبدال',
+      lead: 'توضح هذه الصفحة كيف يتم الطلب والدفع والتوصيل، ومتى يمكن الاستبدال أو الإرجاع، وكيف يتم حجز الدورات وإلغاؤها.',
+      draft: 'مسودة غير منشورة: القيم المعلَّمة تحتاج إلى تحديد قبل الإطلاق.',
+      stepsH: 'كيف يتم الطلب؟',
+      steps: [['اختر', 'أضف المنتجات أو الدورات إلى السلة.'], ['أرسل الطلب', 'تصلنا رسالة بالطلب عبر WhatsApp أو البريد الإلكتروني.'], ['التأكيد', 'نؤكد معك التوفر والمجموع النهائي ورسوم التوصيل.'], ['الدفع والتوصيل', 'تدفع بالطريقة المتفق عليها، ثم يُرسل الطلب.']],
+      payH: 'الدفع',
+      pay: [
+        'لا يُطلب أي دفع عبر الموقع. يتم الدفع فقط بعد أن نؤكد معك توفر الطلب والمجموع النهائي.',
+        `الأسعار المعروضة بـ${currency.name.ar}، ولا تشمل رسوم التوصيل.`,
+      ],
+      payMethods: 'طرق الدفع المتاحة',
+      delH: 'التوصيل',
+      delAreas: 'مناطق التوصيل', delTime: 'مدة التوصيل المتوقعة', delFee: 'رسوم التوصيل',
+      del: [
+        'تُبلَّغ برسوم التوصيل وموعده المتوقع قبل تأكيد الطلب.',
+        'عند الاستلام، تحقّق من الطلب وأبلغنا فورًا عن أي نقص أو تلف أو اختلاف.',
+        'تُستخدم أجهزة الضغط السلبي وأجهزة قياس ABPI حسب تعليمات الشركة المصنّعة وتحت إشراف مختص.',
+      ],
+      exH: 'الاستبدال والإرجاع',
+      exPeriod: 'مدة طلب الاستبدال أو الإرجاع',
+      days: (n: number) => `${n} يومًا من تاريخ الاستلام`,
+      exWhen: 'يمكن طلب الاستبدال أو الإرجاع في الحالات التالية:',
+      exCases: ['منتج تالف عند الاستلام.', 'منتج مختلف عمّا طلبته.', 'عيب في التصنيع.'],
+      exRules: [
+        'حفاظًا على سلامة المرضى والتعقيم، لا تُستبدل ولا تُرجع الضمادات والمنتجات المعقّمة والجوارب الضاغطة ومستلزمات الكولوستومي بعد فتح عبوتها أو استخدامها، إلا إذا كان فيها عيب.',
+        'يُعاد المنتج في عبوته الأصلية مع ما يثبت الطلب.',
+        'إذا كان الخطأ منّا (تلف أو منتج مختلف)، نتحمّل تكلفة الاستبدال والتوصيل.',
+      ],
+      courseH: 'الدورات: الحجز والإلغاء',
+      course: [
+        'يُثبَّت المقعد بعد تأكيد الحجز وإتمام الدفع.',
+        'إذا أُلغيت الدورة أو تغيّر موعدها من جهتنا، تختار بين نقل حجزك إلى موعد آخر أو استرداد المبلغ كاملًا.',
+      ],
+      courseCancel: 'إلغاء الحجز من جهة المشارك واسترداد المبلغ',
+      contactH: 'أسئلة عن طلبك؟',
+      contactP: 'تواصل معنا وسنجيبك في أقرب وقت.',
+      contact: 'التواصل',
+      back: { shop: 'العودة إلى المتجر', courses: 'الدورات والكورسات' },
+    }
+  : {
+      title: 'Payment, Delivery and Exchange Policy | Speranza Health',
+      description: 'How ordering, payment and delivery work, when items can be exchanged or returned, and how course bookings and cancellations work at Speranza Health.',
+      h1: 'Payment, delivery and exchange policy',
+      lead: 'This page explains how ordering, payment and delivery work, when an item can be exchanged or returned, and how course bookings and cancellations work.',
+      draft: 'Unpublished draft: the highlighted values must be decided before launch.',
+      stepsH: 'How ordering works',
+      steps: [['Choose', 'Add products or courses to the cart.'], ['Send the order', 'We receive your order by WhatsApp or email.'], ['Confirmation', 'We confirm availability, the final total and delivery with you.'], ['Payment and delivery', 'You pay by the agreed method, then the order is sent.']],
+      payH: 'Payment',
+      pay: [
+        'No payment is taken on the website. You pay only after we have confirmed availability and the final total with you.',
+        `Prices are shown in ${currency.name.en} and do not include delivery.`,
+      ],
+      payMethods: 'Payment methods',
+      delH: 'Delivery',
+      delAreas: 'Delivery areas', delTime: 'Expected delivery time', delFee: 'Delivery fee',
+      del: [
+        'You are told the delivery fee and expected date before the order is confirmed.',
+        'On delivery, check your order and tell us straight away about anything missing, damaged or different.',
+        'Negative pressure devices and ABPI devices are used according to the manufacturer’s instructions and under the supervision of a qualified professional.',
+      ],
+      exH: 'Exchanges and returns',
+      exPeriod: 'Time limit to request an exchange or return',
+      days: (n: number) => `${n} days from delivery`,
+      exWhen: 'You can request an exchange or return when:',
+      exCases: ['The item arrived damaged.', 'The item is different from what you ordered.', 'The item has a manufacturing fault.'],
+      exRules: [
+        'For patient safety and sterility, dressings, sterile products, compression stockings and colostomy supplies cannot be exchanged or returned once opened or used, unless they are faulty.',
+        'Items are returned in their original packaging with proof of the order.',
+        'If the mistake is ours (damage or a different item), we cover the cost of the exchange and delivery.',
+      ],
+      courseH: 'Courses: booking and cancellation',
+      course: [
+        'Your place is secured once the booking is confirmed and paid.',
+        'If we cancel or reschedule a course, you choose between moving your booking to another date or a full refund.',
+      ],
+      courseCancel: 'Cancellation by the participant and refunds',
+      contactH: 'Questions about your order?',
+      contactP: 'Contact us and we will reply as soon as we can.',
+      contact: 'Contact',
+      back: { shop: 'Back to the shop', courses: 'Courses' },
+    };
+const rows = (pairs: Array<[string, string | null]>) => pairs.map(([k, val]) => ({ k, val }));
+const schema = pageGraph({ lang, key: 'policies', type: 'WebPage', title: copy.title, description: copy.description, dateModified: '2026-11-23', aboutTopic: ar ? 'سياسة الدفع والتوصيل والاستبدال' : 'Payment, delivery and exchange policy' });
+---
+<BaseLayout lang={lang} pageKey="policies" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="policies" />
+    <header class="page-head prose">
+      <h1>{copy.h1}</h1>
+      <p class="lead">{copy.lead}</p>
+      {incomplete && <p class="draft-banner">{copy.draft}</p>}
+    </header>
+
+    <section aria-labelledby="steps-h">
+      <h2 id="steps-h" class="flush">{copy.stepsH}</h2>
+      <ol class="steps" role="list">{copy.steps.map(([h, p]) => <li><strong>{h}</strong>{p}</li>)}</ol>
+    </section>
+
+    <section class="prose" aria-labelledby="pay-h">
+      <h2 id="pay-h">{copy.payH}</h2>
+      <ul>{copy.pay.map((x) => <li>{x}</li>)}</ul>
+      <table class="fact-table"><tbody>
+        {rows([[copy.payMethods, v(policy.paymentMethods)]]).map((r) => <tr><th scope="row">{r.k}</th><td>{r.val ?? <span class="tbd">{tbd}</span>}</td></tr>)}
+      </tbody></table>
+    </section>
+
+    <section class="prose" aria-labelledby="del-h">
+      <h2 id="del-h">{copy.delH}</h2>
+      <table class="fact-table"><tbody>
+        {rows([[copy.delAreas, v(policy.deliveryAreas)], [copy.delTime, v(policy.deliveryTime)], [copy.delFee, v(policy.deliveryFee)]]).map((r) => <tr><th scope="row">{r.k}</th><td>{r.val ?? <span class="tbd">{tbd}</span>}</td></tr>)}
+      </tbody></table>
+      <ul>{copy.del.map((x) => <li>{x}</li>)}</ul>
+    </section>
+
+    <section class="prose" aria-labelledby="ex-h">
+      <h2 id="ex-h">{copy.exH}</h2>
+      <table class="fact-table"><tbody>
+        <tr><th scope="row">{copy.exPeriod}</th><td>{policy.exchangeDays !== null ? copy.days(policy.exchangeDays) : <span class="tbd">{tbd}</span>}</td></tr>
+      </tbody></table>
+      <p>{copy.exWhen}</p>
+      <ul>{copy.exCases.map((x) => <li>{x}</li>)}</ul>
+      <ul>{copy.exRules.map((x) => <li>{x}</li>)}</ul>
+    </section>
+
+    <section class="prose" aria-labelledby="course-h">
+      <h2 id="course-h">{copy.courseH}</h2>
+      <ul>{copy.course.map((x) => <li>{x}</li>)}</ul>
+      <table class="fact-table"><tbody>
+        <tr><th scope="row">{copy.courseCancel}</th><td>{v(policy.courseCancellation) ?? <span class="tbd">{tbd}</span>}</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="cta-band" aria-labelledby="pc-h">
+      <div>
+        <h2 id="pc-h">{copy.contactH}</h2>
+        <p>{copy.contactP}</p>
+      </div>
+      <a class="btn btn-gold" href={path(lang, 'contact')}>{copy.contact}</a>
+    </section>
+    <p>
+      {shopHref && <a href={shopHref}>{copy.back.shop}</a>}
+      {shopHref && coursesHref && ' · '}
+      {coursesHref && <a href={coursesHref}>{copy.back.courses}</a>}
+    </p>
+  </div>
+</BaseLayout>
