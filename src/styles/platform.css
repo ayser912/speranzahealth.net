@@ -245,3 +245,6 @@ html[dir='rtl'] .vlib-dlg-bar { padding: 0.5rem 1rem 0.5rem 0.5rem; }
 .cart-note { font-size: 0.92rem; color: var(--ink-soft); margin: 0 0 1rem; }
 .cart-body .form { max-width: none; padding: 1rem; }
 @media (max-width: 30rem) { .cart-fab { inset-inline: 1rem; justify-content: center; } }
+
+/* Tablet width: the submenu buttons use the same size as the other menu tabs. */
+@media (min-width: 48.01rem) and (max-width: 56rem) { .site-nav .sub-toggle { font-size: 0.92rem; padding-inline: 0.3rem; } }
