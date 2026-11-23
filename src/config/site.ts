@@ -215,7 +215,7 @@ export const team = [
   { id: 'plastic', ar: 'الجراحة التجميلية والترميمية', en: 'Plastic and reconstructive surgery' },
   { id: 'podiatry', ar: 'طب وجراحة القدم (Podiatry)', en: 'Podiatry' },
   /** Added 23 Nov 2026 (Aissar, item 9). */
-  { id: 'derm', ar: 'الأمراض الجلدية', en: 'Dermatology' },
+  { id: 'dermatology', ar: 'الأمراض الجلدية', en: 'Dermatology' },
   { id: 'id', ar: 'الأمراض المعدية', en: 'Infectious diseases' },
   { id: 'endocrine', ar: 'الغدد الصماء والسكري', en: 'Endocrinology and diabetes' },
   { id: 'nephrology', ar: 'أمراض الكلى', en: 'Nephrology (kidney disease)' },
