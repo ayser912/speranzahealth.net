@@ -34,7 +34,7 @@ const copy = {
     h1Sub: 'العناية بالجروح بالعلم والأمل، وبفريق متعدد التخصصات',
     lead: 'منصة رقمية عربية متخصصة في العناية بالجروح، موجّهة لكل الناس حول العالم: استشارة عن بعد مع المختص المعني من فريق طبي متعدد التخصصات، ومعلومة واضحة ومبنية على الدليل العلمي للمرضى والأسر، وتدريب للكوادر الصحية.',
     ctaRemote: 'سجّل اهتمامك بالاستشارة عن بعد',
-    ctaRemoteLive: 'اطلب استشارة عن بعد',
+    ctaRemoteLive: 'احجز استشارة عن بعد الآن',
     soon: 'قريبًا',
     soonP: 'نعمل حاليًا على استكمال الفريق الطبي لهذه الخدمة، وستُنشر أسماء الأطباء وتخصصاتهم هنا عند إطلاقها. سجّل اهتمامك وسنتواصل معك عند الإطلاق.',
     remoteTeamSoon: 'التخصصات المخطط أن يضمّها الفريق:',
@@ -65,7 +65,8 @@ const copy = {
     remoteP: 'تقدّم المنصة التشخيص أو النصيحة الطبية عبر استشارة عن بعد (اتصال مرئي أو صوتي) مع المختص المعني من الفريق الطبي متعدد التخصصات، أو عبر زيارة منزلية، أو حجز موعد في العيادة أو المركز، حسب ما تحتاجه الحالة.',
     howH: 'طرق الحصول على الرأي الطبي',
     how: ['استشارة عن بعد (مرئية أو صوتية)', 'زيارة منزلية', 'موعد في العيادة أو المركز'],
-    bookNote: 'يتم الحجز حاليًا عبر واتساب أو صفحة التواصل، وسيُضاف نظام حجز إلكتروني لاحقًا.',
+    bookNote: 'في صفحة الاستشارة عن بعد تعريف بكل تخصص والمختصين وأوقات تواجدهم، ومنها تحجز موعدك وتدخل الاستشارة من داخل المنصة.',
+    profilesCta: 'التخصصات والمختصون وأوقات التواجد',
     remoteTeam: 'التخصصات التي يُنسَّق معها حسب حاجة كل حالة:',
     remoteNotes: [
       'يقدّم التشخيص ووصف العلاج المختصُّ المعني، كلٌّ ضمن تخصصه ونطاق ممارسته.',
@@ -99,7 +100,7 @@ const copy = {
     h1Sub: 'Wound care built on evidence, hope and a multidisciplinary team',
     lead: 'An Arabic digital platform dedicated to wound care, for people worldwide: remote consultation with the relevant specialist from a multidisciplinary medical team, clear evidence-based information for patients and families, and training for healthcare teams.',
     ctaRemote: 'Register interest in remote consultation',
-    ctaRemoteLive: 'Request a remote consultation',
+    ctaRemoteLive: 'Book a remote consultation now',
     soon: 'Coming soon',
     soonP: 'We are completing the medical team for this service. The physicians’ names and specialties will be published here at launch. Register your interest and we will contact you when it opens.',
     remoteTeamSoon: 'Specialties the team is planned to include:',
@@ -130,7 +131,8 @@ const copy = {
     remoteP: 'The platform provides a diagnosis or medical advice through a remote consultation (video or voice call) with the relevant specialist from the multidisciplinary medical team, a home visit, or an appointment at the clinic or centre, depending on what the case needs.',
     howH: 'Ways to get a medical opinion',
     how: ['Remote consultation (video or voice)', 'Home visit', 'Clinic or centre appointment'],
-    bookNote: 'Bookings are currently made by WhatsApp or the contact page; online booking will be added later.',
+    bookNote: 'The remote consultation page introduces each specialty, its specialists and their hours. Book there and join the consultation inside the platform.',
+    profilesCta: 'Specialties, specialists and hours',
     remoteTeam: 'Specialties coordinated with, as each case requires:',
     remoteNotes: [
       'Diagnosis and treatment are provided by the relevant specialist, each within their own specialty and scope of practice.',
@@ -160,8 +162,8 @@ const copy = {
 
 const schema = pageGraph({ lang, key: 'home', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated });
 const ref = { lang, page: 'home', placement: 'hero' };
-const remoteHref = `${path(lang, 'contact')}?reason=remote`;
 const live = flags.remoteConsultationLive;
+const remoteHref = live ? path(lang, 'consult') : `${path(lang, 'contact')}?reason=remote`;
 const ctaRemote = live ? copy.ctaRemoteLive : copy.ctaRemote;
 const featured = ['when-to-see-a-wound-care-specialist', 'wound-infection-warning-signs', 'home-wound-care-mistakes']
   .map((slug) => articles.find((a) => a.slug === slug)!)
@@ -238,6 +240,7 @@ const specialties = team.filter((m) => m.id !== 'other');
           <ul class="chips" role="list">{specialties.map((m) => <li>{m[lang]}</li>)}</ul>
           <div class="actions">
             <a class="btn btn-primary" href={remoteHref} {...track('cta_click', { lang, page: 'home', placement: 'services-remote' })}>{ctaRemote}</a>
+            {live && <a class="btn btn-secondary" href={`${path(lang, 'consult')}#specialties`}>{copy.profilesCta}</a>}
           </div>
           {live && <p class="muted">{copy.bookNote}</p>}
         </div>

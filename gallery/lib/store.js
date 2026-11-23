@@ -54,6 +54,27 @@ export async function writeJson(pathname, data) {
   await put(pathname, body, { access: 'private', contentType: 'application/json', addRandomSuffix: false, allowOverwrite: true, cacheControlMaxAge: 60 });
 }
 
+/**
+ * Create a JSON record only if it does not exist yet (used as a lock so one consultation slot
+ * cannot be booked twice). Throws an error with code 'EEXIST' when the record is already there.
+ */
+export async function createJsonExclusive(pathname, data) {
+  const body = JSON.stringify(data);
+  if (useFs) {
+    const f = path.join(root, pathname);
+    await fs.mkdir(path.dirname(f), { recursive: true });
+    await fs.writeFile(f, body, { flag: 'wx' }); // EEXIST if taken
+    return;
+  }
+  const { put } = await B();
+  try {
+    await put(pathname, body, { access: 'private', contentType: 'application/json', addRandomSuffix: false, allowOverwrite: false });
+  } catch (e) {
+    if (/already exists/i.test(String(e?.message || ''))) { const err = new Error('exists'); err.code = 'EEXIST'; throw err; }
+    throw e;
+  }
+}
+
 export async function putFile(pathname, buffer, contentType) {
   if (useFs) {
     const f = path.join(root, pathname);

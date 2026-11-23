@@ -9,6 +9,10 @@ import * as A from '../lib/auth.js';
 import * as V from '../lib/views.js';
 import * as AV from '../lib/admin-views.js';
 import { ingest, watermarked, blurredCover } from '../lib/media.js';
+import * as C from '../lib/consult.js';
+import { ensureRoom, joinUrl, videoConfigured, deleteRoom } from '../lib/video.js';
+import { mailConfigured } from '../lib/mail.js';
+import * as CV from '../lib/consult-admin.js';
 
 const SEC_HEADERS = {
   'Content-Security-Policy': "default-src 'self'; img-src 'self' data: blob: https://speranzahealth.net; media-src 'self' blob: https://*.blob.vercel-storage.com; connect-src 'self' https://vercel.com https://*.blob.vercel-storage.com https://blob.vercel-storage.com; style-src 'self'; script-src 'self'; font-src 'self' https://speranzahealth.net; frame-ancestors 'none'; base-uri 'none'; form-action 'self'; object-src 'none'",
@@ -80,8 +84,12 @@ async function handle(request) {
 
   // The public access-request form also lives on speranzahealth.net and posts here.
   const fromMainSite = /^https:\/\/(www\.)?speranzahealth\.net$/.test(request.headers.get('origin') || '');
-  if (method === 'POST' && !A.sameOrigin(request) && !(path === '/request' && fromMainSite)) return res('Forbidden', 403);
+  const consultApiPath = seg[0] === 'consult' && seg[1] === 'api';
+  if (method === 'POST' && !consultApiPath && !A.sameOrigin(request) && !(path === '/request' && fromMainSite)) return res('Forbidden', 403);
   try { A.assertConfigured(); } catch { return html(V.simple(lang, 'Not configured', 'SESSION_SECRET missing').html, 500); }
+
+  /* ---------------- remote consultation booking API (used by speranzahealth.net) ---------------- */
+  if (consultApiPath) return consultApi(request, seg.slice(2), method, url);
 
   /* ---------------- viewer ---------------- */
   if (path === '/') {
@@ -210,6 +218,71 @@ async function handle(request) {
   return html(V.simple(lang, T.notFound, '').html, 404);
 }
 
+/** Origins allowed to call the booking API from the browser (the main site; localhost only in local mode). */
+function allowedOrigin(request) {
+  const o = request.headers.get('origin') || '';
+  if (/^https:\/\/(www\.)?speranzahealth\.net$/.test(o)) return o;
+  if ((isLocal || process.env.CONSULT_DEV_ORIGINS === '1') && /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(o)) return o;
+  return '';
+}
+
+async function consultApi(request, seg, method, url) {
+  const origin = allowedOrigin(request);
+  const cors = origin ? { 'Access-Control-Allow-Origin': origin, Vary: 'Origin', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Max-Age': '600' } : {};
+  const out = (data, status = 200) => res(JSON.stringify(data), status, { 'Content-Type': 'application/json; charset=utf-8', ...cors });
+  if (method === 'OPTIONS') return res(null, 204, cors);
+  if (method === 'POST' && !origin && !A.sameOrigin(request)) return out({ error: 'forbidden' }, 403);
+  const body = method === 'POST' ? await request.text().then((t) => JSON.parse(t || '{}')).catch(() => ({})) : {};
+  const [a] = seg;
+  try {
+    if (a === 'status' && method === 'GET') return out({ ready: C.ready(), video: videoConfigured() });
+
+    if (a === 'slots' && method === 'GET') {
+      const r = await C.freeSlots(String(url.searchParams.get('provider') || ''));
+      if (!r) return out({ error: 'not-found' }, 404);
+      return out({ ready: C.ready(), provider: r.provider.id, minutes: r.provider.slotMinutes, timezone: r.provider.timezone, slots: r.slots });
+    }
+
+    if (a === 'book' && method === 'POST') {
+      if (String(body.website || '')) return out({ error: 'invalid' }, 400); // honeypot
+      const ip = (request.headers.get('x-forwarded-for') || '').split(',')[0].trim() || 'unknown';
+      const r = await C.createBooking(body, { ipHash: A.hashCode('ip', ip).slice(0, 16) });
+      if (r.error) return out(r, r.error === 'taken' ? 409 : r.error === 'busy' ? 429 : r.error === 'not-ready' ? 503 : 400);
+      return out(r);
+    }
+
+    if ((a === 'booking' && method === 'GET') || ((a === 'join' || a === 'cancel') && method === 'POST')) {
+      const id = a === 'booking' ? url.searchParams.get('b') : body.b;
+      const key = a === 'booking' ? url.searchParams.get('k') : body.k;
+      const b = await C.getBooking(id);
+      const role = C.roleFor(b, key);
+      if (!role) return out({ error: 'not-found' }, 404);
+      if (a === 'booking') return out(C.publicView(b, role));
+      if (a === 'cancel') {
+        if (b.status !== 'confirmed') return out({ error: 'not-active', booking: C.publicView(b, role) }, 409);
+        if (Date.now() > b.start) return out({ error: 'started' }, 409);
+        await C.cancelBooking(b, role);
+        await deleteRoom(b.room);
+        return out({ ok: true, booking: C.publicView(b, role) });
+      }
+      // join
+      const v = C.publicView(b, role);
+      if (b.status !== 'confirmed') return out({ error: 'not-active' }, 409);
+      if (Date.now() < v.joinFrom) return out({ error: 'early', joinFrom: v.joinFrom }, 425);
+      if (Date.now() > v.joinUntil) return out({ error: 'ended' }, 410);
+      if (!videoConfigured()) return out({ error: 'no-video' }, 503);
+      b.room = await ensureRoom(b);
+      await writeJson(`data/consult/bookings/${b.id}.json`, b);
+      const name = role === 'host' ? b.providerName[b.lang] || b.providerName.ar : b.name;
+      return out({ url: await joinUrl(b.room, { userName: name, owner: role === 'host', until: v.joinUntil }) });
+    }
+    return out({ error: 'not-found' }, 404);
+  } catch (e) {
+    console.error('consult api', e);
+    return out({ error: 'server' }, 500);
+  }
+}
+
 async function pendingRequests() {
   const all = await readAll('data/requests/');
   const old = all.filter((r) => Date.parse(r.createdAt) < Date.now() - 30 * 86400000);
@@ -239,6 +312,16 @@ async function handleAdmin(request, url, seg, method) {
   if (a === 'home') {
     const [grants, cases, log, requests] = await Promise.all([readAll('data/grants/'), readAll('data/cases/'), readLog(), pendingRequests()]);
     return html(AV.adminHome({ grants, cases, log, requests }));
+  }
+
+  if (a === 'consults') {
+    if (b && ID.test(b) && c2 === 'cancel' && method === 'POST') {
+      const bk = await C.getBooking(b);
+      if (bk) { await C.cancelBooking(bk, 'admin'); await deleteRoom(bk.room); }
+      return redirect('/admin/consults');
+    }
+    const list = await C.purgeOld(await C.allBookings());
+    return html(CV.consultsPage({ bookings: list, ready: C.ready(), mail: mailConfigured(), video: videoConfigured() }));
   }
 
   if (a === 'requests') {
@@ -444,3 +527,4 @@ async function entry(request) {
 export const GET = entry;
 export const POST = entry;
 export const HEAD = entry;
+export const OPTIONS = entry;

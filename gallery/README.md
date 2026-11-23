@@ -43,6 +43,27 @@ when files in this folder change on `main`.
 
 After changing a variable, redeploy (Deployments → ⋯ → Redeploy).
 
+## Remote consultation booking (added 23 Nov 2026)
+The same app also serves the booking API for speranzahealth.net/…/remote-consultation/ under `/consult/api/*`
+(status, slots, book, booking, join, cancel; CORS only for speranzahealth.net). Admin: **/admin/consults**.
+- Providers and hours come from the site (`src/config/consult.ts` → `https://speranzahealth.net/consult/providers.json`, cached 5 min).
+- A slot is locked with `data/consult/slots/<provider>/<start>.json`, so it cannot be booked twice.
+- Each booking is confirmed at once and the client is emailed (day, date, time, specialist, personal room link, .ics);
+  the platform inbox gets a copy with the client's contact and the specialist's own room link.
+- Bookings are deleted 30 days after the appointment. Calls are not recorded.
+
+| Key | Set by | Purpose |
+| --- | --- | --- |
+| `SMTP_USER` | Aissar | Mailbox that sends confirmations, e.g. `aissar@speranzahealth.net` |
+| `SMTP_PASS` | **Aissar only** | Its Google **App Password** (Google Account → Security → 2-Step Verification → App passwords) |
+| `CONSULT_NOTIFY_EMAIL` | Aissar | Where the team copy of every booking goes, e.g. `aissar@speranzahealth.net` |
+| `DAILY_API_KEY` | **Aissar only** | Video room inside the platform (daily.co → Developers → API key) |
+| `CONSULT_PROVIDER_EMAILS` | optional | JSON map `{"provider-id":"doctor@…"}` so each doctor also gets their bookings |
+| `SMTP_HOST`, `SMTP_PORT`, `MAIL_FROM`, `SITE_URL` | optional | Defaults: smtp.gmail.com, 465, "Speranza Health | سبيرانزا هيلث", https://speranzahealth.net |
+
+Online booking appears on the site only when SMTP and Daily are both set **and** a provider has hours.
+Local test: `MAIL_TRANSPORT=file` writes emails to `.data/mail/`; `CONSULT_ALLOW_NO_VIDEO=1` skips the video check.
+
 ## Plan
 The Hobby (free) plan is fine while the gallery is "under construction". Upgrade to **Pro** before publishing real
 cases, because Hobby is for non-commercial use.

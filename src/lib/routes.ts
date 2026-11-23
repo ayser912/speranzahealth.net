@@ -6,7 +6,7 @@ import { person, flags, type Lang } from '../config/site';
  */
 export type PageKey =
   | 'home' | 'about' | 'chronic' | 'contact' | 'legal'
-  | 'pressure' | 'diabeticFoot' | 'surgical' | 'npwt' | 'education' | 'articles' | 'homeVisits' | 'dressings' | 'journeys';
+  | 'pressure' | 'diabeticFoot' | 'surgical' | 'npwt' | 'education' | 'articles' | 'homeVisits' | 'dressings' | 'journeys' | 'consult';
 
 interface PageDef {
   slug: string;
@@ -21,6 +21,8 @@ export const pages: Record<PageKey, PageDef> = {
   about: { slug: person.aboutSlug, nav: { ar: 'عن المؤسس', en: 'About the founder' }, built: true, priority: 0.9 },
   chronic: { slug: 'chronic-wound-care-jordan', nav: { ar: 'الجروح المزمنة', en: 'Chronic wounds' }, built: true, priority: 0.9 },
   contact: { slug: 'contact', nav: { ar: 'التواصل', en: 'Contact' }, built: true, priority: 0.7 },
+  /** Remote consultation: specialty profiles, providers, hours and online booking (23 Nov 2026). */
+  consult: { slug: 'remote-consultation', nav: { ar: 'الاستشارة عن بعد', en: 'Remote consultation' }, built: true, priority: 0.9 },
   legal: { slug: 'privacy-and-disclaimer', nav: { ar: 'الخصوصية وإخلاء المسؤولية', en: 'Privacy & disclaimer' }, built: true, priority: 0.3 },
   // Phase 2
   pressure: { slug: 'pressure-injury-care', nav: { ar: 'قرح الضغط', en: 'Pressure injuries' }, built: true, priority: 0.8 },
@@ -51,10 +53,11 @@ export const careNav: PageKey[] = ['chronic', 'pressure', 'diabeticFoot', 'surgi
 export const careLabel: Record<Lang, string> = { ar: 'العناية بالجروح', en: 'Wound care' };
 /** Parent page in the breadcrumb trail: the wound-type guides sit under the wound-care hub. */
 export const parentOf = (key: PageKey): PageKey | undefined => (careNav.includes(key) ? 'articles' : undefined);
-/** Main navigation, in display order. 'care' renders the careNav group as a submenu. */
-export const mainNav: Array<PageKey | 'care'> = ['about', 'care', 'dressings', 'journeys', 'education', 'contact'];
+/** Main navigation, in display order. 'care' renders the careNav group as a submenu.
+ * «عن المؤسس» lives in the footer links only, not in the header (Aissar, 23 Nov 2026). */
+export const mainNav: Array<PageKey | 'care'> = ['consult', 'care', 'dressings', 'journeys', 'education', 'contact'];
 /** Footer "site" column. */
-export const footerNav: PageKey[] = ['about', 'dressings', 'journeys', 'education', 'contact', 'legal'];
+export const footerNav: PageKey[] = ['about', 'consult', 'dressings', 'journeys', 'education', 'contact', 'legal'];
 
 /** Credentials live on the About page (merged 6 Oct 2026). */
 export const credentialsHref = (lang: Lang) => `${path(lang, 'about')}#credentials`;

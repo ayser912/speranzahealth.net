@@ -9,7 +9,7 @@ import { pageGraph } from '../../lib/schema';
 
 export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
 const lang = Astro.params.lang as Lang;
-const updated = '2026-10-15';
+const updated = '2026-11-23';
 const mail = `<a href="mailto:${contact.email}"><span class="ltr">${contact.email}</span></a>`;
 const cred = `<a href="${credentialsHref(lang)}">${lang === 'ar' ? 'المؤهلات' : 'credentials'}</a>`;
 
@@ -22,13 +22,14 @@ const copy = {
     sections: [
       { h: 'الحالات الطارئة', p: ['لا يدير هذا الموقع ولا WhatsApp ولا البريد الإلكتروني أي حالات طارئة. عند وجود احمرار ينتشر حول الجرح أو حرارة أو تشوّش أو نزيف لا يتوقف، توجّه فورًا إلى أقرب قسم طوارئ أو اتصل بالرقم <span class="ltr">911</span>.'] },
       { h: 'محتوى تثقيفي وليس نصيحة طبية فردية', p: ['كل جرح وكل مريض حالة مختلفة. لا تبدأ علاجًا ولا تغيّره ولا توقفه، ولا تغيّر نوع الضماد، بناءً على محتوى الموقع وحده. ناقش أي قرار مع الطبيب المعالج أو الفريق الصحي المسؤول عنك.', 'قراءة المحتوى أو إرسال استفسار لا يُنشئ علاقة علاجية، ولا يَعِد الموقع بالتئام الجروح أو بأي نتيجة علاجية محددة.'] },
-      { h: 'نطاق الممارسة', p: [`${person.name.ar} أخصائي جروح معتمد من البورد الأمريكي، وليس طبيبًا. التشخيص الطبي ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات. اطّلع على ${cred}.`] },
+      { h: 'نطاق الممارسة', p: [`${person.name.ar} أخصائي جروح مزمنة معتمد من البورد الأمريكي CWS®. يعمل ضمن فريق متعدد التخصصات، ويقدّم كل مختص الرعاية ضمن تخصصه. اطّلع على ${cred}.`] },
       { h: 'المراجع والتحديث', p: ['يستند المحتوى السريري إلى إرشادات ومراجع علمية دولية موثوقة، ويظهر تاريخ آخر مراجعة في كل صفحة. يمكن طلب قائمة المراجع عبر صفحة التواصل. قد تتغير التوصيات بعد هذا التاريخ.'] },
       { h: 'نموذج التواصل', p: ['لا يرسل النموذج بياناتك إلى خادم ولا يخزنها. عند الضغط على زر الإرسال تُفتح رسالة في WhatsApp أو البريد الإلكتروني، ولا تُرسل إلا عندما تضغط أنت على إرسال. يطلب النموذج الاسم الأول وطريقة التواصل المفضلة فقط.'] },
-      { h: 'طلب دخول معرض رحلات الالتئام', p: ['عند طلب رمز دخول المعرض نجمع اسمك ورقم الواتساب وصفتك فقط، لإرسال الرابط والرمز إليك. تُحذف بيانات الطلب بعد معالجته، أو تلقائيًا خلال 30 يومًا. يُسجَّل كل دخول إلى المعرض (المرجع والوقت) لحماية خصوصية المرضى، وتحمل الصور علامة مائية مرتبطة برمز المشاهد. صور المرضى منشورة بموافقة خطية منهم، ومحفوظة في تخزين خاص غير متاح للعامة لدى مزوّد خدمة سحابية (Vercel، في الاتحاد الأوروبي).'] },
+      { h: 'حجز الاستشارة عن بعد', p: ['عند حجز استشارة نطلب اسمك وبريدك الإلكتروني ورقم الواتساب والموعد الذي تختاره فقط، لتأكيد الموعد وإرسال إيميل التأكيد ورابط الغرفة إليك وإبلاغ المختص المعني. لا نطلب معلومات صحية في نموذج الحجز. تتم الاستشارة داخل المنصة برابط شخصي، ولا تُسجَّل. تُحذف بيانات الحجز بعد 30 يومًا من موعد الاستشارة.'] },
+      { h: 'طلب دخول معرض رحلات الالتئام', p: ['عند طلب رمز دخول المعرض نجمع اسمك ورقم الواتساب وصفتك فقط، لإرسال الرابط والرمز إليك. تُحذف بيانات الطلب بعد معالجته، أو تلقائيًا خلال 30 يومًا. يُسجَّل كل دخول إلى المعرض (المرجع والوقت) لحماية خصوصية المرضى، وتحمل الصور علامة مائية مرتبطة برمز المشاهد. صور المرضى منشورة بموافقة خطية منهم، ولا يصل إليها إلا من يحمل رابطًا ورمزًا شخصيين.'] },
       { h: 'المعلومات الصحية', p: ['لا نطلب معلومات صحية عبر الموقع. لا ترسل صور الجروح أو التقارير الطبية عبر النموذج أو الرسائل قبل الاتفاق على طريقة آمنة.'] },
       { h: 'التحليلات وملفات تعريف الارتباط', p: ['قد يستخدم الموقع Google Analytics 4 لفهم عدد الزيارات. لا تُحمّل أدوات التحليل ولا ملفات تعريف الارتباط الخاصة بها إلا بعد موافقتك، ويُحفظ اختيارك في متصفحك فقط.'] },
-      { h: 'حقوقك', p: [`يمكنك طلب معرفة البيانات التي لدينا عنك أو تصحيحها أو حذفها، أو سحب موافقتك في أي وقت، بمراسلة ${mail}. نتعامل مع البيانات وفق التشريعات الأردنية المعمول بها، بما فيها قانون حماية البيانات الشخصية رقم 24 لسنة 2023.`] },
+      { h: 'حقوقك', p: [`يمكنك طلب معرفة البيانات التي لدينا عنك أو تصحيحها أو حذفها، أو سحب موافقتك في أي وقت، بمراسلة ${mail}.`] },
       { h: 'الروابط الخارجية والاستقلالية', p: ['قد يحتوي الموقع على روابط لمواقع أخرى للمرجعية، ولسنا مسؤولين عن محتواها. المحتوى مستقل ولا يروّج لأي علامة تجارية.'] },
     ],
   },
@@ -40,13 +41,14 @@ const copy = {
     sections: [
       { h: 'Emergencies', p: ['This website, WhatsApp and email do not handle emergencies. If there is redness spreading around a wound, fever, confusion or bleeding that will not stop, go to the nearest emergency department or call <span class="ltr">911</span> immediately.'] },
       { h: 'Education, not individual medical advice', p: ['Every wound and every patient is different. Do not start, change or stop treatment, or change your dressing type, based on this website alone. Discuss any decision with your treating doctor or care team.', 'Reading this content or sending an enquiry does not create a care relationship, and this website does not promise wound healing or any specific clinical result.'] },
-      { h: 'Scope of practice', p: [`${person.name.en} is an American Board–certified wound specialist, not a physician. Diagnosis, prescribing and surgical decisions are the physician’s responsibility within the multidisciplinary team. See the ${cred}.`] },
+      { h: 'Scope of practice', p: [`${person.name.en} is an American Board–certified chronic wound specialist (CWS®). He works within a multidisciplinary team in which each specialist provides care within their own specialty. See the ${cred}.`] },
       { h: 'References and updates', p: ['Clinical content is based on reliable international guidelines and references, with the last review date shown on each page. The reference list is available on request through the contact page. Recommendations may change after that date.'] },
       { h: 'Contact form', p: ['The form does not send your details to a server or store them. When you press send, a message opens in WhatsApp or your email app, and it is only sent when you press send yourself. The form asks only for your first name and preferred contact method.'] },
-      { h: 'Healing journeys gallery access', p: ['When you request access to the gallery we collect only your name, WhatsApp number and role, to send you the link and code. Request details are deleted once handled, or automatically within 30 days. Every entry to the gallery is logged (reference and time) to protect patient privacy, and images carry a watermark linked to the viewer’s code. Patient images are published with their written consent and kept in private, non-public storage with a cloud provider (Vercel, in the European Union).'] },
+      { h: 'Remote consultation booking', p: ['When you book a consultation we ask only for your name, email, WhatsApp number and the time you choose, to confirm the appointment, send you the confirmation email and room link, and inform the relevant specialist. The booking form does not ask for health information. The consultation takes place inside the platform through a personal link and is not recorded. Booking details are deleted 30 days after the appointment.'] },
+      { h: 'Healing journeys gallery access', p: ['When you request access to the gallery we collect only your name, WhatsApp number and role, to send you the link and code. Request details are deleted once handled, or automatically within 30 days. Every entry to the gallery is logged (reference and time) to protect patient privacy, and images carry a watermark linked to the viewer’s code. Patient images are published with their written consent and can only be opened with a personal link and code.'] },
       { h: 'Health information', p: ['We do not ask for health information through this website. Please don’t send wound photos or medical reports through the form or by message until a secure method has been agreed.'] },
       { h: 'Analytics and cookies', p: ['The website may use Google Analytics 4 to understand visit numbers. Analytics tools and their cookies load only after you consent, and your choice is stored only in your browser.'] },
-      { h: 'Your rights', p: [`You can ask what data we hold about you, ask us to correct or delete it, or withdraw your consent at any time by emailing ${mail}. We handle data in line with applicable Jordanian law, including Personal Data Protection Law No. 24 of 2023.`] },
+      { h: 'Your rights', p: [`You can ask what data we hold about you, ask us to correct or delete it, or withdraw your consent at any time by emailing ${mail}.`] },
       { h: 'External links and independence', p: ['The website may link to other sites for reference; we are not responsible for their content. The content is independent and does not promote any brand.'] },
     ],
   },

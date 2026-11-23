@@ -22,7 +22,7 @@ export function getStaticPaths() {
 }
 const lang = Astro.params.lang as Lang;
 const yrs = yearsExperience();
-const updated = '2026-10-11';
+const updated = '2026-11-23';
 const s = t(lang);
 const cws = credentials.find((c) => c.id === 'cws')!;
 
@@ -37,7 +37,8 @@ const copy = {
     intro: `أسّس أيسر سبيرانزا هيلث، وهو أخصائي جروح معتمد من البورد الأمريكي، بخبرة تمتد لنحو ${yrs} سنوات في القطاع الصحي تشمل العناية الحثيثة والعناية المتقدمة بالجروح والعلاج بالضغط السلبي. يركّز على الجروح التي لا تلتئم كما يُتوقع، وعلى تثقيف المرضى والأسر والكوادر الصحية بوضوح ووفق الدليل العلمي.`,
     focusH: 'مجالات الخبرة',
     scopeH: 'نطاق الممارسة',
-    scope: 'أيسر أخصائي جروح معتمد من البورد الأمريكي، وليس طبيبًا. يقدّم تقييم الجرح والعناية به والتثقيف، بينما يبقى التشخيص ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات.',
+    scope: 'أيسر أخصائي جروح مزمنة معتمد من البورد الأمريكي CWS®. يقدّم تقييم الجروح المزمنة والعناية بها والتثقيف، ضمن فريق متعدد التخصصات يقدّم فيه كل مختص الرعاية ضمن تخصصه.',
+    scopeCta: 'احجز استشارة أونلاين / عن بعد الآن',
     credH: 'المؤهلات والتحقق',
     th: ['المؤهل', 'الجهة المانحة', 'السنة'],
     cwsP: 'اعتماد CWS® تمنحه American Board of Wound Management للممارسين الصحيين المرخصين ذوي الخبرة السريرية المثبتة في العناية بالجروح (ثلاث سنوات على الأقل) بعد اجتياز اختبار مستقل، والبرنامج معتمد من NCCA.',
@@ -55,7 +56,6 @@ const copy = {
       { q: 'ما علاقة أيسر شواقفه بسبيرانزا هيلث؟', a: 'أيسر شواقفه هو مؤسس سبيرانزا هيلث (Speranza Health)، وهي منصة رقمية عربية للعناية بالجروح موجّهة لكل العالم مع تركيز على الشرق الأوسط، تقدّم تثقيفًا موثوقًا للمرضى والأسر، وتدريبًا للكوادر الصحية، واستشارات عن بعد مع المختص المعني من فريق طبي متعدد التخصصات. «سبيرانزا» تعني «الأمل». <a href="/ar/">تعرّف على سبيرانزا هيلث</a>.' },
       { q: 'ماذا يعني اعتماد CWS®؟', a: 'CWS® اختصار Certified Wound Specialist، وهو اعتماد تمنحه American Board of Wound Management (ABWM) للممارسين الصحيين المرخصين بعد ثلاث سنوات على الأقل من الخبرة السريرية في العناية بالجروح واجتياز اختبار مستقل. البرنامج معتمد من NCCA، ويمكن التحقق منه في دليل ABWM الرسمي.' },
       { q: 'هل يعمل أيسر شواقفه في العناية بجروح القدم السكري؟', a: 'نعم، العناية بجروح القدم السكري من مجالات خبرته الأساسية، بالتنسيق مع الطبيب المعالج وجرّاح الأوعية الدموية وجرّاح العظام وأخصائي القدم وأخصائي الأمراض المعدية وأخصائي التغذية. أي جرح جديد في قدم مريض السكري يحتاج إلى مراجعة طبية في اليوم نفسه. اقرأ المزيد عن <a href="/ar/diabetic-foot-wounds/">العناية بجروح القدم السكري</a>.' },
-      { q: 'هل أيسر شواقفه طبيب؟', a: 'لا. أيسر أخصائي جروح معتمد من البورد الأمريكي. التشخيص ووصف الأدوية والقرارات الجراحية من مسؤولية الطبيب ضمن الفريق متعدد التخصصات.' },
       { q: 'كيف أتواصل مع أيسر شواقفه، ومن أي مناطق؟', a: 'تُستقبل طلبات الاستشارة عن بعد والاستفسارات المهنية وطلبات التدريب والتعاون من أي مكان في العالم عبر واتساب أو البريد الإلكتروني من <a href="/ar/contact/">صفحة التواصل</a>. لا تُدار الحالات الطارئة عبر الموقع أو واتساب.' },
       { q: 'كيف يُكتب اسم أيسر شواقفه؟', a: 'بالعربية: أيسر شواقفه، وبالإنجليزية: Aissar Shawaqfeh كما في شهادة CWS®. قد يظهر الاسم أيضًا بتهجئات مثل آيسر شواقفة أو Ayser Shawaqfeh أو Aysar Shawagfeh، وجميعها للشخص نفسه.' },
     ],
@@ -70,7 +70,8 @@ const copy = {
     intro: `Aissar founded Speranza Health. He is an American Board–certified wound specialist, with about ${yrs} years in healthcare spanning intensive care, advanced wound care and negative pressure wound therapy. His focus is wounds that are not healing as expected, and clear, evidence-based education for patients, families and healthcare teams.`,
     focusH: 'Areas of experience',
     scopeH: 'Scope of practice',
-    scope: 'Aissar is an American Board–certified wound specialist, not a physician. He provides wound assessment, wound care and education, while diagnosis, prescribing and surgical decisions remain the physician’s responsibility within the multidisciplinary team.',
+    scope: 'Aissar is an American Board–certified chronic wound specialist (CWS®). He provides chronic wound assessment, wound care and education within a multidisciplinary team in which each specialist provides care within their own specialty.',
+    scopeCta: 'Book an online / remote consultation now',
     credH: 'Credentials and verification',
     th: ['Qualification', 'Issued by', 'Year'],
     cwsP: 'The CWS® credential is awarded by the American Board of Wound Management to licensed clinicians with documented clinical wound-care experience (at least three years) who pass an independent exam. The programme is NCCA-accredited.',
@@ -88,7 +89,6 @@ const copy = {
       { q: 'How is Aissar Shawaqfeh connected to Speranza Health?', a: 'Aissar Shawaqfeh is the founder of Speranza Health, an Arabic digital wound-care platform for a global audience with a focus on the Middle East, offering reliable education for patients and families, training for healthcare teams, and remote consultations with the relevant specialist from a multidisciplinary medical team. “Speranza” means “hope”. <a href="/en/">About Speranza Health</a>.' },
       { q: 'What does CWS® mean?', a: 'CWS® stands for Certified Wound Specialist, a credential awarded by the American Board of Wound Management (ABWM) to licensed clinicians with at least three years of clinical wound-care experience who pass an independent exam. The programme is NCCA-accredited, and holders can be checked in the official ABWM directory.' },
       { q: 'Does Aissar Shawaqfeh work with diabetic foot wounds?', a: 'Yes. Diabetic foot wound care is one of his main areas, coordinated with the treating physician, vascular and orthopaedic surgeons, podiatry, infectious diseases and clinical nutrition. Any new wound on the foot of a person with diabetes needs a medical review the same day. Read more about <a href="/en/diabetic-foot-wounds/">diabetic foot wound care</a>.' },
-      { q: 'Is Aissar Shawaqfeh a doctor?', a: 'No. Aissar is an American Board–certified wound specialist. Diagnosis, prescribing and surgical decisions are the physician’s responsibility within the multidisciplinary team.' },
       { q: 'How can I contact Aissar Shawaqfeh, and from where?', a: 'Remote consultation requests, professional enquiries, training requests and collaboration are welcome from anywhere in the world, by WhatsApp or email via the <a href="/en/contact/">contact page</a>. Emergencies are not handled through the website or WhatsApp.' },
       { q: 'How is the name written?', a: 'In Arabic: أيسر شواقفه. In English: Aissar Shawaqfeh, as on the CWS® certificate. The name may also appear as آيسر شواقفة, Ayser Shawaqfeh or Aysar Shawagfeh; all refer to the same person.' },
     ],
@@ -128,6 +128,7 @@ const ref = { lang, page: 'about', placement: 'hero' };
       <section class="prose" aria-labelledby="scope-h">
         <h2 id="scope-h" class="flush">{copy.scopeH}</h2>
         <p>{copy.scope}</p>
+        <p><a class="btn btn-primary" href={path(lang, 'consult')} {...track('cta_click', { lang, page: 'about', placement: 'scope-book' })}>{copy.scopeCta}</a></p>
       </section>
     </div>
 

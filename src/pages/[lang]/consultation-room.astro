@@ -1,0 +1,84 @@
+---
+/**
+ * Consultation room (23 Nov 2026). Opened from the personal link in the confirmation email
+ * (?b=<booking>&k=<key>). Shows the appointment, lets the client cancel, and embeds the video call
+ * inside the platform when the room opens. Not indexed and not in the sitemap.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { type Lang } from '../../config/site';
+import { consult } from '../../config/consult';
+import { langs, path } from '../../lib/routes';
+import { t } from '../../lib/i18n';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const s = t(lang);
+const L = lang === 'ar'
+  ? {
+      title: 'غرفة الاستشارة عن بعد | سبيرانزا هيلث', description: 'غرفة الاستشارة عن بعد على منصة سبيرانزا هيلث.', h1: 'غرفة الاستشارة',
+      provider: 'المختص', specialty: 'التخصص', when: 'الموعد', mode: 'نوع الاستشارة', ref: 'رقم الحجز',
+      join: 'دخول الاستشارة', cancel: 'إلغاء الموعد', book: 'حجز موعد جديد',
+      tips: ['استخدم متصفح Chrome أو Safari حديثًا، واسمح باستخدام الكاميرا والميكروفون عند السؤال.', 'اختر مكانًا هادئًا بإضاءة جيدة واتصال إنترنت مستقر.', 'لا تُسجَّل الاستشارة.'],
+      noscript: 'تحتاج غرفة الاستشارة إلى تفعيل JavaScript في المتصفح.',
+      ui: {
+        loading: 'جارٍ تحميل تفاصيل الموعد…', missing: 'الرابط غير صحيح أو انتهت صلاحيته. افتح الرابط من إيميل التأكيد كما هو.',
+        error: 'حدث خطأ في الاتصال. حاول مرة أخرى بعد قليل.', cancelled: 'هذا الموعد ملغى.', cancelledNow: 'تم إلغاء الموعد، ووصلك إيميل بذلك.',
+        ended: 'انتهى وقت هذه الاستشارة.', opensIn: 'تُفتح الغرفة بعد {time}.', opensAt: 'تُفتح الغرفة {time}.', open: 'الغرفة مفتوحة الآن. اضغط «دخول الاستشارة».',
+        early: 'لم يحن وقت فتح الغرفة بعد.', noVideo: 'غرفة الفيديو غير مفعّلة بعد. سيتواصل معك الفريق قبل الموعد.',
+        connecting: 'جارٍ تجهيز الغرفة…', inCall: 'أنت داخل غرفة الاستشارة.', frameTitle: 'غرفة الاستشارة المرئية',
+        confirmCancel: 'هل تريد إلغاء هذا الموعد؟ سيصبح الوقت متاحًا لغيرك.', minutes: 'دقيقة',
+      },
+    }
+  : {
+      title: 'Consultation Room | Speranza Health', description: 'The remote consultation room on the Speranza Health platform.', h1: 'Consultation room',
+      provider: 'Specialist', specialty: 'Specialty', when: 'Appointment', mode: 'Consultation type', ref: 'Booking reference',
+      join: 'Join the consultation', cancel: 'Cancel appointment', book: 'Book a new appointment',
+      tips: ['Use an up-to-date Chrome or Safari and allow the camera and microphone when asked.', 'Choose a quiet, well-lit place with a stable internet connection.', 'The consultation is not recorded.'],
+      noscript: 'The consultation room needs JavaScript to be enabled in your browser.',
+      ui: {
+        loading: 'Loading your appointment…', missing: 'This link is not valid or has expired. Please open the link from your confirmation email exactly as it is.',
+        error: 'A connection error occurred. Please try again shortly.', cancelled: 'This appointment is cancelled.', cancelledNow: 'The appointment is cancelled and an email has been sent to you.',
+        ended: 'This consultation time has ended.', opensIn: 'The room opens in {time}.', opensAt: 'The room opens on {time}.', open: 'The room is open now. Press “Join the consultation”.',
+        early: 'The room is not open yet.', noVideo: 'The video room is not active yet. The team will contact you before the appointment.',
+        connecting: 'Preparing the room…', inCall: 'You are in the consultation room.', frameTitle: 'Video consultation room',
+        confirmCancel: 'Cancel this appointment? The time will become available to others.', minutes: 'minutes',
+      },
+    };
+const modeNames = lang === 'ar' ? { video: 'مرئية', voice: 'صوتية' } : { video: 'Video', voice: 'Voice' };
+const data = { api: consult.api, lang, ui: L.ui, modeNames };
+---
+<BaseLayout lang={lang} paths={{ ar: '/ar/consultation-room/', en: '/en/consultation-room/' }} navKey="consult" title={L.title} description={L.description} noindex>
+  <div class="wrap room" data-room>
+    <header class="page-head prose">
+      <h1>{L.h1}</h1>
+      <p class="room-status" data-room-status aria-live="polite">{L.ui.loading}</p>
+      <noscript><p class="soon-note">{L.noscript}</p></noscript>
+    </header>
+    <div class="room-grid">
+      <section class="room-card" data-room-details hidden>
+        <dl class="room-facts">
+          <div><dt>{L.provider}</dt><dd data-room-provider></dd></div>
+          <div><dt>{L.specialty}</dt><dd data-room-specialty></dd></div>
+          <div><dt>{L.when}</dt><dd data-room-when></dd></div>
+          <div><dt>{L.mode}</dt><dd data-room-mode></dd></div>
+          <div><dt>{L.ref}</dt><dd dir="ltr" data-room-ref></dd></div>
+        </dl>
+        <p class="actions">
+          <button type="button" class="btn btn-primary" data-room-join hidden>{L.join}</button>
+          <button type="button" class="btn btn-secondary" data-room-cancel hidden>{L.cancel}</button>
+        </p>
+      </section>
+      <aside class="prose">
+        <ul class="sf-notes" role="list">{L.tips.map((x) => <li>{x}</li>)}</ul>
+        <p class="muted">{s.emergencyShort}</p>
+        <p><a href={path(lang, 'consult')}>{L.book}</a></p>
+      </aside>
+    </div>
+    <div class="room-stage" data-room-stage hidden></div>
+    <script type="application/json" id="room-data" set:html={JSON.stringify(data).replace(/</g, '\\u003c')}></script>
+  </div>
+</BaseLayout>
+<script>
+  import { initRoom } from '../../lib/consult-client';
+  initRoom();
+</script>

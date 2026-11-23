@@ -28,6 +28,7 @@ npm test             # build + internal link check + SEO/structured-data check
 | Social sharing images | `public/og/ar.png`, `public/og/en.png` (regenerate with `node scripts/make-og.mjs`) |
 | Logo and icons | `public/brand/` (`speranza-logo-horizontal.svg` header, `speranza-logo.svg` stacked, `speranza-mark.svg` symbol), `public/favicon.svg`, `favicon-32.png`, `apple-touch-icon.png`, `icon-192/512.png`. Traced from the logo Aissar supplied on 11 Oct 2026. Paths are set in `site.logo` in `src/config/site.ts`. |
 | Homepage (Speranza: meaning, purpose, services incl. remote consultation) | `src/pages/[lang]/index.astro` |
+| Remote consultation: specialties, providers (doctors), their hours | `src/config/consult.ts` (page: `src/pages/[lang]/remote-consultation.astro`, room: `consultation-room.astro`, browser code: `src/lib/consult-client.ts`, booking server: `gallery/lib/consult*.js`, see `gallery/README.md`) |
 | Founder page (photo, interview, figures, credentials, press, FAQ) | `src/pages/[lang]/[about].astro` (URL stays `/…/about-aissar-shawaqfeh/`, menu label “About the founder”) |
 
 ### Feature flags (`src/config/site.ts → flags`)

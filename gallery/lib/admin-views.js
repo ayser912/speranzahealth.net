@@ -18,7 +18,7 @@ export function adminLayout({ title, body, nav = true }) {
 <header class="top"><div class="wrap">
   <a class="brand" href="/admin/home"><img src="https://speranzahealth.net/brand/speranza-logo-horizontal.svg" alt="سبيرانزا هيلث" width="164" height="40"></a>
   <span class="pill">إدارة المعرض</span>
-  ${nav ? `<nav class="anav"><a href="/admin/requests">الطلبات</a><a href="/admin/codes">رموز الدخول</a><a href="/admin/cases">الحالات</a><a href="/admin/log">سجل الدخول</a>
+  ${nav ? `<nav class="anav"><a href="/admin/consults">الاستشارات</a><a href="/admin/requests">الطلبات</a><a href="/admin/codes">رموز الدخول</a><a href="/admin/cases">الحالات</a><a href="/admin/log">سجل الدخول</a>
   <form method="post" action="/admin/logout"><button class="linkbtn" type="submit">خروج</button></form></nav>` : ''}
 </div></header>
 <main class="wrap">${body}</main></body></html>`;

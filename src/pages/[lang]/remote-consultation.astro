@@ -1,0 +1,344 @@
+---
+/**
+ * Remote consultation (Aissar, 23 Nov 2026): a profile for each specialty with its providers and their
+ * hours, and online booking inside the platform. Booking → instant confirmation email to the client.
+ * Data: src/config/consult.ts. Booking server: gallery app (/consult/api). Room: /…/consultation-room/.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ContactActions from '../../components/ContactActions.astro';
+import Icon from '../../components/Icon.astro';
+import { type Lang } from '../../config/site';
+import { consult, specialties, providers, providersFor, isBookable, days, type Provider } from '../../config/consult';
+import { path, langs } from '../../lib/routes';
+import { pageGraph } from '../../lib/schema';
+import { t } from '../../lib/i18n';
+import { track } from '../../lib/links';
+
+export function getStaticPaths() { return langs.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const s = t(lang);
+const updated = '2026-11-23';
+
+const copy = {
+  ar: {
+    title: 'الاستشارة عن بعد مع المختص المعني | سبيرانزا هيلث',
+    description: 'احجز استشارة عن بعد (مرئية أو صوتية) داخل منصة سبيرانزا هيلث مع المختص المعني: تخصصات الفريق، والمختصون وأوقات تواجدهم، وتأكيد فوري بالبريد الإلكتروني.',
+    eyebrow: 'متاحة الآن',
+    h1: 'الاستشارة عن بعد',
+    lead: 'استشارة مرئية أو صوتية مع المختص المعني من فريق متعدد التخصصات، من داخل منصة سبيرانزا هيلث ومن أي مكان في العالم. اختر التخصص والمختص والموعد، ويصلك إيميل التأكيد فورًا بكل تفاصيل الموعد.',
+    bookNow: 'احجز استشارة الآن',
+    seeSpecialties: 'التخصصات والمختصون',
+    stepsH: 'كيف تتم الاستشارة؟',
+    steps: [
+      ['اختر المختص والموعد', 'تصفّح التخصصات، واختر المختص والوقت المناسب لك من أوقات تواجده.'],
+      ['يصلك إيميل التأكيد فورًا', 'بمجرد تأكيد الحجز تصلك رسالة فيها اليوم والتاريخ والوقت والمختص ورابط غرفة الاستشارة.'],
+      ['ادخل الغرفة من المنصة', 'في الموعد افتح الرابط وادخل غرفة الاستشارة على المنصة نفسها، دون تحميل أي تطبيق.'],
+    ],
+    specH: 'التخصصات والمختصون',
+    specP: 'لكل تخصص صفحة تعريفية بما يقدّمه في العناية بالجروح، والمختصين المتاحين وأوقات تواجدهم.',
+    hoursH: 'أوقات التواجد',
+    hoursTba: 'تُعلن أوقات التواجد قريبًا. يمكنك طلب موعد عبر واتساب.',
+    tzNote: (z: string) => `بتوقيت ${z}`,
+    languages: 'لغة الاستشارة',
+    langNames: { ar: 'العربية', en: 'الإنجليزية' },
+    modesL: 'نوع الاستشارة',
+    modeNames: { video: 'مرئية', voice: 'صوتية' },
+    bookWith: (n: string) => `احجز مع ${n}`,
+    profile: 'الملف التعريفي',
+    noProviders: 'يُنسَّق الموعد مع مختص من هذا التخصص حسب حاجة الحالة. اطلب موعدًا وسنرتّبه لك.',
+    request: 'اطلب موعدًا',
+    bookH: 'احجز موعدك',
+    bookP: 'كل الأوقات تظهر بتوقيتك المحلي. الحجز مؤكد مباشرة، ويصلك إيميل التأكيد فورًا.',
+    fallbackH: 'الحجز الإلكتروني',
+    fallbackP: 'الحجز الإلكتروني غير متاح في هذه اللحظة. احجز موعدك عبر واتساب أو الهاتف أو البريد الإلكتروني، وسيرتّب الفريق الموعد مع المختص المعني.',
+    notesH: 'قبل أن تحجز',
+    notes: [
+      'يقدّم كل مختص الاستشارة ضمن تخصصه ونطاق ممارسته.',
+      'لا تُغني الاستشارة عن بعد عن الفحص السريري عندما تتطلبه الحالة.',
+      'لا تُرسل صورًا أو تقارير طبية قبل الاتفاق مع المختص على طريقة آمنة لمشاركتها.',
+      'الحالات الطارئة لا تُدار عن بعد: توجّه إلى أقرب قسم طوارئ.',
+    ],
+    otherWays: 'طرق أخرى للحصول على الرأي الطبي: زيارة منزلية أو موعد في العيادة أو المركز. اطلبها عبر التواصل.',
+    ui: {
+      step1: '1. اختر المختص', step2: '2. اختر اليوم والوقت', step3: '3. بياناتك',
+      noSlots: 'لا توجد أوقات متاحة في الأسابيع القادمة لهذا المختص. اطلب موعدًا عبر واتساب.',
+      loading: 'جارٍ تحميل الأوقات المتاحة…', tz: 'الأوقات بتوقيتك', change: 'تغيير',
+      name: 'الاسم الكامل', email: 'البريد الإلكتروني', emailHint: 'يصلك عليه إيميل التأكيد ورابط الغرفة.',
+      phone: 'رقم واتساب', phoneHint: 'مع رمز الدولة، مثال: ‎+962791234567', mode: 'نوع الاستشارة',
+      consent: 'أوافق على استخدام بياناتي لتأكيد الموعد وإجراء الاستشارة، وقد قرأت', privacy: 'سياسة الخصوصية',
+      submit: 'تأكيد الحجز', sending: 'جارٍ تأكيد الحجز…',
+      errName: 'اكتب اسمك (حرفان على الأقل، دون أرقام).', errEmail: 'اكتب بريدًا إلكترونيًا صحيحًا.', errPhone: 'اكتب رقم واتساب صحيحًا مع رمز الدولة.', errConsent: 'يلزم الموافقة لإتمام الحجز.', errSlot: 'اختر يومًا ووقتًا.',
+      errTaken: 'حُجز هذا الوقت للتو. اختر وقتًا آخر.', errBusy: 'تم إرسال عدة حجوزات من هذه الشبكة اليوم. تواصل معنا عبر واتساب.', errServer: 'تعذّر إتمام الحجز الآن. حاول مرة أخرى أو تواصل معنا عبر واتساب.',
+      doneH: 'تم تأكيد موعدك', doneEmail: (e: string) => `أرسلنا إيميل التأكيد إلى ${e}. إن لم تجده خلال دقائق، راجع مجلد الرسائل غير المرغوب فيها.`,
+      doneNoEmail: 'تم الحجز، لكن تعذّر إرسال الإيميل الآن. سيتواصل معك الفريق لتأكيد التفاصيل.',
+      room: 'صفحة غرفة الاستشارة', keep: 'احتفظ بهذا الرابط: هو رابطك الشخصي لدخول الاستشارة أو إلغائها.',
+      another: 'حجز موعد آخر', minutes: 'دقيقة', with: 'مع',
+    },
+  },
+  en: {
+    title: 'Remote Consultation with a Specialist | Speranza Health',
+    description: 'Book a video or voice consultation inside the Speranza Health platform: specialty profiles, specialists and their hours, with instant email confirmation.',
+    eyebrow: 'Available now',
+    h1: 'Remote consultation',
+    lead: 'A video or voice consultation with the relevant specialist from a multidisciplinary team, inside the Speranza Health platform, from anywhere in the world. Choose the specialty, the specialist and the time, and the confirmation email with every detail reaches you straight away.',
+    bookNow: 'Book a consultation now',
+    seeSpecialties: 'Specialties and specialists',
+    stepsH: 'How it works',
+    steps: [
+      ['Choose a specialist and a time', 'Browse the specialties, then pick a specialist and a time that suits you from their hours.'],
+      ['Instant confirmation email', 'As soon as the booking is confirmed you receive the day, date, time, specialist and the link to the consultation room.'],
+      ['Join the room on the platform', 'At the appointment, open the link and enter the consultation room on the platform itself, with nothing to install.'],
+    ],
+    specH: 'Specialties and specialists',
+    specP: 'Each specialty has a profile of what it offers in wound care, with the available specialists and their hours.',
+    hoursH: 'Hours',
+    hoursTba: 'Hours will be announced soon. You can request an appointment on WhatsApp.',
+    tzNote: (z: string) => `${z} time`,
+    languages: 'Languages',
+    langNames: { ar: 'Arabic', en: 'English' },
+    modesL: 'Consultation type',
+    modeNames: { video: 'Video', voice: 'Voice' },
+    bookWith: (n: string) => `Book with ${n}`,
+    profile: 'Profile',
+    noProviders: 'An appointment with a specialist in this field is arranged as each case requires. Request one and we will set it up.',
+    request: 'Request an appointment',
+    bookH: 'Book your appointment',
+    bookP: 'All times are shown in your local time. The booking is confirmed immediately and the confirmation email reaches you straight away.',
+    fallbackH: 'Online booking',
+    fallbackP: 'Online booking is not available at this moment. Book by WhatsApp, phone or email and the team will arrange the appointment with the relevant specialist.',
+    notesH: 'Before you book',
+    notes: [
+      'Each specialist consults within their own specialty and scope of practice.',
+      'A remote consultation does not replace a clinical examination when the situation needs one.',
+      'Please don’t send photos or medical reports until a secure method has been agreed with the specialist.',
+      'Emergencies are not managed remotely: go to the nearest emergency department.',
+    ],
+    otherWays: 'Other ways to get a medical opinion: a home visit or a clinic or centre appointment. Ask for them through the contact page.',
+    ui: {
+      step1: '1. Choose a specialist', step2: '2. Choose a day and time', step3: '3. Your details',
+      noSlots: 'No free times in the coming weeks for this specialist. Please request an appointment on WhatsApp.',
+      loading: 'Loading free times…', tz: 'Times in your time zone', change: 'Change',
+      name: 'Full name', email: 'Email', emailHint: 'The confirmation and the room link are sent here.',
+      phone: 'WhatsApp number', phoneHint: 'With country code, e.g. +962791234567', mode: 'Consultation type',
+      consent: 'I agree that my details are used to confirm the appointment and hold the consultation, and I have read the', privacy: 'privacy policy',
+      submit: 'Confirm booking', sending: 'Confirming your booking…',
+      errName: 'Enter your name (at least 2 letters, no numbers).', errEmail: 'Enter a valid email address.', errPhone: 'Enter a valid WhatsApp number with the country code.', errConsent: 'Consent is required to book.', errSlot: 'Choose a day and a time.',
+      errTaken: 'That time was just booked. Please choose another.', errBusy: 'Several bookings were made from this network today. Please contact us on WhatsApp.', errServer: 'The booking could not be completed right now. Please try again or contact us on WhatsApp.',
+      doneH: 'Your appointment is confirmed', doneEmail: (e: string) => `We sent the confirmation email to ${e}. If it has not arrived within a few minutes, check your spam folder.`,
+      doneNoEmail: 'Your appointment is booked, but the email could not be sent right now. The team will contact you to confirm the details.',
+      room: 'Consultation room page', keep: 'Keep this link: it is your personal link to join or cancel the consultation.',
+      another: 'Book another appointment', minutes: 'minutes', with: 'with',
+    },
+  },
+}[lang];
+
+const dayNames: Record<Lang, Record<string, string>> = {
+  ar: { sun: 'الأحد', mon: 'الاثنين', tue: 'الثلاثاء', wed: 'الأربعاء', thu: 'الخميس', fri: 'الجمعة', sat: 'السبت' },
+  en: { sun: 'Sunday', mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday' },
+};
+const zoneNames: Record<string, Record<Lang, string>> = {
+  'Asia/Amman': { ar: 'عمّان', en: 'Amman' }, 'Asia/Riyadh': { ar: 'الرياض', en: 'Riyadh' }, 'Asia/Dubai': { ar: 'دبي', en: 'Dubai' },
+  'Asia/Kuwait': { ar: 'الكويت', en: 'Kuwait' }, 'Asia/Qatar': { ar: 'الدوحة', en: 'Doha' }, 'Africa/Cairo': { ar: 'القاهرة', en: 'Cairo' },
+  'Asia/Baghdad': { ar: 'بغداد', en: 'Baghdad' }, 'Europe/London': { ar: 'لندن', en: 'London' },
+};
+const zoneName = (z: string) => zoneNames[z]?.[lang] ?? z.split('/').pop()!.replace(/_/g, ' ');
+const hm = (x: string) => {
+  const [h, m] = x.split(':').map(Number);
+  return new Intl.DateTimeFormat(lang === 'ar' ? 'ar-u-nu-latn' : 'en-GB', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC' }).format(new Date(Date.UTC(2026, 0, 1, h, m)));
+};
+/** Weekly hours grouped into runs of days with the same windows, e.g. "Sunday – Thursday: 5:00 pm – 9:00 pm". */
+function hoursRows(p: Provider): Array<{ days: string; times: string }> {
+  if (!p.hours) return [];
+  const key = (d: (typeof days)[number]) => JSON.stringify(p.hours![d] ?? []);
+  const rows: Array<{ days: string; times: string }> = [];
+  let i = 0;
+  while (i < days.length) {
+    const k = key(days[i]);
+    let j = i;
+    while (j + 1 < days.length && key(days[j + 1]) === k) j++;
+    const w = p.hours[days[i]] ?? [];
+    if (w.length) rows.push({ days: i === j ? dayNames[lang][days[i]] : `${dayNames[lang][days[i]]} – ${dayNames[lang][days[j]]}`, times: w.map(([a, b]) => `${hm(a)} – ${hm(b)}`).join(lang === 'ar' ? '، ' : ', ') });
+    i = j + 1;
+  }
+  return rows;
+}
+
+const bookable = providers.filter(isBookable);
+const specName = (id: string) => specialties.find((x) => x.id === id)?.name[lang] ?? id;
+const clientData = {
+  api: consult.api,
+  lang,
+  roomPath: `/${lang}/consultation-room/`,
+  providers: bookable.map((p) => ({ id: p.id, name: p.name[lang], title: p.title[lang], specialty: specName(p.specialty), modes: p.modes, minutes: p.slotMinutes })),
+  modeNames: copy.modeNames,
+  ui: { ...copy.ui, doneEmail: copy.ui.doneEmail('{email}') },
+};
+const remoteRef = `${path(lang, 'contact')}?reason=remote`;
+const schema = pageGraph({ lang, key: 'consult', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated });
+---
+<BaseLayout lang={lang} pageKey="consult" title={copy.title} description={copy.description} schema={schema}>
+  <div class="wrap">
+    <Breadcrumbs lang={lang} pageKey="consult" />
+    <header class="page-head prose">
+      <p class="brand-eyebrow"><span class="hj-dot open" aria-hidden="true"></span>{copy.eyebrow}</p>
+      <h1>{copy.h1}</h1>
+      <p class="lead">{copy.lead}</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#book" {...track('cta_click', { lang, page: 'consult', placement: 'hero-book' })}><Icon name="video" />{copy.bookNow}</a>
+        <a class="btn btn-secondary" href="#specialties">{copy.seeSpecialties}</a>
+      </div>
+    </header>
+
+    <section aria-labelledby="steps-h">
+      <h2 id="steps-h" class="flush">{copy.stepsH}</h2>
+      <ol class="purpose-list" role="list">
+        {copy.steps.map(([h, p], i) => (
+          <li><span class="pl-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><h3>{h}</h3><p>{p}</p></li>
+        ))}
+      </ol>
+    </section>
+
+    <section id="specialties" class="section-gap" aria-labelledby="spec-h">
+      <h2 id="spec-h">{copy.specH}</h2>
+      <p class="muted">{copy.specP}</p>
+      <ul class="sp-grid" role="list">
+        {specialties.map((sp) => {
+          const list = providersFor(sp.id);
+          return (
+            <li id={`sp-${sp.id}`} class="sp-card">
+              <h3>{sp.name[lang]}</h3>
+              <p class="sp-about">{sp.about[lang]}</p>
+              {list.length ? (
+                <ul class="pv-list" role="list">
+                  {list.map((p) => {
+                    const rows = hoursRows(p);
+                    return (
+                      <li class="pv">
+                        <p class="pv-name"><strong>{p.name[lang]}</strong></p>
+                        <p class="pv-title">{p.title[lang]}</p>
+                        {p.about && <p>{p.about[lang]}</p>}
+                        <dl class="pv-facts">
+                          <div><dt>{copy.languages}</dt><dd>{p.languages.map((l) => copy.langNames[l]).join(lang === 'ar' ? '، ' : ', ')}</dd></div>
+                          <div><dt>{copy.modesL}</dt><dd>{p.modes.map((m) => copy.modeNames[m]).join(lang === 'ar' ? '، ' : ', ')}</dd></div>
+                        </dl>
+                        <p class="pv-hours-h">{copy.hoursH} <span class="muted">({copy.tzNote(zoneName(p.timezone))})</span></p>
+                        {rows.length ? (
+                          <ul class="pv-hours" role="list">{rows.map((r) => <li><span>{r.days}</span><span class="pv-times">{r.times}</span></li>)}</ul>
+                        ) : <p class="muted">{copy.hoursTba}</p>}
+                        <p class="actions">
+                          {isBookable(p)
+                            ? <a class="btn btn-primary" href="#book" data-book-provider={p.id}>{copy.bookWith(p.name[lang])}</a>
+                            : <a class="btn btn-primary" href={remoteRef}>{copy.request}</a>}
+                          {p.profileHref && <a class="btn btn-secondary" href={p.profileHref[lang]}>{copy.profile}</a>}
+                        </p>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <Fragment>
+                  <p class="muted">{copy.noProviders}</p>
+                  <p><a href={remoteRef}>{copy.request} <span aria-hidden="true">{lang === 'ar' ? '←' : '→'}</span></a></p>
+                </Fragment>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+
+    <section id="book" class="section-gap bk" aria-labelledby="book-h" data-consult>
+      <h2 id="book-h">{copy.bookH}</h2>
+      <div class="bk-fallback" data-bk-fallback>
+        <p class="soon-note">{copy.fallbackP}</p>
+        <ContactActions lang={lang} page="consult" placement="booking-fallback" />
+      </div>
+      {bookable.length > 0 && (
+        <div class="bk-app" data-bk-app hidden>
+          <p class="muted">{copy.bookP}</p>
+          <form class="form bk-form" novalidate data-bk-form>
+            <fieldset class="field bk-step">
+              <legend>{copy.ui.step1}</legend>
+              <div class="bk-providers">
+                {bookable.map((p, i) => (
+                  <label class="bk-provider">
+                    <input type="radio" name="provider" value={p.id} checked={i === 0} />
+                    <span><strong>{p.name[lang]}</strong><span class="muted">{specName(p.specialty)} · {p.title[lang]}</span></span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <fieldset class="field bk-step">
+              <legend>{copy.ui.step2}</legend>
+              <p class="muted" data-bk-tz></p>
+              <div class="bk-days" data-bk-days role="group"></div>
+              <div class="bk-times" data-bk-times role="group"></div>
+              <p class="muted" data-bk-slot-msg aria-live="polite"></p>
+              <p class="error" data-err="slot"></p>
+            </fieldset>
+            <fieldset class="field bk-step">
+              <legend>{copy.ui.step3}</legend>
+              <div class="field">
+                <label for="bk-name">{copy.ui.name}</label>
+                <input id="bk-name" name="name" type="text" autocomplete="name" maxlength="80" required />
+                <p class="error" data-err="name"></p>
+              </div>
+              <div class="field">
+                <label for="bk-email">{copy.ui.email}</label>
+                <span class="hint" id="bk-email-hint">{copy.ui.emailHint}</span>
+                <input id="bk-email" name="email" type="email" inputmode="email" autocomplete="email" dir="ltr" maxlength="254" required aria-describedby="bk-email-hint" />
+                <p class="error" data-err="email"></p>
+              </div>
+              <div class="field">
+                <label for="bk-phone">{copy.ui.phone}</label>
+                <span class="hint" id="bk-phone-hint">{copy.ui.phoneHint}</span>
+                <input id="bk-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" maxlength="20" required aria-describedby="bk-phone-hint" />
+                <p class="error" data-err="phone"></p>
+              </div>
+              <fieldset class="field" data-bk-modes>
+                <legend>{copy.ui.mode}</legend>
+                <div class="choice"><input id="bk-mode-video" type="radio" name="mode" value="video" checked /><label for="bk-mode-video">{copy.modeNames.video}</label></div>
+                <div class="choice"><input id="bk-mode-voice" type="radio" name="mode" value="voice" /><label for="bk-mode-voice">{copy.modeNames.voice}</label></div>
+              </fieldset>
+              <div class="bk-hp" aria-hidden="true"><label for="bk-website">Website</label><input id="bk-website" name="website" type="text" tabindex="-1" autocomplete="off" /></div>
+              <div class="choice">
+                <input id="bk-consent" name="consent" type="checkbox" value="1" required />
+                <label for="bk-consent">{copy.ui.consent} <a href={path(lang, 'legal')}>{copy.ui.privacy}</a>.</label>
+              </div>
+              <p class="error" data-err="consent"></p>
+            </fieldset>
+            <p class="bk-summary" data-bk-summary aria-live="polite"></p>
+            <button class="btn btn-primary" type="submit" data-bk-submit>{copy.ui.submit}</button>
+            <p class="error" data-err="form" role="alert"></p>
+          </form>
+          <div class="bk-done" data-bk-done hidden tabindex="-1">
+            <h3>{copy.ui.doneH}</h3>
+            <p data-bk-done-when></p>
+            <p data-bk-done-email></p>
+            <p><a class="btn btn-primary" data-bk-done-room href="#">{copy.ui.room}</a></p>
+            <p class="muted">{copy.ui.keep}</p>
+            <p><button type="button" class="linkbtn" data-bk-again>{copy.ui.another}</button></p>
+          </div>
+        </div>
+      )}
+      <script type="application/json" id="consult-data" set:html={JSON.stringify(clientData).replace(/</g, '\\u003c')}></script>
+    </section>
+
+    <section class="section-gap grid-2" aria-labelledby="notes-h">
+      <div class="prose">
+        <h2 id="notes-h" class="flush">{copy.notesH}</h2>
+        <ul class="sf-notes" role="list">{copy.notes.map((n) => <li><Icon name="check" />{n}</li>)}</ul>
+      </div>
+      <div class="prose">
+        <p>{copy.otherWays}</p>
+        <p class="muted">{s.emergencyShort}</p>
+        <ContactActions lang={lang} page="consult" placement="notes" show={['whatsapp', 'email']} />
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+<script>
+  import { initBooking } from '../../lib/consult-client';
+  initBooking();
+</script>

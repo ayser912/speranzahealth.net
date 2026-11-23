@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 process.env.STORE ||= 'fs';
-const { GET, POST, HEAD } = await import('./api/app.js');
+const { GET, POST, HEAD, OPTIONS } = await import('./api/app.js');
 const types = { '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.png': 'image/png', '.txt': 'text/plain' };
 const port = Number(process.env.PORT || 4600);
 
@@ -22,7 +22,7 @@ http.createServer(async (req, res) => {
   for await (const c of req) chunks.push(c);
   const body = chunks.length ? Buffer.concat(chunks) : undefined;
   const request = new Request(url, { method: req.method, headers: req.headers, body: ['GET', 'HEAD'].includes(req.method) ? undefined : body, duplex: 'half' });
-  const fn = { GET, POST, HEAD }[req.method] || GET;
+  const fn = { GET, POST, HEAD, OPTIONS }[req.method] || GET;
   const r = await fn(request);
   const headers = {};
   r.headers.forEach((v, k) => { if (k !== 'set-cookie') headers[k] = v; });
