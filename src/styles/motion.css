@@ -12,6 +12,7 @@
   --dur-1: 160ms;   /* hovers, presses */
   --dur-2: 260ms;   /* menus, small panels */
   --dur-3: 620ms;   /* reveals, entrances */
+  --ease-ripple: cubic-bezier(0.65, 0, 0.35, 1);   /* motion style 3: circles that grow and shrink */
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -35,10 +36,20 @@
   @view-transition { navigation: auto; }
   .site-header { view-transition-name: site-header; }
   .emergency { view-transition-name: emergency; }
-  ::view-transition-old(root) { animation: vt-out 180ms var(--ease-std) both; }
-  ::view-transition-new(root) { animation: vt-in 320ms var(--ease-out) both; }
-  @keyframes vt-out { to { opacity: 0; } }
-  @keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
+  /* Motion style 3: a green circle grows from the point you clicked until it fills the screen, then shrinks
+     away to reveal the new page. BaseLayout's head script shows .vt-ripple (with --vt-x/--vt-y) only while
+     a page transition runs; browsers without cross-page transitions simply change page. */
+  .vt-go .vt-ripple { display: block; position: fixed; inset: 0; z-index: 2147483000; pointer-events: none; view-transition-name: vt-ripple;
+    background: radial-gradient(circle at var(--vt-x, 50%) var(--vt-y, 50%), #13805f 0%, #0a5c47 40%, #064f3d 100%); }
+  ::view-transition-new(vt-ripple) { animation: vt-ripple 780ms both; }
+  ::view-transition-old(root) { animation: none; }
+  ::view-transition-new(root) { animation: vt-hold 350ms steps(1, end) both; }
+  @keyframes vt-ripple {
+    0% { clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 50%)); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+    45% { clip-path: circle(var(--vt-r, 75vmax) at var(--vt-x, 50%) var(--vt-y, 50%)); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+    100% { clip-path: circle(0 at 50% 50%); }
+  }
+  @keyframes vt-hold { from { opacity: 0; } to { opacity: 1; } }
 
   /* ---------- Hero entrance (home page) ---------- */
   .hero h1 .h1-name  { animation: rise var(--dur-3) var(--ease-out) both; }
@@ -63,7 +74,7 @@
   }
 
   /* ---------- Hover and press feedback ---------- */
-  a, .btn, .site-nav a, .sub-toggle, .lang-switch, .nav-toggle, .card, .video-cta, .video-cta .play {
+  a, .btn, .nav-list a, .sub-toggle, .lang-switch, .nav-toggle, .fmenu-toggle, .card, .video-cta, .video-cta .play {
     transition:
       color var(--dur-1) var(--ease-std),
       background-color var(--dur-1) var(--ease-std),
@@ -85,11 +96,69 @@
   .topic-list h3 a:hover, .topic-list h3 a:focus-visible { background-size: 100% 2px; }
   .topic-list li { transition: background-color var(--dur-2) var(--ease-std); }
 
-  /* ---------- Menus ---------- */
-  .js .site-nav .sub.open { animation: drop var(--dur-2) var(--ease-out) both; }
-  @media (max-width: 52rem) { .js .site-nav.open { animation: drop var(--dur-2) var(--ease-out) both; } }
-  @keyframes drop { from { opacity: 0; transform: translateY(-6px); } }
-  .sub-toggle svg { transition: transform var(--dur-2) var(--ease-out); }
+  /* ==========================================================================
+     Motion style 3 «تموّج دائري» — circular ripple (chosen by Aissar, 24 Nov 2026):
+     the side menu, the footer menus and the page-to-page change all open as circles,
+     buttons ripple from the point you press, and the consultation button's colours flow
+     slowly between green and deep gold.
+     ========================================================================== */
+
+  /* ---------- Side menu: a circle grows out of the Menu button (Header.astro sets --cx/--cy) ---------- */
+  .js .site-nav { clip-path: circle(0 at var(--cx, 100%) var(--cy, 0)); transition: clip-path 420ms var(--ease-ripple), visibility 0s linear 420ms; }
+  .js .site-nav.open { clip-path: circle(160% at var(--cx, 100%) var(--cy, 0)); transition: clip-path 640ms var(--ease-ripple), visibility 0s; }
+  .js .nav-scrim { clip-path: circle(0 at var(--cx, 100%) var(--cy, 0)); transition: clip-path 420ms var(--ease-ripple), opacity 420ms var(--ease-std), visibility 0s linear 420ms; }
+  .js .nav-scrim.open { clip-path: circle(150vmax at var(--cx, 100%) var(--cy, 0)); transition: clip-path 760ms var(--ease-ripple), opacity 300ms var(--ease-std), visibility 0s; }
+  .js .site-nav.open .nav-list > li { animation: menu-item 520ms var(--ease-out) both; animation-delay: calc(140ms + var(--i, 0) * 50ms); }
+  @keyframes menu-item { from { opacity: 0; transform: scale(0.94) translateY(6px); } }
+  .js .site-nav .sub { transition: grid-template-rows 340ms var(--ease-out), visibility 0s linear 340ms; }
+  .js .site-nav .sub.open { transition: grid-template-rows 340ms var(--ease-out), visibility 0s; }
+  .sub-toggle svg, .fmenu-toggle svg { transition: transform var(--dur-2) var(--ease-out); }
+  .nav-ico { transition: background-color var(--dur-2) var(--ease-std), color var(--dur-2) var(--ease-std), transform var(--dur-2) var(--ease-out); }
+  .nav-list > li > a:hover .nav-ico, .sub-toggle:hover .nav-ico { transform: scale(1.08) rotate(-4deg); }
+  .nav-close { transition: transform var(--dur-2) var(--ease-out), background-color var(--dur-1); }
+  .nav-close:hover { transform: rotate(90deg); }
+
+  /* Menu button: the three lines shift on hover */
+  .burger span { transition: transform var(--dur-2) var(--ease-out), inset var(--dur-2) var(--ease-out); }
+  .nav-toggle:hover .burger span:nth-child(2) { inset-inline-end: 0; }
+  .nav-toggle:hover .burger span:nth-child(1) { transform: translateY(-1px); }
+  .nav-toggle:hover .burger span:nth-child(3) { transform: translateY(1px); }
+
+  /* Consultation button: a soft "live" pulse, and its colours flow slowly green → deep gold → green.
+     The gold stop is the dark gold-ink, so the white label keeps its contrast all the way through. */
+  .hc-live { animation: live-pulse 2.4s ease-out infinite; }
+  @keyframes live-pulse { 0% { box-shadow: 0 0 0 2px var(--teal), 0 0 0 2px rgba(233, 207, 152, 0.7); } 70%, 100% { box-shadow: 0 0 0 2px var(--teal), 0 0 0 9px rgba(233, 207, 152, 0); } }
+  .header-consult, .header-consult:hover, .header-consult:focus-visible {
+    background-image: linear-gradient(100deg, #0a5c47 0%, #13775b 22%, #7d5c1e 50%, #13775b 78%, #0a5c47 100%);
+    background-size: 200% 100%;
+    animation: colour-flow 8s linear infinite;
+    transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-std), filter var(--dur-1);
+  }
+  .header-consult:hover { transform: translateY(-1px); filter: brightness(0.93); box-shadow: 0 10px 22px rgba(6, 79, 61, 0.28); }
+  @keyframes colour-flow { to { background-position: 200% 0; } }
+  /* click ripple (BaseLayout script adds .rp > i at the press point) */
+  .rp i { animation: ripple 700ms var(--ease-out) forwards; }
+  @keyframes ripple { from { transform: scale(0); opacity: 0.3; } to { transform: scale(1); opacity: 0; } }
+  /* the same flow runs along the top edge of the consultation announcement */
+  .consult-promo::before { background: linear-gradient(90deg, var(--teal-deep), var(--teal), var(--gold), var(--teal), var(--teal-deep)); background-size: 200% 100%; animation: colour-flow 8s linear infinite; }
+  .cp-dot { animation: live-dot 2.4s ease-out infinite; }
+  @keyframes live-dot { 0% { box-shadow: 0 0 0 0 rgba(31, 157, 107, 0.45); } 70%, 100% { box-shadow: 0 0 0 9px rgba(31, 157, 107, 0); } }
+
+  /* ---------- Footer menus and 3D contact icons ---------- */
+  /* footer menus open as a circle growing up from the bar */
+  .js .fmenu-list { clip-path: circle(0 at 50% 100%); transition: clip-path 340ms var(--ease-ripple), opacity 200ms var(--ease-std), transform 340ms var(--ease-out), visibility 0s linear 340ms; }
+  .js .fmenu.open .fmenu-list { clip-path: circle(150% at 50% 100%); transition: clip-path 520ms var(--ease-ripple), opacity 160ms var(--ease-std), transform 340ms var(--ease-out), visibility 0s; }
+  .js .fmenu.open .fmenu-list li { animation: rise 360ms var(--ease-out) both; }
+  .js .fmenu.open .fmenu-list li:nth-child(2) { animation-delay: 30ms; }
+  .js .fmenu.open .fmenu-list li:nth-child(3) { animation-delay: 60ms; }
+  .js .fmenu.open .fmenu-list li:nth-child(4) { animation-delay: 90ms; }
+  .js .fmenu.open .fmenu-list li:nth-child(5) { animation-delay: 120ms; }
+  .js .fmenu.open .fmenu-list li:nth-child(n+6) { animation-delay: 150ms; }
+  .c3d { transition: transform 380ms var(--ease-out), box-shadow 380ms var(--ease-out); }
+  .c3d-tip { transition: opacity 200ms var(--ease-std), transform 260ms var(--ease-out), visibility 0s linear 260ms; }
+  .c3d:hover .c3d-tip, .c3d:focus-visible .c3d-tip { transition: opacity 200ms var(--ease-std), transform 260ms var(--ease-out), visibility 0s; }
+  .c3d-list li { animation: c3d-in 700ms var(--ease-out) both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+  @keyframes c3d-in { from { opacity: 0; transform: translateY(14px) scale(0.85); } }
 
   /* ---------- Small panels ---------- */
   .consent:not([hidden]) { animation: rise 420ms var(--ease-out) both; }

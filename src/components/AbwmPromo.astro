@@ -9,8 +9,10 @@ import { path } from '../lib/routes';
 import { track } from '../lib/links';
 import QuickContact from './QuickContact.astro';
 import TopicIcon from './TopicIcon.astro';
-interface Props { lang: Lang; page: string }
-const { lang, page } = Astro.props;
+/** variant 'card' (homepage, 24 Nov 2026): the announcement only (no facts, no form); it links to the details and the form on the ABWM page. */
+interface Props { lang: Lang; page: string; variant?: 'full' | 'card' }
+const { lang, page, variant = 'full' } = Astro.props;
+const card = variant === 'card';
 const ar = lang === 'ar';
 const L = ar
   ? {
@@ -25,6 +27,7 @@ const L = ar
       ],
       more: 'أهمية الشهادة ومن يحق له التقدّم',
       formTitle: 'سجّل اهتمامك بالبرنامج',
+      register: 'سجّل اهتمامك الآن',
       topic: 'الموضوع: التسجيل في برنامج التحضير لامتحان البورد الأمريكي للجروح ABWM',
       submit: 'سجّل اهتمامي',
       note: 'برنامج تحضيري مستقل، غير تابع للبورد الأمريكي لإدارة الجروح (ABWM). يُعلن عن المواعيد والمدة والرسوم عند فتح التسجيل.',
@@ -41,25 +44,31 @@ const L = ar
       ],
       more: 'Why it matters and who can apply',
       formTitle: 'Register your interest',
+      register: 'Register your interest now',
       topic: 'Topic: registering for the ABWM exam preparation programme',
       submit: 'Register my interest',
       note: 'An independent preparation programme, not affiliated with the American Board of Wound Management (ABWM). Dates, duration and fees are announced when registration opens.',
     };
 ---
-<section class="abwm-promo" aria-labelledby={`abwm-h-${page}`}>
+<section class={card ? 'abwm-promo abwm-card' : 'abwm-promo'} aria-labelledby={`abwm-h-${page}`}>
   <div class="ap-main">
     <p class="ap-eyebrow"><TopicIcon name="award" />{L.eyebrow}</p>
     <h2 id={`abwm-h-${page}`}>{L.h}</h2>
     <p class="ap-lead">{L.p}</p>
-    <ul class="ap-facts" role="list">
-      {L.facts.map(([icon, text]) => <li><span aria-hidden="true"><TopicIcon name={icon} /></span>{text}</li>)}
-    </ul>
+    {!card && (
+      <ul class="ap-facts" role="list">
+        {L.facts.map(([icon, text]) => <li><span aria-hidden="true"><TopicIcon name={icon} /></span>{text}</li>)}
+      </ul>
+    )}
     <div class="actions">
-      <a class="btn btn-gold" href={path(lang, 'abwm')} {...track('cta_click', { lang, page, placement: 'abwm-promo' })}>{L.more}</a>
+      {card && <a class="btn btn-gold" href={`${path(lang, 'abwm')}#register`} {...track('cta_click', { lang, page, placement: 'abwm-promo-register' })}>{L.register}</a>}
+      <a class={card ? 'btn btn-ghost-light' : 'btn btn-gold'} href={path(lang, 'abwm')} {...track('cta_click', { lang, page, placement: 'abwm-promo' })}>{L.more}</a>
     </div>
     <p class="ap-note">{L.note}</p>
   </div>
-  <div class="ap-form">
-    <QuickContact lang={lang} id={`abwm-qc-${page}`} page={page} topic={L.topic} title={L.formTitle} submit={L.submit} askProfession />
-  </div>
+  {!card && (
+    <div class="ap-form">
+      <QuickContact lang={lang} id={`abwm-qc-${page}`} page={page} topic={L.topic} title={L.formTitle} submit={L.submit} askProfession />
+    </div>
+  )}
 </section>

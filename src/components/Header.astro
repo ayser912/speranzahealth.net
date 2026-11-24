@@ -1,17 +1,31 @@
 ---
+/**
+ * Header (redesigned 24 Nov 2026, Aissar item 1): one row — logo, search, language, the «الاستشارة عن بعد»
+ * button and a Menu button. Every other menu entry lives in one side menu (drawer) that slides in from the
+ * side; the remote consultation is kept OUT of the menu and sits beside the Menu button.
+ * Without JavaScript the menu is a plain list under the header.
+ */
 import { site, type Lang } from '../config/site';
 import { path, mainNav, navGroups, pages, otherLang, isPublic, type PageKey, type NavGroupKey } from '../lib/routes';
 import { t } from '../lib/i18n';
+import { track } from '../lib/links';
 import SiteSearch from './SiteSearch.astro';
 import LogoArt from './LogoArt.astro';
+import Icon from './Icon.astro';
+import TopicIcon from './TopicIcon.astro';
 interface Props { lang: Lang; pageKey?: PageKey; altHref?: string }
 const { lang, pageKey, altHref } = Astro.props;
 const s = t(lang);
 const alt = otherLang(lang);
 const switchHref = altHref ?? path(alt, pageKey ?? 'home');
 const isGroup = (k: string): k is NavGroupKey => k in navGroups;
-/** Menu entries; hidden pages (src/config/launch.ts) are dropped here, so they are never linked. */
-const entries = mainNav.filter((k) => isGroup(k) || isPublic(k));
+/** Side-menu entries: everything in mainNav except the consultation (its own button). Hidden pages are dropped. */
+const entries = mainNav.filter((k) => k !== 'consult' && (isGroup(k) || isPublic(k)));
+/** Small icon beside each top-level menu entry (TopicIcon names). */
+const navIcon: Record<string, string> = { care: 'bandage', videos: 'reel', dressings: 'layers', journeys: 'image', pros: 'team', shop: 'cart', contact: 'chat' };
+const L = lang === 'ar'
+  ? { consult: 'الاستشارة عن بعد', consultShort: 'استشارة', nav: 'القائمة الرئيسية', close: 'إغلاق القائمة' }
+  : { consult: 'Remote consultation', consultShort: 'Consult', nav: 'Main', close: 'Close menu' };
 ---
 <header class="site-header">
   <div class="wrap">
@@ -19,57 +33,99 @@ const entries = mainNav.filter((k) => isGroup(k) || isPublic(k));
       <LogoArt which="horizontal" class="brand-logo" width={site.logo.horizontalSize.w} height={site.logo.horizontalSize.h}
         label={lang === 'ar' ? 'سبيرانزا هيلث (Speranza Health) — الصفحة الرئيسية' : 'Speranza Health — home'} />
     </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">{s.menu}</button>
-    <nav id="site-nav" class="site-nav" aria-label={lang === 'ar' ? 'القائمة الرئيسية' : 'Main'}>
-      <ul>
-        {entries.map((k) => {
-          if (!isGroup(k)) return <li><a href={path(lang, k)} aria-current={k === pageKey ? 'page' : undefined}>{pages[k].nav[lang]}</a></li>;
-          const g = navGroups[k];
-          const items = g.items.filter(isPublic);
-          const active = !!pageKey && (items.includes(pageKey) || g.hub?.key === pageKey);
-          return (
-            <li class="has-sub">
-              <button type="button" class="sub-toggle" aria-expanded="false" aria-controls={`sub-${k}`} data-active={active ? 'true' : undefined}>
-                {g.label[lang]}<svg aria-hidden="true" viewBox="0 0 12 12" width="12" height="12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
-              </button>
-              <ul id={`sub-${k}`} class="sub">
-                {g.hub && <li class="sub-hub"><a href={path(lang, g.hub.key)} aria-current={pageKey === g.hub.key ? 'page' : undefined}>{g.hub.label[lang]}</a></li>}
-                {items.map((c) => (
-                  <li><a href={path(lang, c)} aria-current={c === pageKey ? 'page' : undefined}>{pages[c].nav[lang]}</a></li>
-                ))}
-              </ul>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
     <SiteSearch lang={lang} />
     <a class="lang-switch" href={switchHref} hreflang={alt === 'ar' ? 'ar' : 'en'} lang={alt} aria-label={s.switchLangLabel}><span class="ls-long">{s.switchLang}</span><span class="ls-short" aria-hidden="true">{alt === 'en' ? 'EN' : 'ع'}</span></a>
+    <a class="header-consult" href={path(lang, 'consult')} aria-current={pageKey === 'consult' ? 'page' : undefined}
+      {...track('cta_click', { lang, page: pageKey ?? 'other', placement: 'header-consult' })}>
+      <span class="hc-ico" aria-hidden="true"><Icon name="video" /><span class="hc-live"></span></span>
+      <span class="hc-long">{L.consult}</span><span class="hc-short" aria-hidden="true">{L.consultShort}</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span class="nt-label">{s.menu}</span>
+    </button>
   </div>
 </header>
+<div class="nav-scrim" data-nav-close aria-hidden="true"></div>
+<nav id="site-nav" class="site-nav" aria-label={L.nav}>
+  <div class="nav-head">
+    <span class="nav-title"><img src={site.logo.mark} width="32" height="32" alt="" decoding="async" />{s.menu}</span>
+    <button type="button" class="nav-close" data-nav-close aria-label={L.close}>
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <ul class="nav-list">
+    {entries.map((k, i) => {
+      if (!isGroup(k)) return <li style={`--i:${i}`}><a href={path(lang, k)} aria-current={k === pageKey ? 'page' : undefined}><span class="nav-lbl"><span class="nav-ico" aria-hidden="true"><TopicIcon name={navIcon[k] ?? 'bandage'} /></span>{pages[k].nav[lang]}</span></a></li>;
+      const g = navGroups[k];
+      const items = g.items.filter(isPublic);
+      const active = !!pageKey && (items.includes(pageKey) || g.hub?.key === pageKey);
+      return (
+        <li class="has-sub" style={`--i:${i}`}>
+          <button type="button" class="sub-toggle" aria-expanded={active ? 'true' : 'false'} aria-controls={`sub-${k}`} data-active={active ? 'true' : undefined}>
+            <span class="nav-lbl"><span class="nav-ico" aria-hidden="true"><TopicIcon name={navIcon[k] ?? 'bandage'} /></span>{g.label[lang]}</span><svg aria-hidden="true" viewBox="0 0 12 12" width="12" height="12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+          </button>
+          <div id={`sub-${k}`} class={active ? 'sub open' : 'sub'}>
+            <ul>
+              {g.hub && <li class="sub-hub"><a href={path(lang, g.hub.key)} aria-current={pageKey === g.hub.key ? 'page' : undefined}>{g.hub.label[lang]}</a></li>}
+              {items.map((c) => (
+                <li><a href={path(lang, c)} aria-current={c === pageKey ? 'page' : undefined}>{pages[c].nav[lang]}</a></li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      );
+    })}
+  </ul>
+</nav>
 <script>
   const btn = document.querySelector<HTMLButtonElement>('.nav-toggle');
   const nav = document.getElementById('site-nav');
-  const toggles = [...document.querySelectorAll<HTMLButtonElement>('.sub-toggle')];
-  const subOf = (b: HTMLButtonElement) => document.getElementById(b.getAttribute('aria-controls') ?? '');
-  const setSub = (b: HTMLButtonElement, open: boolean) => { b.setAttribute('aria-expanded', String(open)); subOf(b)?.classList.toggle('open', open); };
-  const closeAll = (except?: HTMLButtonElement) => toggles.forEach((b) => { if (b !== except) setSub(b, false); });
-  if (btn && nav) {
-    btn.addEventListener('click', () => {
-      const open = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', String(!open));
-      nav.classList.toggle('open', !open);
+  const scrim = document.querySelector<HTMLElement>('.nav-scrim');
+  if (btn && nav && scrim) {
+    const root = document.documentElement;
+    const isOpen = () => btn.getAttribute('aria-expanded') === 'true';
+    /* «تموّج دائري» (motion 3, 24 Nov 2026): the menu and the dimmed backdrop grow as circles out of the Menu button */
+    const aim = () => {
+      const b = btn.getBoundingClientRect(), n = nav.getBoundingClientRect();
+      const x = b.left + b.width / 2, y = b.top + b.height / 2;
+      nav.style.setProperty('--cx', `${Math.round(x - n.left)}px`);
+      nav.style.setProperty('--cy', `${Math.round(y - n.top)}px`);
+      scrim.style.setProperty('--cx', `${Math.round(x)}px`);
+      scrim.style.setProperty('--cy', `${Math.round(y)}px`);
+      void nav.offsetWidth; /* commit the start point before the class change */
+    };
+    const setOpen = (open: boolean) => {
+      if (open === isOpen()) return;
+      if (open) aim();
+      btn.setAttribute('aria-expanded', String(open));
+      nav.classList.toggle('open', open);
+      scrim.classList.toggle('open', open);
+      root.classList.toggle('nav-open', open);
+      if (open) requestAnimationFrame(() => nav.querySelector<HTMLElement>('.nav-close')?.focus());
+      else btn.focus({ preventScroll: true });
+    };
+    btn.addEventListener('click', () => setOpen(!isOpen()));
+    document.querySelectorAll('[data-nav-close]').forEach((el) => el.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (e) => {
+      if (!isOpen()) return;
+      if (e.key === 'Escape') { e.preventDefault(); setOpen(false); return; }
+      if (e.key !== 'Tab') return;
+      /* keep keyboard focus inside the open menu */
+      const items = [...nav.querySelectorAll<HTMLElement>('a, button')].filter((el) => el.offsetParent !== null && getComputedStyle(el).visibility !== 'hidden');
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
     });
+    /* coming back with the browser's Back button never shows the menu stuck open */
+    addEventListener('pageshow', () => { if (isOpen()) setOpen(false); });
   }
-  toggles.forEach((b) => {
-    b.addEventListener('click', (e) => { e.stopPropagation(); const open = b.getAttribute('aria-expanded') !== 'true'; closeAll(b); setSub(b, open); });
-    subOf(b)?.addEventListener('focusout', (e) => { if (!b.parentElement?.contains(e.relatedTarget as Node)) setSub(b, false); });
-  });
-  document.addEventListener('click', (e) => { toggles.forEach((b) => { if (!b.parentElement?.contains(e.target as Node)) setSub(b, false); }); });
-  document.addEventListener('keydown', (e) => {
-    if (e.key !== 'Escape') return;
-    const open = toggles.find((b) => b.getAttribute('aria-expanded') === 'true');
-    if (open) { setSub(open, false); open.focus(); return; }
-    if (btn && nav?.classList.contains('open')) { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.focus(); }
+  /* sections inside the menu open and close like an accordion */
+  document.querySelectorAll<HTMLButtonElement>('.site-nav .sub-toggle').forEach((b) => {
+    b.addEventListener('click', () => {
+      const open = b.getAttribute('aria-expanded') !== 'true';
+      b.setAttribute('aria-expanded', String(open));
+      document.getElementById(b.getAttribute('aria-controls') ?? '')?.classList.toggle('open', open);
+    });
   });
 </script>

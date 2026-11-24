@@ -20,12 +20,6 @@
 .cta-band .btn { white-space: nowrap; }
 @media (max-width: 40rem) { .cta-band { grid-template-columns: 1fr; } }
 
-/* footer: five columns once the professionals' column is added */
-.footer-grid { grid-template-columns: 1.5fr repeat(4, minmax(0, 1fr)); }
-@media (max-width: 72rem) { .footer-grid { grid-template-columns: 1fr 1fr 1fr; } .footer-grid > :first-child { grid-column: 1 / -1; } }
-.site-footer .ltr { max-width: 100%; overflow-wrap: anywhere; }
-@media (max-width: 40rem) { .footer-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 26rem) { .footer-grid { grid-template-columns: 1fr; } }
 
 /* ---------- Video library ---------- */
 .vlib { margin-block: 1rem 2rem; }
@@ -245,6 +239,3 @@ html[dir='rtl'] .vlib-dlg-bar { padding: 0.5rem 1rem 0.5rem 0.5rem; }
 .cart-note { font-size: 0.92rem; color: var(--ink-soft); margin: 0 0 1rem; }
 .cart-body .form { max-width: none; padding: 1rem; }
 @media (max-width: 30rem) { .cart-fab { inset-inline: 1rem; justify-content: center; } }
-
-/* Tablet width: the submenu buttons use the same size as the other menu tabs. */
-@media (min-width: 48.01rem) and (max-width: 56rem) { .site-nav .sub-toggle { font-size: 0.92rem; padding-inline: 0.3rem; } }

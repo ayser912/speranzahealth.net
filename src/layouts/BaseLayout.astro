@@ -87,6 +87,33 @@ const ogImage = abs(`/og/${lang}.png`);
 
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
     <script is:inline>document.documentElement.classList.add('js');</script>
+    <script is:inline>
+      /* Motion style 3 «تموّج دائري»: remember where a link was clicked, and when the next page arrives with a
+         page transition, show the green circle (.vt-ripple, motion.css) growing from that point. */
+      (function () {
+        if (!('onpagereveal' in window)) return;
+        var d = document.documentElement;
+        addEventListener('pagereveal', function (e) {
+          if (!e.viewTransition) return;
+          var p = null;
+          try { p = JSON.parse(sessionStorage.getItem('sh-vt') || 'null'); sessionStorage.removeItem('sh-vt'); } catch (_) {}
+          var w = innerWidth, h = innerHeight;
+          if (!(p && Date.now() - p.t < 8000)) p = { x: w / 2, y: h / 2 };
+          /* the circle's full size = distance from the click to the farthest corner, so it grows at an even pace */
+          var r = Math.ceil(Math.hypot(Math.max(p.x, w - p.x), Math.max(p.y, h - p.y)));
+          d.style.setProperty('--vt-x', p.x + 'px'); d.style.setProperty('--vt-y', p.y + 'px'); d.style.setProperty('--vt-r', r + 'px');
+          d.classList.add('vt-go');
+          e.viewTransition.finished.finally(function () { d.classList.remove('vt-go'); });
+        });
+        document.addEventListener('click', function (e) {
+          var a = e.target.closest && e.target.closest('a[href]');
+          if (!a) return;
+          var r = a.getBoundingClientRect();
+          var x = e.detail ? e.clientX : r.left + r.width / 2, y = e.detail ? e.clientY : r.top + r.height / 2;
+          try { sessionStorage.setItem('sh-vt', JSON.stringify({ x: Math.round(x), y: Math.round(y), t: Date.now() })); } catch (_) {}
+        }, true);
+      })();
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">{s.skip}</a>
@@ -96,13 +123,35 @@ const ogImage = abs(`/og/${lang}.png`);
       <slot />
     </main>
     <Footer lang={lang} pageKey={pageKey} />
+    <div class="vt-ripple" aria-hidden="true"></div>
     <Analytics lang={lang} />
+    <script is:inline>
+      /* Motion style 3: buttons, menu entries and tabs ripple from the point you press. */
+      (function () {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var sel = '.btn, .header-consult, .nav-toggle, .nav-close, .nav-list a, .sub-toggle, .fmenu-toggle, .fmenu-list a, .lang-switch, .filter-chips button, .video-cta, .video-teaser a, .vlib-play';
+        document.addEventListener('pointerdown', function (e) {
+          var h = e.target.closest && e.target.closest(sel);
+          if (!h || e.button > 0) return;
+          var cs = getComputedStyle(h);
+          if (cs.position === 'static') h.style.position = 'relative';
+          if (cs.isolation !== 'isolate') h.style.isolation = 'isolate';
+          var r = h.getBoundingClientRect(), s = Math.max(r.width, r.height) * 2.3;
+          var box = document.createElement('span'), dot = document.createElement('i');
+          box.className = 'rp'; box.setAttribute('aria-hidden', 'true');
+          dot.style.cssText = 'width:' + s + 'px;height:' + s + 'px;left:' + (e.clientX - r.left - s / 2) + 'px;top:' + (e.clientY - r.top - s / 2) + 'px';
+          box.appendChild(dot); h.appendChild(box);
+          setTimeout(function () { box.remove(); }, 750);
+        });
+      })();
+    </script>
     <script is:inline>
       /* Scroll reveal: only for elements that start below the fold, only when motion is welcome. */
       (function () {
         if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         var sel = [
           'main h2', '.topic-list > li', '.purpose-list > li', '.service-list > li', '.service-feature', '.meaning-word', '.dress-card', '.dg-head', '.card-list > li', '.team-list > li', '.grid-2 > *',
+          '.promo-grid > *', '.video-teaser > li',
           '.ill', '.record', '.author-box', '.callout', '.toc', '.video-cta', '.video',
           '.form', 'table.data', '.references', '.disclosure', '.portrait', '.contact-actions', '.actions'
         ].join(',');

@@ -1,187 +1,88 @@
 ---
 /**
- * Homepage = Speranza Health front page (restructured 11 Oct 2026 at Aissar's request):
- * the name and its meaning, why the platform exists, and the services. Everything about Aissar
- * himself (photo, interview, figures, credentials) lives on the founder page (pages.about).
+ * Homepage (slimmed down 24 Nov 2026 at Aissar's request, items 2–10):
+ * 1) a compact introduction to Speranza Health,
+ * 2) right under it, two announcements side by side: remote consultation (book now) and the ABWM exam
+ *    preparation for healthcare professionals,
+ * 3) the awareness videos, then the contact band.
+ * Removed from the homepage: the meaning of «Speranza», why we created it, the services list, the
+ * multidisciplinary team, how we work, and the featured articles (all still covered on their own pages).
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ContactActions from '../../components/ContactActions.astro';
-import TeamSection from '../../components/TeamSection.astro';
-import ArticleCards from '../../components/ArticleCards.astro';
 import VideoSection from '../../components/VideoSection.astro';
 import AbwmPromo from '../../components/AbwmPromo.astro';
 import LogoArt from '../../components/LogoArt.astro';
 import Icon from '../../components/Icon.astro';
-import { site, person, team, flags, type Lang } from '../../config/site';
-import { path, langs, careNav, pages } from '../../lib/routes';
+import { site, flags, type Lang } from '../../config/site';
+import { path, langs } from '../../lib/routes';
 import { pageGraph } from '../../lib/schema';
-import { t } from '../../lib/i18n';
 import { track } from '../../lib/links';
-import { articles } from '../../content/articles/index';
 
 export function getStaticPaths() {
   return langs.map((lang) => ({ params: { lang } }));
 }
 const lang = Astro.params.lang as Lang;
-const s = t(lang);
-const updated = '2026-11-11';
+const updated = '2026-11-24';
 
 const copy = {
   ar: {
     title: 'سبيرانزا هيلث | منصة عربية للعناية بالجروح واستشارات عن بعد',
     description: 'سبيرانزا هيلث: منصة رقمية عربية للعناية بالجروح موجّهة لكل العالم، أسسها أيسر شواقفه CWS®. استشارة عن بعد مع المختص المعني، وتثقيف موثوق، وتدريب للكوادر الصحية.',
-    eyebrow: 'Speranza · الأمل',
     h1: 'سبيرانزا هيلث',
     h1Sub: 'العناية بالجروح بالعلم والأمل، وبفريق متعدد التخصصات',
     lead: 'منصة رقمية عربية متخصصة في العناية بالجروح، موجّهة لكل الناس حول العالم: استشارة عن بعد مع المختص المعني من فريق طبي متعدد التخصصات، ومعلومة واضحة ومبنية على الدليل العلمي للمرضى والأسر، وتدريب للكوادر الصحية.',
-    ctaRemote: 'سجّل اهتمامك بالاستشارة عن بعد',
-    ctaRemoteLive: 'احجز استشارة عن بعد الآن',
-    soon: 'قريبًا',
-    soonP: 'نعمل حاليًا على استكمال الفريق الطبي لهذه الخدمة، وستُنشر أسماء الأطباء وتخصصاتهم هنا عند إطلاقها. سجّل اهتمامك وسنتواصل معك عند الإطلاق.',
-    remoteTeamSoon: 'التخصصات المخطط أن يضمّها الفريق:',
-    ctaServices: 'تعرّف على الخدمات',
     logoAlt: 'شعار سبيرانزا هيلث: نجمة يحلّق في داخلها طائر بجناحين مفتوحين',
-    meaningH: 'ماذا تعني «سبيرانزا»؟',
-    meaningWord: 'Speranza',
-    meaningIs: 'تعني',
-    meaningValue: 'الأمل',
-    meaning: [
-      'الجرح الذي لا يلتئم يُتعب المريض وأسرته، وكثيرًا ما يفقدون الأمل بعد أشهر من المراجعات وتجربة الضمادات والخلطات المختلفة.',
-      'اخترنا اسم «سبيرانزا» لأن الأمل الذي نقصده ليس وعدًا بنتيجة، بل أمل مبنيّ على تقييم صحيح، ومعرفة واضحة، وفريق يعمل معًا حول المريض.',
-    ],
-    purposeH: 'لماذا أنشأنا سبيرانزا؟',
-    purposeLead: 'لأن العناية الجيدة بالجروح تحتاج إلى ثلاثة أشياء معًا:',
-    purpose: [
-      ['معلومة موثوقة', 'محتوى تثقيفي مبني على الإرشادات الدولية يساعد المرضى والأسر على فهم الجرح، ومعرفة علامات الخطر، وتجنّب الأخطاء الشائعة.'],
-      ['الطريق إلى التخصص المناسب', 'الجرح المعقد يحتاج غالبًا إلى أكثر من تخصص. ننسّق الرأي مع الفريق متعدد التخصصات بدل التنقّل بين التجارب.'],
-      ['رفع مستوى الممارسة', 'تدريب وتثقيف للكوادر الصحية من أطباء وممرضين وصيادلة وأخصائيي علاج طبيعي، لنشر الممارسات الحديثة في العناية بالجروح في المستشفيات والمراكز الصحية.'],
-    ],
-    founderLine: 'أسّس سبيرانزا هيلث',
-    founderTitle: 'أخصائي جروح معتمد من البورد الأمريكي CWS®',
-    founderCta: 'عن المؤسس',
-    servicesH: 'الخدمات المقدّمة',
-    remoteTag: 'خدمة',
+    promos: 'إعلانات',
+    remoteTag: 'الاستشارة عن بعد',
     liveBadge: 'متاحة الآن',
+    soon: 'قريبًا',
     remoteH: 'الاستشارة عن بعد مع المختص المعني',
     remoteP: 'تقدّم المنصة التشخيص أو النصيحة الطبية عبر استشارة عن بعد (اتصال مرئي أو صوتي) مع المختص المعني من الفريق الطبي متعدد التخصصات، أو عبر زيارة منزلية، أو حجز موعد في العيادة أو المركز، حسب ما تحتاجه الحالة.',
-    howH: 'طرق الحصول على الرأي الطبي',
+    soonP: 'نعمل حاليًا على استكمال الفريق الطبي لهذه الخدمة. سجّل اهتمامك وسنتواصل معك عند الإطلاق.',
     how: ['استشارة عن بعد (مرئية أو صوتية)', 'زيارة منزلية', 'موعد في العيادة أو المركز'],
-    bookNote: 'في صفحة الاستشارة عن بعد تعريف بكل تخصص والمختصين وأوقات تواجدهم، ومنها تحجز موعدك وتدخل الاستشارة من داخل المنصة.',
+    ctaRemote: 'سجّل اهتمامك بالاستشارة عن بعد',
+    ctaRemoteLive: 'احجز استشارة عن بعد الآن',
     profilesCta: 'التخصصات والمختصون وأوقات التواجد',
-    remoteTeam: 'التخصصات التي يُنسَّق معها حسب حاجة كل حالة:',
-    remoteNotes: [
-      'يقدّم التشخيص ووصف العلاج المختصُّ المعني، كلٌّ ضمن تخصصه ونطاق ممارسته.',
-      'لا تُغني الاستشارة عن بعد عن الفحص السريري عندما تتطلبه الحالة.',
-      'لا تُرسل صورًا أو تقارير طبية قبل الاتفاق على طريقة آمنة لمشاركتها.',
-      'الحالات الطارئة لا تُدار عن بعد: توجّه إلى أقرب قسم طوارئ.',
-    ],
-    services: [
-      { icon: 'care', h: 'العناية بالجروح: أدلة ومقالات', p: 'دليل لكل نوع من الجروح يجمع الوقاية والعناية وعلامات الخطر، ومقالات تثقيفية مدعومة بمراجع علمية تساعد الأسرة على المشاركة في العناية بثقة.', links: careNav, href: 'articles', cta: 'كل الأدلة والمقالات' },
-      { icon: 'layers', h: 'دليل ضمادات الجروح الحديثة', p: 'الأنواع الرئيسية للضمادات الحديثة، ومكوّنات كل نوع، وما يُستخدم له عادةً، مع أداة بحث حسب حالة الجرح.', href: 'dressings', cta: 'ضمادات الجروح الحديثة' },
-      { icon: 'image', h: 'معرض رحلات الالتئام', p: 'حالات حقيقية موثّقة بالصور لمراحل التئام جروح مختلفة، بموافقة أصحابها. معرض خاص يُفتح برمز شخصي.', href: 'journeys', cta: 'تعرّف على المعرض' },
-      { icon: 'teach', h: 'التعليم والتدريب للكوادر الصحية', p: 'محاضرات وورش عملية للأطباء والممرضين والصيادلة وأخصائيي العلاج الطبيعي، في أي مكان في العالم، حول تقييم الجروح واختيار الضمادات والعلاج بالضغط السلبي.', href: 'education', cta: 'التعليم والتدريب' },
-    ],
-    approachH: 'منهجنا في العمل',
-    approach: [
-      ['تقييم مبني على الدليل', 'قرارات العناية تستند إلى الإرشادات الدولية المعتمدة في العناية بالجروح.'],
-      ['متابعة وقياس التقدم', 'قياس الجرح وتوثيقه بانتظام لمعرفة ما إذا كانت الخطة تعمل أو تحتاج إلى تعديل.'],
-      ['الأسرة شريك في العناية', 'شرح واضح وعملي ومكتوب عند الحاجة، لأن الأسرة جزء أساسي من نجاح الخطة.'],
-      ['وضوح في نطاق الممارسة', 'كل تخصص يعمل ضمن نطاقه، ودون وعود بنتائج علاجية مضمونة.'],
-    ],
-    articlesH: 'من مقالاتنا التثقيفية',
-    allArticles: 'كل الأدلة والمقالات',
+    remoteNote: 'لا تُغني الاستشارة عن بعد عن الفحص السريري عندما تتطلبه الحالة.',
     contactH: 'التواصل',
     contactP: 'لطلب استشارة عن بعد أو زيارة منزلية أو موعد في العيادة أو المركز، أو للاستفسار عن التدريب والتعاون، من أي مكان في العالم.',
   },
   en: {
     title: 'Speranza Health | Wound-Care Platform and Remote Consultation',
     description: 'Speranza Health is an Arabic digital wound-care platform for a global audience, founded by Aissar Shawaqfeh, CWS®: remote consultation, reliable education and training.',
-    eyebrow: 'Speranza · Hope',
     h1: 'Speranza Health',
     h1Sub: 'Wound care built on evidence, hope and a multidisciplinary team',
     lead: 'An Arabic digital platform dedicated to wound care, for people worldwide: remote consultation with the relevant specialist from a multidisciplinary medical team, clear evidence-based information for patients and families, and training for healthcare teams.',
-    ctaRemote: 'Register interest in remote consultation',
-    ctaRemoteLive: 'Book a remote consultation now',
-    soon: 'Coming soon',
-    soonP: 'We are completing the medical team for this service. The physicians’ names and specialties will be published here at launch. Register your interest and we will contact you when it opens.',
-    remoteTeamSoon: 'Specialties the team is planned to include:',
-    ctaServices: 'See the services',
     logoAlt: 'Speranza Health logo: a star with a bird rising inside it, wings spread',
-    meaningH: 'What does “Speranza” mean?',
-    meaningWord: 'Speranza',
-    meaningIs: 'means',
-    meaningValue: 'hope',
-    meaning: [
-      'A wound that will not heal wears down the patient and the family. After months of appointments, dressings and home remedies, many of them lose hope.',
-      'We chose the name Speranza because the hope we mean is not a promise of a result. It is hope built on a proper assessment, clear knowledge and a team working together around the patient.',
-    ],
-    purposeH: 'Why we created Speranza',
-    purposeLead: 'Good wound care needs three things working together:',
-    purpose: [
-      ['Reliable information', 'Educational content based on international guidelines that helps patients and families understand the wound, recognise warning signs and avoid common mistakes.'],
-      ['A clear route to the right specialty', 'A complex wound usually needs more than one specialty. We coordinate opinions with the multidisciplinary team instead of moving from one trial to the next.'],
-      ['Better everyday practice', 'Training and education for healthcare teams, including physicians, nurses, pharmacists and physiotherapists, to spread current wound-care practice in hospitals and health centres.'],
-    ],
-    founderLine: 'Speranza Health was founded by',
-    founderTitle: 'American Board–Certified Wound Specialist, CWS®',
-    founderCta: 'About the founder',
-    servicesH: 'Services',
-    remoteTag: 'Service',
+    promos: 'Announcements',
+    remoteTag: 'Remote consultation',
     liveBadge: 'Available now',
+    soon: 'Coming soon',
     remoteH: 'Remote consultation with the relevant specialist',
     remoteP: 'The platform provides a diagnosis or medical advice through a remote consultation (video or voice call) with the relevant specialist from the multidisciplinary medical team, a home visit, or an appointment at the clinic or centre, depending on what the case needs.',
-    howH: 'Ways to get a medical opinion',
+    soonP: 'We are completing the medical team for this service. Register your interest and we will contact you when it opens.',
     how: ['Remote consultation (video or voice)', 'Home visit', 'Clinic or centre appointment'],
-    bookNote: 'The remote consultation page introduces each specialty, its specialists and their hours. Book there and join the consultation inside the platform.',
+    ctaRemote: 'Register interest in remote consultation',
+    ctaRemoteLive: 'Book a remote consultation now',
     profilesCta: 'Specialties, specialists and hours',
-    remoteTeam: 'Specialties coordinated with, as each case requires:',
-    remoteNotes: [
-      'Diagnosis and treatment are provided by the relevant specialist, each within their own specialty and scope of practice.',
-      'A remote consultation does not replace a clinical examination when the situation needs one.',
-      'Please don’t send photos or medical reports until a secure way to share them has been agreed.',
-      'Emergencies are not managed remotely: go to the nearest emergency department.',
-    ],
-    services: [
-      { icon: 'care', h: 'Wound care: guides and articles', p: 'A guide for each type of wound covering prevention, care and warning signs, plus referenced educational articles that help families take part in care with confidence.', links: careNav, href: 'articles', cta: 'All guides and articles' },
-      { icon: 'layers', h: 'Advanced wound dressings guide', p: 'The main types of modern dressing, what each is made of and what it is typically used for, with a finder by wound situation.', href: 'dressings', cta: 'Advanced wound dressings' },
-      { icon: 'image', h: 'Healing journeys gallery', p: 'Real, photo-documented healing stages of different wounds, with patient consent. A private gallery opened with a personal code.', href: 'journeys', cta: 'About the gallery' },
-      { icon: 'teach', h: 'Education and training for healthcare teams', p: 'Lectures and hands-on workshops for physicians, nurses, pharmacists and physiotherapists, anywhere in the world, on wound assessment, dressing selection and negative pressure wound therapy.', href: 'education', cta: 'Education and training' },
-    ],
-    approachH: 'How we work',
-    approach: [
-      ['Evidence-based assessment', 'Care decisions follow recognised international wound-care guidelines.'],
-      ['Follow-up and measurement', 'Measuring and documenting the wound regularly to see whether the plan is working or needs to change.'],
-      ['Families as partners', 'Clear, practical explanations, written down when needed, because families are central to a plan that works.'],
-      ['A clear scope of practice', 'Each specialty works within its own scope, with no promises of guaranteed outcomes.'],
-    ],
-    articlesH: 'From our educational articles',
-    allArticles: 'All guides and articles',
+    remoteNote: 'A remote consultation does not replace a clinical examination when the situation needs one.',
     contactH: 'Contact',
     contactP: 'To request a remote consultation, a home visit or a clinic or centre appointment, or to ask about training and collaboration, from anywhere in the world.',
   },
 }[lang];
 
 const schema = pageGraph({ lang, key: 'home', type: 'WebPage', title: copy.title, description: copy.description, dateModified: updated });
-const ref = { lang, page: 'home', placement: 'hero' };
 const live = flags.remoteConsultationLive;
 const remoteHref = live ? path(lang, 'consult') : `${path(lang, 'contact')}?reason=remote`;
-const ctaRemote = live ? copy.ctaRemoteLive : copy.ctaRemote;
-const featured = ['when-to-see-a-wound-care-specialist', 'wound-infection-warning-signs', 'home-wound-care-mistakes']
-  .map((slug) => articles.find((a) => a.slug === slug)!)
-  .filter(Boolean);
-const specialties = team.filter((m) => m.id !== 'other');
 ---
 <BaseLayout lang={lang} pageKey="home" title={copy.title} description={copy.description} schema={schema}>
-  <section class="hero brand-hero">
+  <section class="hero brand-hero hero-compact">
     <div class="wrap">
-      <div>
+      <div class="hc-text">
         <p class="brand-eyebrow"><span lang="it">Speranza</span> · {lang === 'ar' ? 'الأمل' : 'Hope'}</p>
         <h1><span class="h1-name">{copy.h1}</span><span class="visually-hidden">{lang === 'ar' ? '، ' : ': '}</span><span class="h1-title">{copy.h1Sub}</span></h1>
         <p class="lead">{copy.lead}</p>
-        <div class="actions">
-          <a class="btn btn-primary" href={remoteHref} {...track('cta_click', { ...ref, placement: 'hero-remote' })}><Icon name="video" />{ctaRemote}</a>
-          <a class="btn btn-secondary" href="#services" {...track('cta_click', { ...ref, placement: 'hero-services' })}>{copy.ctaServices}</a>
-        </div>
       </div>
       <div class="brand-logo-hero">
         <LogoArt which="stacked" width={site.logo.stackedSize.w} height={site.logo.stackedSize.h} label={copy.logoAlt} />
@@ -189,115 +90,31 @@ const specialties = team.filter((m) => m.id !== 'other');
     </div>
   </section>
 
-  <section class="section meaning" aria-labelledby="meaning-h">
-    <div class="wrap meaning-grid">
-      <div class="meaning-word" aria-hidden="true">
-        <span class="mw-word" lang="it">{copy.meaningWord}</span>
-        <span class="mw-eq">{copy.meaningIs}</span>
-        <span class="mw-value">{copy.meaningValue}</span>
-      </div>
-      <div class="prose">
-        <h2 id="meaning-h" class="flush">{copy.meaningH}</h2>
-        <p class="lead-sm"><strong><span lang="it">Speranza</span> {copy.meaningIs} {lang === 'ar' ? `«${copy.meaningValue}»` : `“${copy.meaningValue}”`}.</strong></p>
-        {copy.meaning.map((p) => <p>{p}</p>)}
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-alt" aria-labelledby="purpose-h">
-    <div class="wrap">
-      <h2 id="purpose-h" class="flush">{copy.purposeH}</h2>
-      <p>{copy.purposeLead}</p>
-      <ol class="purpose-list" role="list">
-        {copy.purpose.map(([h, p], i) => (
-          <li><span class="pl-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><h3>{h}</h3><p>{p}</p></li>
-        ))}
-      </ol>
-      <p class="founder-line">
-        {copy.founderLine} <a href={path(lang, 'about')} {...track('cta_click', { ...ref, placement: 'founder-line' })}><strong>{person.name[lang]}</strong></a>{lang === 'ar' ? '، ' : ', '}{copy.founderTitle}.
-        <a class="founder-cta" href={path(lang, 'about')}>{copy.founderCta} <span aria-hidden="true">{lang === 'ar' ? '←' : '→'}</span></a>
-      </p>
-    </div>
-  </section>
-
-  <section id="services" class="section" aria-labelledby="services-h">
-    <div class="wrap">
-      <h2 id="services-h" class="flush">{copy.servicesH}</h2>
-
-      <article class="service-feature" aria-labelledby="remote-h">
-        <div class="sf-main">
-          <span class="sf-icon" aria-hidden="true"><Icon name="video" /></span>
-          <span class="soon-badge">{live ? copy.liveBadge : copy.soon}</span>
-          <h3 id="remote-h">{copy.remoteH}</h3>
-          <p>{copy.remoteP}</p>
-          {!live && <p class="soon-note">{copy.soonP}</p>}
-          {live && (
-            <Fragment>
-              <p class="sf-team-h">{copy.howH}</p>
-              <ul class="chips" role="list">{copy.how.map((x) => <li>{x}</li>)}</ul>
-            </Fragment>
-          )}
-          <p class="sf-team-h">{live ? copy.remoteTeam : copy.remoteTeamSoon}</p>
-          <ul class="chips" role="list">{specialties.map((m) => <li>{m[lang]}</li>)}</ul>
-          <div class="actions">
-            <a class="btn btn-primary" href={remoteHref} {...track('cta_click', { lang, page: 'home', placement: 'services-remote' })}>{ctaRemote}</a>
-            {live && <a class="btn btn-secondary" href={`${path(lang, 'consult')}#specialties`}>{copy.profilesCta}</a>}
-          </div>
-          {live && <p class="muted">{copy.bookNote}</p>}
+  <section class="section promos" aria-label={copy.promos}>
+    <div class="wrap promo-grid">
+      <article class="consult-promo" aria-labelledby="consult-promo-h">
+        <p class="cp-eyebrow"><Icon name="video" />{copy.remoteTag}<span class="cp-badge"><span class="cp-dot" aria-hidden="true"></span>{live ? copy.liveBadge : copy.soon}</span></p>
+        <h2 id="consult-promo-h">{copy.remoteH}</h2>
+        <p class="cp-lead">{live ? copy.remoteP : copy.soonP}</p>
+        {live && <ul class="chips" role="list">{copy.how.map((x) => <li>{x}</li>)}</ul>}
+        <div class="actions">
+          <a class="btn btn-primary" href={remoteHref} {...track('cta_click', { lang, page: 'home', placement: 'promo-remote' })}><Icon name="video" />{live ? copy.ctaRemoteLive : copy.ctaRemote}</a>
+          {live && <a class="btn btn-secondary" href={`${path(lang, 'consult')}#specialties`} {...track('cta_click', { lang, page: 'home', placement: 'promo-specialties' })}>{copy.profilesCta}</a>}
         </div>
-        <ul class="sf-notes" role="list">
-          {copy.remoteNotes.map((n) => <li><Icon name="check" />{n}</li>)}
-        </ul>
+        <p class="muted cp-note">{copy.remoteNote}</p>
       </article>
-
-      <ul class="service-list" role="list">
-        {copy.services.map((sv) => (
-          <li class="service-card">
-            <span class="sf-icon" aria-hidden="true"><Icon name={sv.icon as 'care' | 'teach' | 'book' | 'layers' | 'image'} /></span>
-            <h3>{sv.h}</h3>
-            <p>{sv.p}</p>
-            {sv.links && <ul class="service-links">{sv.links.map((k) => <li><a href={path(lang, k)}>{pages[k].nav[lang]}</a></li>)}</ul>}
-            {sv.href && <p class="service-more"><a href={path(lang, sv.href as 'education' | 'articles' | 'dressings' | 'journeys')}>{sv.cta} <span aria-hidden="true">{lang === 'ar' ? '←' : '→'}</span></a></p>}
-          </li>
-        ))}
-      </ul>
+      <AbwmPromo lang={lang} page="home" variant="card" />
     </div>
   </section>
 
-  <section class="section section-alt">
-    <div class="wrap"><TeamSection lang={lang} /></div>
-  </section>
-
-  <div class="section">
-    <div class="wrap"><AbwmPromo lang={lang} page="home" /></div>
-  </div>
-
-  <section class="section" aria-labelledby="approach-h">
-    <div class="wrap">
-      <h2 id="approach-h" class="flush">{copy.approachH}</h2>
-      <div class="grid-2">
-        {copy.approach.map(([h, p]) => (<div><h3 style="margin-top:0">{h}</h3><p>{p}</p></div>))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
+  <section class="section section-alt home-videos">
     <div class="wrap"><VideoSection lang={lang} page="home" /></div>
-  </section>
-
-  <section class="section section-alt" aria-labelledby="articles-h">
-    <div class="wrap">
-      <h2 id="articles-h" class="flush">{copy.articlesH}</h2>
-      <ArticleCards lang={lang} items={featured} showTopic={false} />
-      <p><a href={path(lang, 'articles')}>{copy.allArticles}</a></p>
-    </div>
   </section>
 
   <section class="section" aria-labelledby="contact-h">
     <div class="wrap prose">
       <h2 id="contact-h" class="flush">{copy.contactH}</h2>
       <p>{copy.contactP}</p>
-      <p class="muted">{s.emergencyShort}</p>
       <ContactActions lang={lang} page="home" placement="contact-band" />
     </div>
   </section>
